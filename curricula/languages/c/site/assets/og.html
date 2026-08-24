@@ -1,0 +1,37 @@
+<!doctype html>
+<!-- بطاقة المشاركة: نفس الأرضيّتين، ونفس الخطّين. -->
+<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../public/fonts/fonts.css">
+<style>
+  html,body{margin:0;width:1200px;height:630px}
+  body{
+    background:#020403;color:#d9e6dc;
+    font-family:'Cairo',sans-serif;
+    display:grid;grid-template-columns:1fr 380px;
+  }
+  .say{padding:76px 72px;display:flex;flex-direction:column;justify-content:center;gap:22px}
+  h1{margin:0;font-size:86px;line-height:1.2;font-weight:700}
+  h1 em{font-style:normal;color:#8fa695}
+  p{margin:0;font-size:29px;line-height:1.7;color:#8fa695}
+  .kick{font-family:'Source Code Pro',monospace;font-size:20px;color:#5d7264;direction:ltr}
+  .mach{
+    background:#000000;border-right:6px solid #3ee87b;
+    display:flex;flex-direction:column;justify-content:center;gap:26px;padding:0 54px;
+  }
+  .mach div{display:flex;align-items:baseline;justify-content:space-between;gap:18px;font-size:24px}
+  .mach b{font-weight:600}
+  .mach span{font-family:'Source Code Pro',monospace;font-size:20px;color:#7d8a80;direction:ltr}
+</style></head><body>
+  <div class="say">
+    <p class="kick">Apple clang 16 · c17 · darwin/arm64</p>
+    <h1>C — <em>اللغة الأولى</em></h1>
+    <p>مدخل البرمجة من الآلة صعوداً، لمن لم يكتب سطراً قبل اليوم.<br>وكلُّ لوحةٍ تقول من يضمنها.</p>
+  </div>
+  <div class="mach">
+    <p style="margin:0 0 8px;font-size:19px;color:#7d8a80">من يضمن المخرَج</p>
+    <div><b style="color:#c9dc4b">المواصفة</b><span>portable</span></div>
+    <div><b style="color:#3ee87b">المترجم</b><span>clang 16</span></div>
+    <div><b style="color:#7d8a80">هذه الآلة</b><span>this run</span></div>
+    <div><b style="color:#ff5c4d">غير معرَّف</b><span>no promise</span></div>
+  </div>
+</body></html>

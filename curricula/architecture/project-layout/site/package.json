@@ -1,0 +1,30 @@
+{
+  "name": "@t3lm/site-project-layout",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build && node ../../../../tools/sw.mjs .",
+    "preview": "vite preview",
+    "typecheck": "tsc -b",
+    "smoke": "vite build --ssr scripts/ssr-check.tsx --outDir .ssr --logLevel error && node .ssr/ssr-check.js",
+    "measure": "node ../tools/measure.mjs --check",
+    "shots": "node ../tools/shots.mjs",
+    "assets": "node ../../../../tools/assets.mjs .",
+    "fonts": "node ../../../../tools/fonts.mjs . \"https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap\""
+  },
+  "dependencies": {
+    "@t3lm/kit": "*",
+    "marked": "^16.4.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-router-dom": "^6.26.2"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "typescript": "^5.6.0",
+    "vite": "^7.0.0"
+  }
+}

@@ -1,0 +1,43 @@
+T3lm — Licensing
+
+Copyright (c) 2026 T3lm
+
+This repository is dual-licensed:
+
+  CONTENT   Everything under `curricula/`: the .md curricula, appendices,
+            diagrams, and exercises.
+            Licensed under Creative Commons
+            Attribution-NonCommercial-ShareAlike 4.0 International
+            (CC BY-NC-SA 4.0).
+
+  SOFTWARE  `kit/`, `tools/`, and the `site/` sources of every curriculum.
+            Licensed under the PolyForm Noncommercial License 1.0.0.
+            See LICENSE-CODE.
+
+
+CONTENT LICENSE — CC BY-NC-SA 4.0
+
+To view a copy of this license, visit
+    https://creativecommons.org/licenses/by-nc-sa/4.0/
+Full legal code:
+    https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
+
+You are free to share and adapt the content, provided you give appropriate
+credit, link to the license, indicate changes, do not use the material for
+commercial purposes, and distribute your derivatives under the same license.
+
+For commercial use of any part of this repository, request explicit permission
+from the copyright holder.
+
+────────────────────────────────────────────────────────────────────────
+
+المحتوى (كل ما تحت `curricula/`) مرخَّص بـ CC BY-NC-SA 4.0.
+الكود (`kit/` و `tools/` ومصادر المواقع) مرخَّص بـ PolyForm Noncommercial 1.0.0
+(انظر LICENSE-CODE).
+
+يجوز: النسخ والتوزيع والاشتقاق والتعديل.
+بشرط: نسب المصدر، ووضع رابط الرخصة، وبيان ما عُدِّل، وتوزيع الاشتقاق بنفس رخصته.
+ويُمنع: أي استعمال تجاري — بيعاً، أو ضمن دورة مدفوعة، أو داخل منتج أو خدمة
+مدفوعة، أو تحقيقاً لدخل بأي شكل.
+
+لأي استعمال تجاري: اطلب إذناً صريحاً من صاحب حقوق النشر.

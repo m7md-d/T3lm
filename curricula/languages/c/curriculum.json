@@ -1,0 +1,15 @@
+{
+  "slug": "c",
+  "category": "languages",
+  "title": "C — اللغة الأولى",
+  "tagline": "مدخل البرمجة من الآلة صعوداً — لمن لم يكتب سطراً قبل اليوم",
+  "url": "https://c.nodeksa.com",
+  "profile": "default",
+  "status": "published",
+  "adopted": true,
+  "layout": "canonical",
+  "site": {
+    "stack": "kit",
+    "deploy": "t3lm-c"
+  }
+}

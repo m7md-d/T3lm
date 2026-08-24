@@ -1,0 +1,19 @@
+/* الطرفية ترث هوية المنهج — إحالات فقط، بلا قيمة واحدة. */
+.ck-term {
+  --ck-term-bg:          var(--ck-term-surface, var(--ck-bg));
+  --ck-term-fg:          var(--ck-text);
+  --ck-term-dim:         var(--ck-text-faint);
+  --ck-term-prompt:      var(--ck-ok);
+  --ck-term-cmd:         var(--ck-text-dim);
+  --ck-term-ok:          var(--ck-ok);
+  --ck-term-err:         var(--ck-danger);
+
+  --ck-term-r:           var(--ck-r, 0px);
+  --ck-term-r-sm:        calc(var(--ck-term-r) * 0.5);
+  --ck-term-border:      var(--ck-border-w, 1px);
+
+  --ck-term-font:        var(--ck-font-mono);
+  --ck-term-ui-font:     var(--ck-font-body, inherit);
+  --ck-term-size:        var(--ck-term-fs, 0.8rem);
+  --ck-term-line-height: 1.75;
+}

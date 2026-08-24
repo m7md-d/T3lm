@@ -1,0 +1,13 @@
+{
+  "name": "t3lm",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "kit",
+    "curricula/*/*/site"
+  ],
+  "scripts": {
+    "doctor": "node tools/doctor.mjs",
+    "doctor:fix": "node tools/doctor.mjs --fix"
+  }
+}

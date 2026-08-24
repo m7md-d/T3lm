@@ -1,0 +1,14 @@
+{
+  "slug": "project-layout",
+  "category": "architecture",
+  "title": "هيكلة المشروع — أين يسكن كل شيء، ولماذا",
+  "tagline": "فلسفة تنظيم المشروع وفصل المسؤوليات: من المسطّح إلى Hexagonal وClean وDDD — بقياسٍ لا بذوق",
+  "url": "https://project-layout.nodeksa.com",
+  "profile": "default",
+  "status": "building",
+  "layout": "canonical",
+  "site": {
+    "stack": "kit",
+    "deploy": "t3lm-project-layout"
+  }
+}

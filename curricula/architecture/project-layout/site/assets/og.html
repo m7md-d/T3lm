@@ -1,0 +1,38 @@
+<!doctype html>
+<!-- بطاقة المشاركة. مشتقّة كما الصفحة: خطُّ الحدّ، وشجرةٌ يعبرها اعتمادٌ واحد. -->
+<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../public/fonts/fonts.css">
+<style>
+  :root{--bg:#0b0e12;--ink:#dfe6ee;--ink-2:#9aa7b6;--ink-3:#6b7887;
+        --in:#4bb3a6;--out:#d98a45;--wire:#7d8896;--edge:#3aa0a0;--line:#1e2630}
+  *{margin:0;box-sizing:border-box}
+  body{width:1200px;height:630px;background:var(--bg);color:var(--ink);
+       font-family:'Readex Pro',system-ui,sans-serif;display:grid;
+       grid-template-columns:1fr 400px;align-items:center;gap:56px;padding:72px 80px}
+  h1{font-size:76px;font-weight:600;line-height:1.25;letter-spacing:-.5px}
+  p{margin-top:24px;font-size:30px;line-height:1.7;color:var(--ink-2);font-weight:300;max-width:620px}
+  .foot{margin-top:44px;display:flex;align-items:center;gap:18px;font-size:24px;color:var(--ink-3)}
+  .dot{width:10px;height:10px;border-radius:50%;background:var(--edge)}
+  .en{font-family:'JetBrains Mono',ui-monospace,monospace;direction:ltr;unicode-bidi:isolate}
+  /* الشجرة: نفس مفردات الموقع — داخلٌ وحدٌّ وعبور */
+  .tree{direction:ltr;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:25px;
+        line-height:2.05;border-inline-start:3px solid var(--edge);padding-inline-start:28px}
+  .tree div{white-space:nowrap;color:var(--wire)}
+  .tree .in{color:var(--in)}
+  .tree .out{color:var(--out)}
+  .arrow{color:var(--out);font-size:21px}
+</style></head><body>
+  <div>
+    <h1>هيكلة المشروع</h1>
+    <p>اثنتا عشرة هيكلة على نظامٍ واحد، وخمسة تغييراتٍ تُقاس على كلٍّ منها.
+       بقياسٍ لا بذوق.</p>
+    <div class="foot"><span class="dot"></span><span class="en">project-layout.nodeksa.com</span></div>
+  </div>
+  <div class="tree">
+    <div class="in">core/</div>
+    <div class="in">ports/</div>
+    <div>app/</div>
+    <div class="out">adapters/http/</div>
+    <div class="out">adapters/db/ <span class="arrow">→ ports</span></div>
+  </div>
+</body></html>

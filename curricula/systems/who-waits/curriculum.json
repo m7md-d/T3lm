@@ -1,0 +1,15 @@
+{
+  "slug": "who-waits",
+  "category": "systems",
+  "title": "مَن يَنتظر؟",
+  "tagline": "الأنظمة التي تتعامل مع الزمن والانتظار — والمرجع البصري للمستودع",
+  "url": "https://who-waits.nodeksa.com",
+  "profile": "default",
+  "status": "published",
+  "layout": "canonical",
+  "site": {
+    "stack": "legacy",
+    "deploy": "t3lm-who-waits",
+    "live": true
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "name": "@t3lm/kit",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./editor": "./src/editor/index.ts",
+    "./editor/derive.css": "./src/editor/derive.css",
+    "./editor/editor.css": "./src/editor/editor.css",
+    "./editor/vscode-dark.css": "./src/editor/presets/vscode-dark.css",
+    "./highlight": "./src/highlight/index.ts",
+    "./highlight/go": "./src/highlight/go.ts",
+    "./highlight/rust": "./src/highlight/rust.ts",
+    "./md": "./src/md/index.ts",
+    "./progress": "./src/progress/index.ts",
+    "./styles/contract.css": "./src/styles/contract.css",
+    "./styles/reset.css": "./src/styles/reset.css",
+    "./terminal": "./src/terminal/Terminal.tsx",
+    "./terminal/derive.css": "./src/terminal/derive.css",
+    "./terminal/terminal.css": "./src/terminal/terminal.css",
+    "./highlight/c": "./src/highlight/c.ts"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "dependencies": {
+    "@codemirror/autocomplete": "^6.18.0",
+    "@codemirror/commands": "^6.7.0",
+    "@codemirror/lang-cpp": "^6.0.2",
+    "@codemirror/lang-go": "^6.0.1",
+    "@codemirror/lang-javascript": "^6.2.2",
+    "@codemirror/lang-python": "^6.1.6",
+    "@codemirror/lang-rust": "^6.0.2",
+    "@codemirror/language": "^6.10.3",
+    "@codemirror/search": "^6.5.6",
+    "@codemirror/state": "^6.4.1",
+    "@codemirror/view": "^6.34.1",
+    "@lezer/common": "^1.2.1",
+    "@lezer/cpp": "^1.1.6",
+    "@lezer/go": "^1.0.0",
+    "@lezer/highlight": "^1.2.1",
+    "@lezer/rust": "^1.0.2"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^6.1.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "typescript": "^7.0.2",
+    "vite": "^8.2.2"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "demo": "vite",
+    "demo:build": "vite build"
+  },
+  "license": "SEE LICENSE IN ../LICENSE-CODE"
+}

@@ -1,0 +1,23 @@
+/* توكنز تجريبية — تمثّل ملفّ الهوية العالمي عند أي منهج.
+   غيّر --ck-primary وحده وشاهد المحرّر كلّه يتبعه. */
+:root {
+  --ck-primary: #4bc4e8;
+  --ck-primary-soft: #8fdcf0;
+  --ck-secondary: #c9a2f0;
+  --ck-ok: #7fd39b;
+  --ck-warn: #e5b06a;
+  --ck-danger: #ea6a78;
+
+  --ck-bg: #0a0e13;
+  --ck-surface: #10161e;
+  --ck-surface-2: #182230;
+  --ck-line: #243040;
+  --ck-text: #dae3ed;
+  --ck-text-dim: #93a3b6;
+  --ck-text-faint: #61728a;
+
+  --ck-font-body: system-ui, "Segoe UI", sans-serif;
+  --ck-font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --ck-r: 6px;
+}
+body { background: var(--ck-bg); color: var(--ck-text); font-family: var(--ck-font-body); }

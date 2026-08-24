@@ -1,0 +1,19 @@
+# اللغات
+
+لغات البرمجة — نظام الأنواع والتمثيل والتنفيذ
+
+<!-- doctor:list:start -->
+| المنهج | الموضوع | الموقع | الأسلوب | الحالة |
+|---|---|---|---|---|
+| [`c`](c) | مدخل البرمجة من الآلة صعوداً — لمن لم يكتب سطراً قبل اليوم | `c.nodeksa.com` | `default` | ✅ |
+| [`go`](go) | تفكيك Go من نظام أنواعها إلى تمثيلها في الذاكرة — لمن يعرف C | [زُر ↗](https://go.nodeksa.com) | `default` | 🔨 |
+| [`rust`](rust) | تفكيك Rust من المِلكية إلى نظام أنواعها — لمن يعرف C ولم يكتب Rust | [زُر ↗](https://rust.nodeksa.com) | `default` | 🔨 |
+
+**مقترحات** — موضوعٌ محجوزٌ بريدمي يقول متطلّباته، بلا منهجٍ بعد:
+
+- [`c-advanced`](c-advanced/README.md)
+- [`dart`](dart/README.md)
+- [`typescript`](typescript/README.md)
+<!-- doctor:list:end -->
+
+البنية والاتفاقات: [`.claude/conventions/repo-layout.md`](../../.claude/conventions/repo-layout.md)

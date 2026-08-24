@@ -1,0 +1,47 @@
+/* بنية الطرفية — بلا لون ولا نصف قطر حرفيّ. */
+
+.ck-term {
+  direction: ltr;
+  unicode-bidi: isolate;
+  background: var(--ck-term-bg);
+  color: var(--ck-term-fg);
+  font-family: var(--ck-term-font);
+  font-size: var(--ck-term-size);
+  line-height: var(--ck-term-line-height);
+  border-radius: var(--ck-term-r);
+  overflow: hidden;
+}
+
+.ck-term-head {
+  display: flex; align-items: center; justify-content: space-between; gap: .6rem;
+  padding: .45rem .75rem .1rem;
+}
+.ck-term-line { display: inline-flex; align-items: baseline; gap: .5ch; min-width: 0; }
+.ck-term-prompt { color: var(--ck-term-prompt); user-select: none; font-weight: 600; }
+.ck-term-cmd { color: var(--ck-term-cmd); overflow-wrap: anywhere; }
+
+.ck-term-meta { display: inline-flex; align-items: center; gap: .5rem; flex: none; }
+.ck-term-chip {
+  font-size: .78em; padding: 0 .45em;
+  border: var(--ck-term-border) solid currentColor;
+  border-radius: var(--ck-term-r-sm);
+  color: var(--ck-term-ok);
+}
+.ck-term[data-status='error'] .ck-term-chip,
+.ck-term[data-status='timeout'] .ck-term-chip { color: var(--ck-term-err); }
+.ck-term[data-status='unavailable'] .ck-term-chip { color: var(--ck-term-dim); }
+.ck-term-ms { font-size: .78em; color: var(--ck-term-dim); }
+
+.ck-term-body { padding: .1rem .75rem 0; }
+.ck-term-stream {
+  margin: 0; font: inherit; white-space: pre-wrap; overflow-wrap: anywhere;
+  overflow-x: auto; max-height: 40vh;
+}
+.ck-term-err { color: var(--ck-term-err); }
+/* المخرَج يبقى أحادياً وLTR لأنه جاء من طرفية كذلك — حتى لو كان عربياً.
+   أمّا الملاحظة فنصٌّ من المؤلّف: خطّ الصفحة واتجاهها. */
+.ck-term-note { margin: 0; color: var(--ck-term-dim);
+  font-family: var(--ck-term-ui-font); direction: rtl; unicode-bidi: plaintext; }
+
+.ck-term-tail { padding: .1rem .75rem .55rem; opacity: 0; }
+.ck-term-tail[data-ready] { opacity: 1; }

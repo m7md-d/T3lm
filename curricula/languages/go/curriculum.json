@@ -1,0 +1,15 @@
+{
+  "slug": "go",
+  "category": "languages",
+  "title": "Go — من الجذور",
+  "tagline": "تفكيك Go من نظام أنواعها إلى تمثيلها في الذاكرة — لمن يعرف C",
+  "url": "https://go.nodeksa.com",
+  "profile": "default",
+  "status": "building",
+  "layout": "canonical",
+  "site": {
+    "stack": "kit",
+    "deploy": "t3lm-go",
+    "live": true
+  }
+}

@@ -1,0 +1,17 @@
+node_modules/
+dist/
+.ssr/
+.runno/
+*.tsbuildinfo
+.demo-dist/
+
+target/
+.DS_Store
+*.zip
+.claude/settings.local.json
+**/public/go-runner.wasm
+**/public/wasm_exec.js
+**/public/wasm/
+
+archive/*
+!archive/discussions/

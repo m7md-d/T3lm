@@ -1,0 +1,470 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   «C — اللغة الأولى». كل قيمةٍ هنا تحيل إلى `tokens.css`؛ لا لون حرفيّ.
+   والقرارات مردودةٌ إلى جدول الاشتقاق في `site/README.md`.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ck-bg);
+  color: var(--ck-text);
+  font-family: var(--ck-font-body);
+  font-size: 1rem;
+  line-height: 1.85;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* عمق: توهّجُ فوسفورٍ من الأعلى + خطوطُ مسحٍ خافتة — الشاشة التي كُتبت عليها C */
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: -2; pointer-events: none;
+  background:
+    radial-gradient(ellipse 65% 42% at 50% -6%,
+      color-mix(in oklab, var(--ck-primary) 14%, transparent), transparent 70%),
+    var(--ck-bg);
+}
+/* النسيج ثنائيّ: صفرٌ وواحد باهتان — الموضوع نفسه، لا زخرفةٌ عامّة */
+body::after {
+  content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Ctext x='6' y='16' font-family='monospace' font-size='13' fill='%233ee87b' fill-opacity='.05'%3E01001000%3C/text%3E%3Ctext x='6' y='46' font-family='monospace' font-size='13' fill='%233ee87b' fill-opacity='.05'%3E01100101%3C/text%3E%3Ctext x='6' y='76' font-family='monospace' font-size='13' fill='%233ee87b' fill-opacity='.05'%3E01101100%3C/text%3E%3Ctext x='6' y='106' font-family='monospace' font-size='13' fill='%233ee87b' fill-opacity='.05'%3E01101111%3C/text%3E%3C/svg%3E");
+  mask-image: linear-gradient(to bottom, black, transparent 65%);
+}
+
+.en {
+  font-family: var(--ck-font-mono);
+  direction: ltr;
+  unicode-bidi: isolate;
+  /* الرباطات مطفأة: الخطّ يحوّل `!=` إلى `≠`، فيعرض حرفاً لا يكتبه القارئ */
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "calt" 0;
+  letter-spacing: 0;
+}
+.num { font-variant-numeric: tabular-nums; }
+a { color: inherit; }
+button { font-family: inherit; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--ck-primary); outline-offset: 2px; }
+::selection { background: color-mix(in oklab, var(--ck-primary) 25%, transparent); }
+
+/* ══ الشريط العلوي ══ */
+.top {
+  position: sticky; top: 0; z-index: 20;
+  height: var(--top-h);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--w4);
+  padding: 0 var(--w6);
+  background: color-mix(in oklab, var(--ck-bg) 86%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: var(--ck-border-w) solid var(--ck-line);
+}
+.brand { display: flex; align-items: baseline; gap: var(--w2); text-decoration: none; }
+.brand b {
+  font-family: var(--ck-font-mono); font-size: 1.15rem; color: var(--ck-primary);
+  text-shadow: 0 0 var(--w3) color-mix(in oklab, var(--ck-primary) 45%, transparent);
+}
+.brand span { font-size: .88rem; color: var(--ck-text-dim); }
+.ver { font-size: .72rem; color: var(--ck-text-faint); }
+
+.reveal { animation: fade .22s ease-out both; }
+@keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; } }
+
+/* ══ الإقليم: سكّةٌ يسار ووثيقةٌ يمين ══ */
+.region {
+  display: grid; grid-template-columns: 240px minmax(0, 1fr);
+  gap: var(--w12);
+  max-width: 1180px; margin: 0 auto;
+  padding: var(--w12) var(--w6) var(--w16);
+}
+.rail {
+  position: sticky; top: calc(var(--top-h) + var(--w6));
+  align-self: start; max-height: 78vh; overflow-y: auto;
+  display: grid; gap: var(--w8);
+}
+.doc { min-width: 0; max-width: 74ch; }
+.doc-head { margin-bottom: var(--w6); }
+.kicker {
+  display: block; font-size: .76rem; color: var(--ck-text-faint); margin-bottom: var(--w2);
+}
+.kicker .sep { margin: 0 var(--w2); }
+.doc h1 {
+  font-size: clamp(1.6rem, 3.4vw, 2.15rem); line-height: 1.35; margin: 0;
+  text-wrap: balance;
+}
+
+/* ══ الأثر ══ */
+.trail h4 {
+  font-size: .74rem; color: var(--ck-text-faint); font-weight: 600;
+  margin: 0 0 var(--w3);
+}
+.trail ol { list-style: none; margin: 0; padding: 0; }
+.trail li { margin-bottom: var(--w); }
+.trail-part {
+  display: block; font-size: .72rem; color: var(--ck-primary);
+  margin: var(--w4) 0 var(--w2);
+}
+.trail button {
+  display: flex; align-items: baseline; gap: var(--w2); width: 100%;
+  padding: var(--w) var(--w2);
+  text-align: right; font-size: .84rem; line-height: 1.5;
+  color: var(--ck-text-faint); background: none; border: 0;
+  border-radius: var(--ck-r);
+}
+.trail button:hover { color: var(--ck-text-dim); background: var(--ck-surface); }
+.trail li[data-on] button { color: var(--ck-primary); font-weight: 600; }
+.trail button i { font-style: normal; color: var(--ck-line-2); flex: none; }
+.trail li[data-on] button i { color: var(--ck-primary); }
+.trail-sum { margin-top: var(--w4); font-size: .74rem; color: var(--ck-text-faint); }
+
+/* ══ «من قرّر؟» — ملاصقٌ للّقطة: التقارب المكاني (d ≈ 0.80) ══ */
+[data-family='spec']  { --fam: var(--a-spec); }
+[data-family='impl']  { --fam: var(--a-impl); }
+[data-family='local'] { --fam: var(--a-local); }
+[data-family='none']  { --fam: var(--a-none); }
+
+.who { border-top: var(--ck-border-w) solid var(--ck-line); padding-top: var(--w4); }
+.who-q { font-size: .74rem; color: var(--ck-text-faint); font-weight: 600; margin: 0 0 var(--w3); }
+.who-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--w3); }
+.who-row { display: grid; gap: 2px; font-size: .8rem; line-height: 1.55; }
+.who-row b {
+  color: var(--fam); font-weight: 600;
+  border-inline-start: 2px solid var(--fam); padding-inline-start: var(--w2);
+}
+.who-row span { color: var(--ck-text-faint); padding-inline-start: var(--w2); }
+
+/* ══ النثر ══ */
+.prose { margin: var(--w4) 0; text-wrap: pretty; }
+.prose > *:first-child { margin-top: 0; }
+.prose > *:last-child { margin-bottom: 0; }
+/* داخل اللقطة الفاصلُ فجوةُ الشبكة وحدها: هوامشُ النثر فوقها تُراكِم ثمانين
+   بكسلاً بين فقرتين، فتصير الصفحة طولاً بلا سبب. */
+.blocks > .prose { margin: 0; }
+.prose p { margin: var(--w4) 0; }
+.prose h3 { font-size: 1.08rem; margin: var(--w8) 0 var(--w3); }
+.prose h4 { font-size: .98rem; color: var(--ck-text-dim); margin: var(--w6) 0 var(--w2); }
+.prose b, .prose strong { color: var(--ck-text); font-weight: 700; }
+.prose em { color: var(--ck-text-dim); font-style: normal; }
+.prose ul, .prose ol { padding-inline-start: var(--w4); margin: var(--w4) 0; }
+.prose li { margin: var(--w2) 0; }
+.prose blockquote {
+  margin: var(--w4) 0; padding-inline-start: var(--w4);
+  border-inline-start: 2px solid var(--ck-line-2); color: var(--ck-text-dim);
+}
+.prose hr { border: 0; border-top: var(--ck-border-w) solid var(--ck-line); margin: var(--w8) 0; }
+.prose a { color: var(--ck-primary); }
+
+.prose code, .who code, .trail code {
+  font-family: var(--ck-font-mono); direction: ltr; unicode-bidi: isolate;
+  font-size: .86em; overflow-wrap: anywhere;
+  color: var(--ck-primary-soft);
+  background: var(--ck-surface-2); border-radius: var(--ck-r);
+  padding: 1px var(--w);
+}
+
+.prose table { width: 100%; border-collapse: collapse; font-size: .92rem; margin: var(--w6) 0; }
+.prose th, .prose td {
+  text-align: right; vertical-align: top;
+  padding: var(--w2) var(--w3);
+  border-bottom: var(--ck-border-w) solid var(--ck-line);
+}
+.prose th { color: var(--ck-text-faint); font-size: .84rem; }
+
+.lead { color: var(--ck-text-dim); margin-bottom: var(--w8); }
+.part-lead { color: var(--ck-text-dim); }
+
+/* ══ البلوكات ══ */
+.blocks { display: grid; gap: var(--w4); }
+.code-wrap { display: grid; gap: var(--w2); }
+.code-note {
+  display: flex; flex-wrap: wrap; gap: var(--w3);
+  margin: 0; font-size: .76rem; color: var(--ck-text-faint);
+}
+.code-flags { color: var(--ck-primary); }
+
+/* لوحةُ مخرَجٍ مسجَّل: حدُّها الأعلى سلطتُها، ومعه وسمُها — قناةٌ ثانية واحدة */
+.rec, .local, .fig {
+  border: var(--ck-border-w) solid var(--ck-line);
+  border-radius: var(--ck-r);
+  margin: 0;
+  overflow: hidden;
+}
+.rec { border-top: 2px solid var(--fam, var(--ck-line-2)); }
+.rec-head {
+  display: flex; justify-content: space-between; align-items: baseline; gap: var(--w3);
+  padding: var(--w2) var(--w3);
+  background: var(--ck-surface);
+  font-size: .76rem; color: var(--ck-text-faint);
+}
+.rec-auth { color: var(--fam); font-weight: 600; cursor: help; }
+.rec-body, .local-body, .fig {
+  margin: 0; padding: var(--w3);
+  font-family: var(--ck-font-mono); font-size: .8rem; line-height: 1.8;
+  direction: ltr; unicode-bidi: isolate; text-align: left;
+  overflow-x: auto; white-space: pre-wrap; word-break: break-word;
+  color: var(--ck-text);
+}
+.rec-foot {
+  padding: var(--w2) var(--w3);
+  border-top: var(--ck-border-w) solid var(--ck-line);
+  font-size: .78rem; color: var(--ck-text-faint);
+}
+.fig { color: var(--ck-text-dim); border-style: dashed; }
+
+.local { border: 0; display: grid; gap: var(--w2); }
+.local-tag { font-size: .76rem; color: var(--ck-text-faint); }
+
+/* ══ البوّابة ══ */
+.gate {
+  padding: var(--w4);
+  border: var(--ck-border-w) solid var(--ck-line-2);
+  border-radius: var(--ck-r);
+  background: var(--ck-surface);
+}
+.gate-ask { display: grid; gap: var(--w); margin: 0 0 var(--w3); }
+.gate-ask b { color: var(--ck-text); }
+.gate-ask span { font-size: .86rem; color: var(--ck-text-dim); }
+.gate-input {
+  width: 100%; padding: var(--w2);
+  font-family: var(--ck-font-mono); font-size: .8rem;
+  color: var(--ck-text); background: var(--ck-bg);
+  border: var(--ck-border-w) solid var(--ck-line-2); border-radius: var(--ck-r);
+  resize: vertical;
+}
+.gate-input::placeholder { font-family: var(--ck-font-body); }
+.gate-btn {
+  margin-top: var(--w3); padding: var(--w2) var(--w4);
+  font-size: .9rem; font-weight: 600;
+  color: var(--ck-bg); background: var(--ck-primary);
+  border: 0; border-radius: var(--ck-r);
+}
+.gate-btn:disabled { opacity: .4; cursor: not-allowed; }
+.gate-open { display: grid; gap: var(--w2); }
+.gate-foot { margin: 0; font-size: .8rem; color: var(--ck-text-faint); }
+.gate-mine { font-size: .84rem; color: var(--ck-text-dim); }
+.gate-mine summary { cursor: pointer; }
+.gate-mine pre {
+  margin-top: var(--w2); padding: var(--w2);
+  font-family: var(--ck-font-mono); font-size: .8rem;
+  background: var(--ck-surface); border: var(--ck-border-w) solid var(--ck-line);
+  border-radius: var(--ck-r);
+}
+
+/* ══ الانتقال: خطوةٌ واحدة أمامك تسمّي نفسها ══ */
+.pager {
+  display: flex; align-items: stretch; justify-content: space-between; gap: var(--w3);
+  margin-top: var(--w12); padding-top: var(--w6);
+  border-top: var(--ck-border-w) solid var(--ck-line);
+}
+.pager button {
+  display: flex; align-items: center; gap: var(--w2);
+  padding: var(--w2) var(--w4);
+  font-size: .88rem; color: var(--ck-text-dim);
+  background: none; border: var(--ck-border-w) solid var(--ck-line);
+  border-radius: var(--ck-r);
+  transition: border-color .15s, color .15s;
+}
+.pager button:hover:not(:disabled) { color: var(--ck-text); border-color: var(--ck-line-2); }
+.pager button:disabled { opacity: .3; cursor: not-allowed; }
+.pager-next {
+  flex: 1; justify-content: flex-end; text-align: left;
+  border-color: var(--ck-line-2) !important;
+}
+.pager-next span { display: grid; gap: 2px; }
+.pager-part { font-style: normal; font-size: .72rem; color: var(--ck-primary); }
+.pager-next b { font-weight: 600; color: var(--ck-text); }
+.pager-next:hover:not(:disabled) {
+  border-color: var(--ck-primary) !important;
+  box-shadow: 0 0 var(--w6) color-mix(in oklab, var(--ck-primary) 12%, transparent);
+}
+
+/* البذرة: الباب المفتوح على الإقليم التالي */
+.seed-door {
+  display: flex; align-items: baseline; justify-content: space-between; gap: var(--w4);
+  margin-top: var(--w12); padding: var(--w4) var(--w6);
+  text-decoration: none;
+  border: var(--ck-border-w) solid var(--ck-primary);
+  border-radius: var(--ck-r);
+  background: color-mix(in oklab, var(--ck-primary) 8%, transparent);
+  transition: box-shadow .18s;
+}
+.seed-door:hover { box-shadow: 0 0 var(--w8) color-mix(in oklab, var(--ck-primary) 18%, transparent); }
+.seed-door span { font-size: .78rem; color: var(--ck-primary); }
+.seed-door b { font-size: 1.05rem; }
+
+/* ══ الواجهة الأولى: تُبنى عرضاً ══ */
+.home { max-width: 1240px; margin: 0 auto; padding: var(--w12) var(--w6) var(--w16); }
+
+.open {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: var(--w16); align-items: center;
+  padding-bottom: var(--w16);
+  border-bottom: var(--ck-border-w) solid var(--ck-line);
+}
+.open-kick { margin: 0 0 var(--w4); font-size: .74rem; color: var(--ck-text-faint); }
+.open h1 {
+  margin: 0 0 var(--w4);
+  font-size: clamp(2.1rem, 3.6vw, 3.1rem); line-height: 1.3; text-wrap: balance;
+}
+.open h1 em {
+  font-style: normal; color: var(--ck-primary);
+  text-shadow: 0 0 var(--w6) color-mix(in oklab, var(--ck-primary) 35%, transparent);
+}
+.open-lead { margin: 0 0 var(--w3); font-size: 1.05rem; color: var(--ck-text-dim); text-wrap: pretty; }
+.open-lead b, .open-need b { color: var(--ck-text); font-weight: 700; }
+.open-need { margin: 0 0 var(--w8); font-size: .92rem; color: var(--ck-text-faint); }
+
+.open-run { display: grid; gap: var(--w2); }
+.open-out {
+  display: flex; align-items: flex-start; gap: var(--w3);
+  padding: var(--w2) var(--w3);
+  background: var(--ck-surface);
+  border: var(--ck-border-w) solid var(--ck-line);
+  border-inline-start: 3px solid var(--fam);
+  border-radius: var(--ck-r);
+}
+.open-out span { flex: none; font-size: .74rem; color: var(--ck-text-faint); padding-top: 3px; }
+.open-out pre {
+  flex: 1; margin: 0;
+  font-family: var(--ck-font-mono); font-size: .84rem;
+  direction: ltr; unicode-bidi: isolate; text-align: left; overflow-x: auto;
+  color: var(--ck-text);
+}
+.open-cap { margin: 0; font-size: .8rem; color: var(--ck-text-faint); }
+
+.go {
+  display: inline-block; padding: var(--w3) var(--w8);
+  font-weight: 700; text-decoration: none;
+  color: var(--ck-bg); background: var(--ck-primary);
+  border-radius: var(--ck-r);
+  box-shadow: 0 var(--w) var(--w4) color-mix(in oklab, var(--ck-primary) 22%, transparent);
+  transition: transform .18s, box-shadow .18s;
+}
+.go:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 var(--w2) var(--w8) color-mix(in oklab, var(--ck-primary) 32%, transparent);
+}
+
+.band { margin-top: var(--w16); }
+.band-h {
+  font-size: 1.15rem; margin: 0 0 var(--w3);
+  padding-bottom: var(--w2);
+  border-bottom: var(--ck-border-w) solid var(--ck-line);
+}
+.band-say { max-width: 68ch; margin: 0 0 var(--w8); color: var(--ck-text-dim); text-wrap: pretty; }
+
+/* ما تخرج به — ثلاثة أعمدة */
+.own { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: var(--w8); }
+.own article { display: grid; gap: var(--w2); align-content: start; }
+.own-n { font-size: .76rem; color: var(--ck-primary); }
+.own h3 { margin: 0; font-size: 1.02rem; line-height: 1.5; }
+.own p { margin: 0; font-size: .9rem; color: var(--ck-text-faint); text-wrap: pretty; }
+
+/* الأمثلة — شبكة عمودين */
+.works { display: grid; grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr)); gap: var(--w8); }
+.work { margin: 0; display: grid; gap: var(--w2); align-content: start; }
+.work-out {
+  display: flex; align-items: flex-start; gap: var(--w3);
+  padding: var(--w2) var(--w3);
+  background: var(--ck-surface);
+  border: var(--ck-border-w) solid var(--ck-line);
+  border-inline-start: 3px solid var(--fam);
+  border-radius: var(--ck-r);
+}
+.work-tag { flex: none; font-size: .74rem; color: var(--ck-text-faint); padding-top: 3px; }
+.work-out pre {
+  flex: 1; margin: 0;
+  font-family: var(--ck-font-mono); font-size: .8rem; line-height: 1.75;
+  direction: ltr; unicode-bidi: isolate; text-align: left; overflow-x: auto;
+}
+.work-from a {
+  display: flex; gap: var(--w2); align-items: baseline;
+  font-size: .8rem; color: var(--ck-text-faint); text-decoration: none;
+}
+.work-from a:hover { color: var(--ck-primary); }
+.work-num { font-family: var(--ck-font-mono); font-size: .74rem; color: var(--ck-primary); }
+
+/* البرهان — مصدرٌ ومخرَجٌ جنباً إلى جنب */
+.proof { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: var(--w6); align-items: start; }
+.proof-run { display: grid; gap: var(--w2); }
+.proof-flags { display: flex; }
+.proof-flags button {
+  flex: 1; display: grid; gap: 2px; justify-items: center;
+  padding: var(--w2) var(--w3);
+  font-size: .8rem; color: var(--ck-text-faint);
+  background: var(--ck-surface);
+  border: var(--ck-border-w) solid var(--ck-line);
+  transition: color .15s, background .15s;
+}
+.proof-flags button:first-child { border-radius: 0 var(--ck-r) var(--ck-r) 0; }
+.proof-flags button:last-child { border-radius: var(--ck-r) 0 0 var(--ck-r); }
+.proof-flags button + button { border-inline-start: 0; }
+.proof-flags button:hover { color: var(--ck-text-dim); }
+.proof-flags button[aria-pressed='true'] {
+  color: var(--ck-primary); background: var(--ck-surface-2); border-color: var(--ck-line-2);
+}
+.proof-when { font-size: .74rem; }
+.proof-out { display: block; font-size: 1.3rem; }
+.proof-say { grid-column: 1 / -1; margin: var(--w4) 0 0; color: var(--ck-text-dim); }
+.proof-say b { color: var(--ck-text); font-weight: 700; }
+.proof-fine { grid-column: 1 / -1; margin: 0; font-size: .8rem; color: var(--ck-text-faint); }
+
+/* الطريق — ثماني حِزَم. كلُّ حزمةٍ **صفٌّ عرضيّ**: عنوانها ثابتٌ يميناً
+   وأقاليمها تملأ ما بقي من العرض. والفاصل خطٌّ بين الحِزَم لا بين الأقاليم،
+   فيُقرأ الطريق ثمانيةً قبل أن يُقرأ تسعةً وعشرين. */
+.road { display: grid; gap: var(--w6); }
+.road-band {
+  display: grid; grid-template-columns: 14rem minmax(0, 1fr);
+  gap: var(--w6);
+  padding-top: var(--w6);
+  border-top: var(--ck-border-w) solid var(--ck-line);
+}
+.road-of { position: sticky; top: calc(var(--top-h) + var(--w4)); align-self: start; }
+.road-span {
+  font-size: .74rem; color: var(--ck-primary);
+  text-shadow: 0 0 var(--w3) color-mix(in oklab, var(--ck-primary) 40%, transparent);
+}
+.road-of h3 { font-size: 1.05rem; margin: var(--w) 0 var(--w2); text-wrap: balance; }
+.road-of p {
+  margin: 0; font-size: .82rem; line-height: 1.65;
+  color: var(--ck-text-faint); text-wrap: pretty;
+}
+.road-of code {
+  font-family: var(--ck-font-mono); direction: ltr; unicode-bidi: isolate;
+  font-size: .9em; color: var(--ck-text-dim);
+}
+
+.road-cards {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: var(--w2);
+}
+.road-cards li { border: var(--ck-border-w) solid var(--ck-line); border-radius: var(--ck-r); }
+.road-cards a {
+  display: grid; grid-template-columns: 3ch 1fr; gap: 2px var(--w3);
+  padding: var(--w3); text-decoration: none; height: 100%;
+}
+.road-cards li:hover { border-color: var(--ck-line-2); background: var(--ck-surface); }
+.road-num { font-family: var(--ck-font-mono); font-size: .78rem; color: var(--ck-text-faint); }
+.road-title { font-weight: 600; }
+.road-hook {
+  grid-column: 2; font-size: .82rem; line-height: 1.6;
+  color: var(--ck-text-faint); text-wrap: pretty;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden;
+}
+.road-here { border-color: var(--ck-primary) !important; }
+.road-here .road-num, .road-cards li:hover .road-num { color: var(--ck-primary); }
+
+/* ══ الضيّق ══ */
+@media (max-width: 62rem) {
+  .region { grid-template-columns: minmax(0, 1fr); gap: var(--w8); padding: var(--w8) var(--w4) var(--w16); }
+  .rail { position: static; max-height: none; }
+  .home { padding: var(--w8) var(--w4) var(--w16); }
+  .open { grid-template-columns: minmax(0, 1fr); gap: var(--w8); }
+  .proof { grid-template-columns: minmax(0, 1fr); }
+  .road-band { grid-template-columns: minmax(0, 1fr); gap: var(--w4); }
+  .road-of { position: static; }
+  .top { padding: 0 var(--w4); }
+  .ver { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, .reveal { animation: none !important; transition: none !important; }
+}

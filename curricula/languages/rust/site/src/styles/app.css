@@ -1,0 +1,392 @@
+/* ══ أساس ══ */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ck-bg);
+  color: var(--ck-text);
+  font-family: var(--ck-font-body);
+  font-size: 1rem;
+  line-height: 1.85;
+  -webkit-font-smoothing: antialiased;
+}
+
+.en {
+  font-family: var(--ck-font-mono);
+  direction: ltr;
+  unicode-bidi: isolate;
+  /* الرباطات مطفأة: الخطّ يحوّل `!=` إلى `≠`، فيعرض حرفاً لا يكتبه القارئ. */
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "calt" 0;
+}
+
+.num { font-variant-numeric: tabular-nums; }
+
+a { color: inherit; }
+
+button { font-family: inherit; cursor: pointer; }
+
+/* ══ الشريط العلوي ══ */
+.top {
+  position: sticky; top: 0; z-index: 20;
+  height: var(--top-h);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--w4);
+  padding: 0 var(--w6);
+  background: color-mix(in oklab, var(--ck-bg) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: var(--ck-border-w) solid var(--ck-line);
+}
+.brand { display: flex; align-items: baseline; gap: var(--w2); text-decoration: none; }
+.brand b { font-size: 1.05rem; color: var(--ck-primary); letter-spacing: -.02em; }
+.brand span { font-size: .82rem; color: var(--ck-text-faint); }
+.ver { font-family: var(--ck-font-mono); font-size: .72rem; color: var(--ck-text-faint);
+  direction: ltr; unicode-bidi: isolate; }
+
+.reveal { max-width: 1180px; margin: 0 auto; padding: var(--w12) var(--w6) var(--w16); }
+
+/* ══ الترويسة ══ */
+.hero { margin-bottom: var(--w16); }
+.hero .kicker { display: block; font-size: .74rem; color: var(--ck-text-faint);
+  letter-spacing: .04em; margin-bottom: var(--w4); }
+.hero h1 { font-size: clamp(2.4rem, 6.5vw, 4rem); line-height: 1.12; margin: 0 0 var(--w6);
+  letter-spacing: -.03em; font-weight: 800; }
+.hero h1 em { font-style: normal; color: var(--ck-primary); }
+.hero p { font-size: 1.1rem; color: var(--ck-text-dim); max-width: 62ch; margin: 0 0 var(--w4); }
+.hero p b { color: var(--ck-text); }
+.hero-need { font-size: .95rem !important; color: var(--ck-text-faint) !important; }
+.hero-need b { font-family: var(--ck-font-mono); font-weight: 600; color: var(--ck-text-dim) !important; }
+
+.resume {
+  display: inline-flex; align-items: center; gap: var(--w2); margin-top: var(--w4);
+  padding: var(--w3) var(--w6);
+  background: var(--ck-primary); color: var(--ck-bg);
+  border-radius: var(--ck-r); text-decoration: none; font-size: .92rem; font-weight: 700;
+  transition: transform .18s;
+}
+.resume:hover { transform: translateY(-2px); }
+.tally { margin-inline-start: var(--w4); font-size: .82rem; color: var(--ck-text-faint); }
+
+/* ══ مقياس الاستعارة ══ */
+.lab { margin-bottom: var(--w16); border: var(--ck-border-w) solid var(--ck-line);
+  border-radius: var(--ck-r); background: var(--ck-surface); overflow: hidden; }
+.lab-head { padding: var(--w6) var(--w6) 0; }
+.lab-tag { font-size: .68rem; letter-spacing: .1em; color: var(--ck-primary);
+  border: var(--ck-border-w) solid color-mix(in oklab, var(--ck-primary) 40%, transparent);
+  border-radius: var(--ck-r); padding: 2px var(--w2); }
+.lab-head h2 { font-size: 1.35rem; margin: var(--w4) 0 var(--w2); letter-spacing: -.02em; }
+.lab-head p { color: var(--ck-text-dim); font-size: .93rem; margin: 0; max-width: 64ch; }
+.lab-head p b { color: var(--ck-text); }
+
+.lab-body { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: var(--w6); padding: var(--w6); align-items: start; }
+
+.lab-lines { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--w2); }
+.lab-lines li { position: relative; display: grid;
+  grid-template-columns: var(--w3) minmax(0, 1fr) auto auto; align-items: center; gap: var(--w3);
+  padding: var(--w2) var(--w3); background: var(--ck-surface-2);
+  border: var(--ck-border-w) solid var(--ck-line); border-radius: var(--ck-r); }
+.lab-lines code { font-size: .82rem; color: var(--ck-text); }
+.lab-fixed { opacity: .6; }
+.lab-role { font-style: normal; font-size: .72rem; color: var(--ck-text-faint); }
+
+/* عمر الاستعارة مرسوماً: شريطٌ يمتدّ من إنشائها إلى آخر استعمالها */
+.lab-span { width: 3px; height: 100%; min-height: var(--w6); border-radius: var(--ck-r);
+  background: var(--ck-line-2); }
+li[data-live] .lab-span { background: var(--v-shared); }
+li[data-role="B"] .lab-span { background: var(--v-exclusive); }
+li[data-role="B"][data-live] .lab-span { background: var(--j-reject); }
+
+.lab-move { display: flex; flex-direction: column; }
+.lab-move button { background: none; border: 0; color: var(--ck-text-faint); padding: 0 var(--w); }
+.lab-move button:hover:not(:disabled) { color: var(--ck-primary); }
+.lab-move button:disabled { opacity: .25; cursor: default; }
+
+.lab-verdict { padding: var(--w4); border-radius: var(--ck-r);
+  border: var(--ck-border-w) solid color-mix(in oklab, var(--j-reject) 45%, var(--ck-line));
+  background: color-mix(in oklab, var(--j-reject) 7%, transparent); }
+.lab-verdict[data-ok] { border-color: color-mix(in oklab, var(--j-accept) 45%, var(--ck-line));
+  background: color-mix(in oklab, var(--j-accept) 7%, transparent); }
+.lab-verdict b { display: block; font-size: .9rem; color: var(--j-reject); margin-bottom: var(--w2); }
+.lab-verdict[data-ok] b { color: var(--j-accept); }
+.lab-verdict pre { margin: 0; font-size: .76rem; line-height: 1.7; white-space: pre-wrap;
+  color: var(--ck-text-dim); }
+.lab-src { display: block; margin-top: var(--w3); font-size: .68rem; color: var(--ck-text-faint); }
+
+/* ══ الحُرّاس ══ */
+.guards { margin-bottom: var(--w16); }
+.guards h2, .map h2 { font-size: 1.45rem; margin: 0 0 var(--w2); letter-spacing: -.02em; }
+.guards .sub { color: var(--ck-text-dim); font-size: .95rem; margin: 0 0 var(--w6); max-width: 70ch; }
+.guards .sub b { color: var(--ck-text); }
+.guards ol { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--w2); }
+.guards li { background: var(--ck-surface); border: var(--ck-border-w) solid var(--ck-line);
+  border-inline-start: 3px solid color-mix(in oklab, var(--ck-primary) 45%, transparent);
+  border-radius: var(--ck-r); }
+.guards li[data-on] { border-color: color-mix(in oklab, var(--ck-primary) 55%, var(--ck-line));
+  border-inline-start-color: var(--ck-primary); }
+
+.guard-face { width: 100%; display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto; gap: var(--w4); align-items: center;
+  padding: var(--w4); background: none; border: 0; color: inherit; text-align: start; }
+.guard-face i { font-style: normal; font-size: 1.9rem; font-weight: 700;
+  color: var(--ck-primary); opacity: .5; min-width: var(--w6); line-height: 1; }
+.guard-head b { display: block; font-size: 1.02rem; line-height: 1.5; }
+.guard-falls { display: flex; flex-wrap: wrap; gap: var(--w) var(--w3); margin-top: var(--w); }
+.guard-falls em { font-style: normal; font-size: .8rem; color: var(--ck-text-faint); }
+.guard-codes { display: flex; gap: var(--w2); }
+.guard-codes code { font-size: .72rem; padding: 2px var(--w2); border-radius: var(--ck-r);
+  color: var(--j-reject); background: color-mix(in oklab, var(--j-reject) 10%, transparent);
+  border: var(--ck-border-w) solid color-mix(in oklab, var(--j-reject) 30%, transparent); }
+.guard-none { font-size: .72rem; color: var(--ck-text-faint); }
+.guard-chev { color: var(--ck-text-faint); transition: transform .2s; }
+li[data-on] .guard-chev { transform: rotate(180deg); color: var(--ck-primary); }
+
+.guard-body { padding: 0 var(--w4) var(--w4); }
+.guard-body > .prose { max-width: 72ch; padding-top: var(--w3);
+  border-top: var(--ck-border-w) solid var(--ck-line); }
+.guard-list { list-style: none; margin: var(--w4) 0 0; padding: 0; display: grid; gap: var(--w); }
+.guard-list li { display: grid; grid-template-columns: minmax(0, 6rem) minmax(0, 1fr);
+  gap: var(--w3); padding: var(--w2) var(--w3); background: var(--ck-surface-2);
+  border: 0; border-radius: var(--ck-r); font-size: .86rem; }
+.guard-list code { color: var(--j-reject); font-size: .78rem; }
+.guard-list span { color: var(--ck-text-dim); }
+.guard-go { display: inline-flex; align-items: center; gap: var(--w2); margin-top: var(--w4);
+  color: var(--ck-primary); text-decoration: none; font-size: .88rem; font-weight: 600; }
+.guard-go:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+/* ══ الطريق ══ */
+.map { margin-bottom: var(--w12); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(285px, 1fr));
+  gap: var(--w3); margin-top: var(--w6); }
+.card { display: block; padding: var(--w4); background: var(--ck-surface);
+  border: var(--ck-border-w) solid var(--ck-line); border-radius: var(--ck-r);
+  text-decoration: none; transition: border-color .2s, transform .2s; }
+.card:hover { border-color: var(--ck-primary); transform: translateY(-3px); }
+.card i { font-style: normal; font-size: 1.4rem; font-weight: 700; color: var(--ck-primary); opacity: .5; }
+.card b { display: block; margin: var(--w2) 0; font-size: 1rem; }
+.card-hook { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden; font-size: .85rem; line-height: 1.7; color: var(--ck-text-faint); }
+.card-hook code { font-size: .8em; }
+.card-seen { display: inline-flex; align-items: center; gap: var(--w); margin-top: var(--w3);
+  font-style: normal; font-size: .74rem; color: var(--ck-primary-soft); }
+.card.lock { border-style: dashed; background: none; cursor: not-allowed; }
+.card.lock i { color: var(--ck-text-faint); }
+.map-note { margin-top: var(--w4); font-size: .84rem; color: var(--ck-text-faint); }
+
+/* ══ المقدّمة المطويّة ══ */
+.intro details { border-top: var(--ck-border-w) solid var(--ck-line); padding: var(--w3) 0; }
+.intro summary { cursor: pointer; font-weight: 600; font-size: .95rem; }
+.intro .prose { padding-top: var(--w3); color: var(--ck-text-dim); font-size: .92rem; }
+
+/* ══ الإقليم ══ */
+.region { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: var(--w12); }
+.rail { position: sticky; top: calc(var(--top-h) + var(--w6)); align-self: start; max-height: 70vh;
+  overflow-y: auto; }
+.doc { min-width: 0; max-width: 74ch; }
+.doc-head { margin-bottom: var(--w6); }
+.kicker { display: block; font-size: .76rem; color: var(--ck-text-faint); margin-bottom: var(--w2); }
+.kicker .sep { margin: 0 var(--w2); color: var(--ck-primary); }
+.doc h1 { font-size: clamp(1.6rem, 3.4vw, 2.2rem); line-height: 1.3; margin: 0;
+  letter-spacing: -.02em; }
+
+.lead { border-inline-start: 3px solid var(--ck-primary); padding-inline-start: var(--w4);
+  margin-bottom: var(--w8); color: var(--ck-text-dim); }
+.part-lead { margin-bottom: var(--w8); color: var(--ck-text-dim); }
+
+/* ══ الأثر ══ */
+.trail h4 { font-size: .74rem; color: var(--ck-text-faint); letter-spacing: .06em;
+  margin: 0 0 var(--w4); }
+.trail ol { list-style: none; margin: 0; padding: 0; }
+.trail li { margin-bottom: var(--w); }
+.trail-part { display: block; font-size: .7rem; color: var(--ck-primary); margin: var(--w4) 0 var(--w2); }
+.trail button { display: flex; align-items: baseline; gap: var(--w2); width: 100%;
+  background: none; border: 0; color: var(--ck-text-faint); font-size: .8rem; text-align: start;
+  padding: var(--w) 0; line-height: 1.5; }
+.trail button:hover { color: var(--ck-text-dim); }
+.trail li[data-on] button { color: var(--ck-primary); font-weight: 600; }
+.trail button i { font-style: normal; color: var(--ck-line-2); }
+.trail li[data-on] button i { color: var(--ck-primary); }
+.trail-sum { margin-top: var(--w4); font-size: .74rem; color: var(--ck-text-faint); }
+
+/* ══ النثر ══ */
+.prose p { margin: 0 0 var(--w4); }
+.prose h3 { font-size: 1.05rem; margin: var(--w8) 0 var(--w3); color: var(--ck-primary-soft); }
+.prose h4 { font-size: .95rem; margin: var(--w6) 0 var(--w2); color: var(--ck-text-dim); }
+.prose ul, .prose ol { padding-inline-start: var(--w6); margin: 0 0 var(--w4); }
+.prose li { margin-bottom: var(--w2); }
+.prose li::marker { color: var(--ck-primary); }
+.prose strong { color: var(--ck-text); font-weight: 700; }
+.prose em { color: var(--ck-primary-soft); font-style: normal; }
+.prose a { color: var(--ck-primary); }
+.prose blockquote { margin: 0 0 var(--w4); padding: var(--w3) var(--w4);
+  border-inline-start: 3px solid var(--v-shared);
+  background: color-mix(in oklab, var(--v-shared) 6%, transparent); color: var(--ck-text-dim); }
+.prose blockquote p:last-child { margin: 0; }
+.prose :is(p, li, td, h3, h4) code {
+  font-family: var(--ck-font-mono); font-size: .84em; direction: ltr; unicode-bidi: isolate;
+  padding: 1px var(--w); border-radius: var(--ck-r);
+  background: var(--ck-surface-2); color: var(--ck-primary-soft); }
+.prose table { width: 100%; border-collapse: collapse; margin: var(--w4) 0; font-size: .88rem;
+  font-variant-numeric: tabular-nums; }
+.prose :is(th, td) { text-align: start; padding: var(--w2) var(--w3);
+  border-bottom: var(--ck-border-w) solid var(--ck-line); vertical-align: top; }
+.prose th { background: var(--ck-surface-2); color: var(--ck-primary-soft); font-size: .78rem;
+  font-weight: 600; }
+.prose hr { border: 0; height: var(--ck-border-w); background: var(--ck-line); margin: var(--w8) 0; }
+
+/* ══ البلوكات ══ */
+.code, .rec, .rej, .local { margin: 0 0 var(--w6); border-radius: var(--ck-r); overflow: hidden;
+  border: var(--ck-border-w) solid var(--ck-line); }
+.code-head, .rec-head, .rej-head {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--w3);
+  padding: var(--w2) var(--w3); background: var(--ck-surface-2);
+  border-bottom: var(--ck-border-w) solid var(--ck-line); font-size: .72rem; }
+.code-lang { color: var(--ck-text-faint); }
+.code-copy { display: inline-flex; align-items: center; gap: var(--w); background: none; border: 0;
+  color: var(--ck-text-faint); font-size: .72rem; }
+.code-copy:hover { color: var(--ck-primary); }
+pre { margin: 0; overflow-x: auto; }
+.code-body, .rec-body, .rej-body, .local-body, .figure {
+  padding: var(--w4); font-size: .82rem; line-height: 1.75; }
+.code-body { background: var(--ck-surface); }
+
+/* ══ توكنة الكود ══
+   الأصناف من `classHighlighter` في العدّة (ميكانيزم)، والألوان من هنا (مظهر).
+   وخمس عائلات لا أكثر: كلمةٌ محجوزة · نوع · نصّ · عدد · تعليق — وما عداها
+   يبقى بلون النصّ، لأن تلوين كل شيء تلوينٌ لا شيء. */
+.code-body .tok-keyword,
+.code-body .tok-controlKeyword,
+.code-body .tok-moduleKeyword,
+.code-body .tok-modifier,
+.code-body .tok-self { color: var(--ck-primary); }
+
+.code-body .tok-typeName,
+.code-body .tok-className,
+.code-body .tok-namespace,
+.code-body .tok-standard { color: var(--ck-primary-soft); }
+
+.code-body .tok-string,
+.code-body .tok-character { color: var(--ck-ok); }
+
+.code-body .tok-number,
+.code-body .tok-bool,
+.code-body .tok-atom,
+.code-body .tok-constant { color: var(--ck-warn); }
+
+.code-body .tok-comment,
+.code-body .tok-lineComment,
+.code-body .tok-blockComment,
+.code-body .tok-docComment { color: var(--ck-text-faint); font-style: italic; }
+
+.code-body .tok-function,
+.code-body .tok-macroName,
+.code-body .tok-meta,
+.code-body .tok-attributeName { color: var(--ck-secondary); }
+
+.code-body .tok-operator,
+.code-body .tok-punctuation,
+.code-body .tok-derefOperator,
+.code-body .tok-separator { color: var(--ck-text-dim); }
+
+.code-body .tok-invalid { color: var(--ck-danger); }
+
+/* رمز العمر `'a` — علامةُ هذا المنهج، فله لون الحالة المستعارة */
+.code-body .tok-variableName2,
+.code-body .tok-labelName { color: var(--v-shared); }
+
+.rec { border-color: color-mix(in oklab, var(--j-accept) 25%, var(--ck-line)); }
+.rec-tag { color: var(--j-accept); }
+.rec-src { color: var(--ck-text-faint); }
+.rec-body { background: color-mix(in oklab, var(--j-accept) 4%, transparent); color: var(--ck-text); }
+.rec-foot { padding: var(--w2) var(--w3); font-size: .74rem; color: var(--ck-text-faint);
+  border-top: var(--ck-border-w) solid var(--ck-line); }
+.rec-mine { padding: var(--w2) var(--w3); border-top: var(--ck-border-w) solid var(--ck-line); }
+.rec-mine summary { font-size: .76rem; color: var(--ck-text-faint); cursor: pointer; }
+.rec-mine pre { margin-top: var(--w2); font-size: .78rem; color: var(--ck-text-dim); }
+
+/* رفض المترجم — نصف ما يُدرَّس هنا، فله بلوكه لا لونٌ على المخرَج */
+.rej { border-color: color-mix(in oklab, var(--j-reject) 35%, var(--ck-line)); }
+.rej-tag { color: var(--j-reject); font-weight: 600; }
+.rej-code { color: var(--j-reject); font-size: .72rem; }
+.rej-body { background: color-mix(in oklab, var(--j-reject) 5%, transparent); color: var(--ck-text-dim); }
+.rej-foot { padding: var(--w2) var(--w3); font-size: .74rem; color: var(--ck-text-faint);
+  border-top: var(--ck-border-w) solid var(--ck-line); }
+.rej-foot code { color: var(--ck-text-dim); }
+
+.local { border-style: dashed; }
+.local-tag { display: flex; align-items: center; gap: var(--w2); padding: var(--w2) var(--w3);
+  font-size: .72rem; color: var(--ck-text-faint);
+  border-bottom: var(--ck-border-w) solid var(--ck-line); }
+.local-body { background: none; color: var(--ck-text-dim); }
+
+.figure { background: var(--ck-surface); border: var(--ck-border-w) solid var(--ck-line);
+  border-radius: var(--ck-r); margin-bottom: var(--w6); color: var(--ck-text-dim);
+  font-family: var(--ck-font-mono); }
+
+/* ══ البوّابة ══ */
+.gate { margin: 0 0 var(--w6); padding: var(--w4); border-radius: var(--ck-r);
+  border: var(--ck-border-w) dashed color-mix(in oklab, var(--v-exclusive) 45%, var(--ck-line));
+  background: color-mix(in oklab, var(--v-exclusive) 5%, transparent); }
+.gate-ask b { display: block; font-size: .95rem; }
+.gate-ask span { display: block; font-size: .82rem; color: var(--ck-text-faint); margin-top: var(--w); }
+.gate-input { width: 100%; margin-top: var(--w3); padding: var(--w3); resize: vertical;
+  background: var(--ck-bg); color: var(--ck-text);
+  border: var(--ck-border-w) solid var(--ck-line); border-radius: var(--ck-r);
+  font-size: .82rem; line-height: 1.7; }
+.gate-btn { margin-top: var(--w3); padding: var(--w2) var(--w4); border: 0; border-radius: var(--ck-r);
+  background: var(--v-exclusive); color: var(--ck-bg); font-size: .85rem; font-weight: 700; }
+.gate-btn:disabled { opacity: .4; cursor: default; }
+
+/* ══ التنقّل ══ */
+.pager { display: flex; justify-content: space-between; gap: var(--w4); margin-top: var(--w12);
+  padding-top: var(--w6); border-top: var(--ck-border-w) solid var(--ck-line); }
+.pager button { display: inline-flex; align-items: center; gap: var(--w2);
+  background: none; border: var(--ck-border-w) solid var(--ck-line); border-radius: var(--ck-r);
+  color: var(--ck-text-dim); padding: var(--w3) var(--w4); font-size: .86rem; }
+.pager button:hover:not(:disabled) { border-color: var(--ck-primary); color: var(--ck-text); }
+.pager button:disabled { opacity: .3; cursor: default; }
+.pager-next { text-align: start; }
+.pager-next b { display: block; font-weight: 600; }
+.pager-part { display: block; font-style: normal; font-size: .72rem; color: var(--ck-primary); }
+
+.seed-door { display: block; margin-top: var(--w12); padding: var(--w6);
+  border: var(--ck-border-w) solid var(--ck-primary); border-radius: var(--ck-r);
+  text-decoration: none; background: color-mix(in oklab, var(--ck-primary) 7%, transparent); }
+.seed-door span { display: flex; align-items: center; gap: var(--w2);
+  font-size: .76rem; color: var(--ck-text-faint); }
+.seed-door b { display: block; margin-top: var(--w2); font-size: 1.15rem; color: var(--ck-primary); }
+.seed-door.sealed { border-style: dashed; border-color: var(--ck-line-2); background: none; }
+.seed-door.sealed b { color: var(--ck-text-dim); font-size: 1rem; }
+
+/* ══ الضيّق ══ */
+@media (max-width: 900px) {
+  .region { grid-template-columns: 1fr; gap: var(--w8); }
+  .rail { position: static; max-height: none; }
+  .lab-body { grid-template-columns: 1fr; }
+  .reveal { padding: var(--w8) var(--w4) var(--w12); }
+  .top { padding: 0 var(--w4); }
+  .guard-face { grid-template-columns: auto minmax(0, 1fr) auto; }
+  .guard-codes { display: none; }
+}
+
+/* ══ «ما توقّعتَه» ══════════════════════════════════════════════════════════
+   أثرُ القارئ لا درجته: التوقّع فوق المخرَج المسجَّل، بلا نسبةٍ ولا صواب/خطأ.
+   والحدّ من عائلة «المستعارة للتعديل» — فالبوّابة موضعُ ادّعاءٍ قابله دليل. */
+.gap { padding: var(--w12) 0 0; border-top: 1px solid var(--ck-line); }
+.gap h2 { font-size: 20px; margin-bottom: var(--w); }
+.gap-note { color: var(--ck-text-faint); font-size: 14px; margin: 0 0 var(--w6); }
+.gap ol { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--w3); }
+.gap li {
+  padding: var(--w4);
+  background: var(--ck-surface);
+  border: var(--ck-border-w) solid var(--ck-line);
+  border-inline-start: 2px solid var(--v-exclusive);
+  border-radius: var(--ck-r);
+}
+.gap .where { display: flex; align-items: baseline; gap: var(--w2); text-decoration: none; color: inherit; }
+.gap .where:hover b { color: var(--ck-primary); }
+.gap .where i { color: var(--ck-text-faint); font-size: 12px; font-style: normal; }
+.gap .where b { font-weight: 700; font-size: 15px; }
+.gap .mine { margin: var(--w3) 0; color: var(--ck-text-dim); font-size: 14px; }
+.gap .mine span { color: var(--ck-text-faint); font-size: 12px; padding-inline-end: var(--w2); }
+.gap pre.rec-body { margin: 0; }

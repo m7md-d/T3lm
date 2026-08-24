@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- وَرَقٌ وأرضٌ باردة، والحدُّ بينهما المترجم. -->
+  <rect width="32" height="32" fill="#020403"/>
+  <rect width="15" height="32" fill="#000000"/>
+  <rect x="15" width="1.5" height="32" fill="#3ee87b"/>
+  <g fill="#d9e6dc">
+    <rect x="19" y="11" width="10" height="2"/>
+    <rect x="19" y="15" width="7" height="2"/>
+    <rect x="19" y="19" width="9" height="2"/>
+  </g>
+  <g fill="#c9dc4b">
+    <rect x="3" y="14.5" width="2.4" height="2.4"/>
+    <rect x="6.6" y="14.5" width="2.4" height="2.4"/>
+    <rect x="10.2" y="14.5" width="2.4" height="2.4" opacity=".45"/>
+  </g>
+</svg>

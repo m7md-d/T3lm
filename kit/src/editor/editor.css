@@ -1,0 +1,77 @@
+/* بنية المحرّر — **بلا قيمة لون واحدة**. كلها متغيّرات يعرّفها المنهج
+   (أو استورد presets/vscode-dark.css). */
+
+.ck-editor {
+  direction: ltr;
+  unicode-bidi: isolate;
+  border: var(--ck-ed-border) solid var(--ck-ed-chrome-line);
+  border-radius: var(--ck-ed-r);
+  overflow: hidden;
+  background: var(--ck-ed-bg);
+  font-family: var(--ck-ed-font);
+}
+
+/* الإطار (أزرار، اسم، ملاحظة) نصٌّ بشريّ قد يكون عربياً، والخطّ الأحاديّ يفكّ
+   وصل حروفه. فالأحاديّ لسطح الكود وحده، والإطار يرث خطّ الصفحة. */
+.ck-ed-bar, .ck-ed-notice { font-family: var(--ck-ed-ui-font); }
+
+.ck-ed-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: .5rem; padding: .3rem .5rem;
+  background: var(--ck-ed-chrome-bg); color: var(--ck-ed-chrome-fg);
+  border-bottom: var(--ck-ed-border) solid var(--ck-ed-chrome-line);
+}
+.ck-ed-name { display: inline-flex; align-items: center; gap: .45rem;
+  font-size: .78rem; opacity: .8; padding-inline-start: .3rem; }
+
+/* وسم المسودّة: القارئ يجب أن يعرف أن المعروض كتابتُه لا كود المؤلّف */
+.ck-ed-draft {
+  font-size: .72rem; line-height: 1.5; padding: 0 .4em; opacity: .95;
+  color: var(--ck-ed-accent);
+  border: var(--ck-ed-border) solid currentColor; border-radius: var(--ck-ed-r-sm);
+}
+.ck-ed-actions { display: flex; gap: .3rem; }
+
+.ck-ed-btn {
+  display: inline-flex; align-items: center; gap: .35rem;
+  font-family: inherit; font-size: .78rem; line-height: 1.6;
+  padding: .18rem .55rem; border-radius: var(--ck-ed-r-sm); cursor: pointer;
+  background: transparent; color: var(--ck-ed-chrome-fg);
+  border: var(--ck-ed-border) solid var(--ck-ed-chrome-line); text-decoration: none;
+  transition: background .12s, border-color .12s;
+}
+.ck-ed-btn:hover { border-color: var(--ck-ed-accent); }
+.ck-ed-btn[disabled] { opacity: .55; cursor: default; }
+.ck-ed-btn[data-on] { color: var(--ck-ed-accent); border-color: currentColor; }
+/* الأيقونة تتبع حجم النصّ وتُحاذيه بصرياً — والمنهج هو من يمرّرها */
+.ck-ed-btn svg { width: 1em; height: 1em; flex: none; }
+.ck-ed-run { background: var(--ck-ed-accent); color: var(--ck-ed-accent-fg); border-color: transparent; }
+.ck-ed-btn kbd {
+  font: inherit; font-size: .9em; opacity: .65;
+  border: var(--ck-ed-border) solid currentColor;
+  border-radius: var(--ck-ed-r-sm); padding: 0 .2rem;
+}
+
+.ck-editor-host { max-height: 60vh; overflow: auto; }
+
+/* تحذير الصدق: يظهر **قبل** المخرَج لا بعده. الإنذار بعد بناء الاعتقاد لا ينفع. */
+.ck-ed-notice {
+  margin: 0; padding: .45rem .7rem; font-size: .78rem; line-height: 1.7;
+  color: var(--ck-ed-chrome-fg); background: var(--ck-ed-chrome-bg);
+  border-top: var(--ck-ed-border) solid var(--ck-ed-chrome-line);
+  border-inline-start: 3px solid var(--ck-ed-warn, var(--ck-ed-accent));
+}
+.ck-ed-notice b { color: var(--ck-ed-warn, var(--ck-ed-accent)); font-weight: 600; }
+
+.ck-ed-out { border-top: var(--ck-ed-border) solid var(--ck-ed-chrome-line); }
+
+/* ── وضع العرض فقط ──
+   مقطعٌ ليس برنامجاً كاملاً: تشغيله وحده بلا معنى، وتحريره يوحي بما لا يُمكن.
+   فيُجرَّد من كل ما يَعِد بتفاعل، ويبقى نسخٌ فقط. */
+.ck-ed-view { background: var(--ck-ed-chrome-bg); }
+.ck-ed-view .ck-ed-bar { background: transparent; border-bottom: 0; padding-bottom: 0; }
+.ck-ed-view .ck-ed-name { opacity: .55; }
+.ck-ed-view .ck-editor-host { opacity: .92; }
+.ck-ed-view .cm-activeLine,
+.ck-ed-view .cm-activeLineGutter { background: transparent; }
+.ck-ed-view .cm-cursor { display: none !important; }

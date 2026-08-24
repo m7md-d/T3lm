@@ -1,0 +1,32 @@
+<!doctype html>
+<!-- بطاقة المشاركة: رفضٌ حقيقيّ من المترجم — مادّةُ التدريس في هذا المنهج. -->
+<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../public/fonts/fonts.css">
+<style>
+  :root{--bg:#100c0a;--surface:#1a1512;--line:#2f2620;--ink:#e8ded6;--dim:#a89689;
+        --faint:#7a6a5f;--rust:#e07a3f;--reject:#d95a5a}
+  *{margin:0;box-sizing:border-box}
+  body{width:1200px;height:630px;background:var(--bg);color:var(--ink);
+       font-family:'Tajawal',system-ui,sans-serif;padding:64px 72px;
+       display:flex;flex-direction:column;justify-content:center;gap:34px}
+  h1{font-size:70px;font-weight:800;letter-spacing:-1px}
+  h1 .amp{font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:700;font-size:62px;
+          color:var(--rust);padding-left:22px;direction:ltr;unicode-bidi:isolate}
+  p{font-size:29px;color:var(--dim);font-weight:400;max-width:900px;line-height:1.6}
+  .err{direction:ltr;unicode-bidi:isolate;background:var(--surface);border:1px solid var(--line);
+       border-inline-start:3px solid var(--reject);border-radius:2px;padding:22px 26px;
+       font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:18.5px;line-height:1.8;color:var(--dim)}
+  .err b{color:var(--reject);font-weight:600}
+  .err i{color:var(--faint);font-style:normal}
+  .foot{display:flex;align-items:center;gap:16px;font-size:23px;color:var(--faint);
+        font-family:'IBM Plex Mono',ui-monospace,monospace;direction:ltr}
+  .dot{width:9px;height:9px;background:var(--rust);border-radius:50%}
+</style></head><body>
+  <h1><span class="amp">Rust</span>ما يثبته المترجم</h1>
+  <p>المِلكية والاستعارة والأعمار ونظام السمات — لمن يعرف C ولم يكتب Rust.</p>
+  <div class="err">
+<b>error[E0502]</b>: cannot borrow `v` as mutable because it is also borrowed as immutable<br>
+<i>&nbsp;--&gt; src/main.rs:4:5</i>
+  </div>
+  <div class="foot"><span class="dot"></span><span>rust.nodeksa.com</span></div>
+</body></html>

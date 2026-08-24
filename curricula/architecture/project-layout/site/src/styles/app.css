@@ -1,0 +1,329 @@
+/**
+ * أنماط «الهيكلة» — **تحيل ولا تعرّف**. كل لونٍ من `tokens.css`.
+ *
+ * والموتيف خطُّ الحدّ: فاصلٌ رأسيّ يفصل الداخل عن الخارج، ويتكرّر في الترويسة
+ * وفي الشجرة وفي بطاقتَي «يستفيد/مضادّ».
+ */
+
+/* ── الأساس ── */
+html { background: var(--bg); }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-weight: 300;
+  line-height: 1.85;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.en, code, pre, kbd {
+  font-family: var(--mono);
+  direction: ltr;
+  unicode-bidi: isolate;
+  font-variant-numeric: tabular-nums;
+  /* الرباطات مطفأة: الخطّ يحوّل `!=` إلى `≠`، فيعرض حرفاً لا يكتبه القارئ. */
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "calt" 0;
+}
+.ar { font-family: var(--sans); direction: rtl; unicode-bidi: isolate; }
+
+a { color: inherit; text-decoration: none; }
+h1, h2, h3 { font-weight: 600; line-height: 1.4; margin: 0; }
+
+/* ── الترويسة ── */
+.top {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px clamp(16px, 4vw, 40px);
+  background: color-mix(in oklab, var(--bg) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.brand { display: flex; align-items: baseline; gap: 10px; }
+.brand b { font-size: 18px; font-weight: 700; }
+.brand span { color: var(--ink-3); font-size: 13px; }
+.top .rule { flex: 1; height: 1px; background: linear-gradient(to left, var(--edge-line), transparent); }
+
+/* ── الواجهة ── */
+.home, .region { max-width: 1080px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 40px) 100px; }
+
+.hero { padding: 72px 0 40px; border-bottom: 1px solid var(--line); }
+.hero h1 { font-size: clamp(30px, 5.2vw, 52px); font-weight: 700; letter-spacing: -0.01em; }
+.hero .tag { max-width: 62ch; color: var(--ink-2); margin: 18px 0 0; font-size: 17px; }
+.hero .tag.dim { color: var(--ink-3); font-size: 15px; margin-top: 10px; }
+
+.concerns { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 28px 0 0; padding: 0; }
+.concerns li {
+  display: flex; align-items: baseline; gap: 8px;
+  padding: 6px 10px; border: 1px solid var(--line-2); border-radius: var(--r);
+  background: var(--bg-2);
+}
+.concerns span { color: var(--in); font-size: 13px; font-weight: 500; }
+.concerns em { color: var(--ink-3); font-size: 13px; font-style: normal; }
+
+/* ── المبادئ ── */
+.principles { padding: 52px 0; border-bottom: 1px solid var(--line); }
+.principles h2 { font-size: 22px; margin-bottom: 22px; }
+.principles ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.principles li {
+  display: grid; grid-template-columns: 34px 1fr; gap: 2px 14px;
+  padding: 14px 16px; background: var(--bg-2);
+  border-inline-start: 2px solid var(--line-2);
+}
+.principles li:hover { border-inline-start-color: var(--edge-line); }
+.principles .pn { grid-row: span 2; color: var(--ink-3); font-size: 20px; font-weight: 600; }
+.principles b { font-weight: 500; font-size: 17px; }
+.principles em { color: var(--ink-3); font-style: normal; font-size: 14px; }
+
+/* ── المقارنة ── */
+.compare { padding: 52px 0; border-bottom: 1px solid var(--line); }
+.compare h2 { font-size: 22px; }
+.compare .sub { color: var(--ink-2); max-width: 60ch; margin: 10px 0 22px; font-size: 15px; }
+.pickers { display: grid; gap: 8px; margin-bottom: 22px; }
+.picker { display: flex; flex-wrap: wrap; gap: 6px; }
+.picker button {
+  font-size: 12px; padding: 5px 9px; cursor: pointer;
+  background: var(--bg-2); color: var(--ink-3);
+  border: 1px solid var(--line-2); border-radius: var(--r);
+}
+.picker button.on { color: var(--bg); background: var(--edge-line); border-color: var(--edge-line); font-weight: 700; }
+
+table.cmp, table.changes { width: 100%; border-collapse: collapse; font-size: 14px; }
+table.cmp th, table.cmp td, table.changes th, table.changes td {
+  text-align: start; padding: 8px 12px; border-bottom: 1px solid var(--line);
+}
+table.cmp thead th { color: var(--ink-3); font-weight: 500; font-size: 13px; }
+table.cmp tbody th, table.changes tbody th { font-weight: 400; color: var(--ink-2); }
+table.cmp td, table.changes td.val { color: var(--ink); }
+.cmp .flipline td.flip, .gauges .flip dd { color: var(--in); font-weight: 600; }
+.cmp .chg th, .changes .cid { color: var(--ink-3); }
+.cid { font-size: 12px; padding-inline-end: 4px; }
+.compare .foot { color: var(--ink-3); font-size: 13px; margin-top: 12px; }
+
+/* ── الطريق: شجرةُ مجلّدات ── */
+.map { padding: 52px 0; }
+.map h2 { font-size: 22px; margin-bottom: 18px; }
+.road { display: grid; }
+.road .root { color: var(--ink-3); font-size: 13px; padding-bottom: 6px; }
+.stop {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 190px) 1fr auto;
+  align-items: baseline; gap: 12px;
+  padding: 9px 10px 9px 0;
+  border-inline-start: 1px solid var(--line-2);
+  margin-inline-start: 14px;
+  position: relative;
+}
+.stop::before {
+  content: ''; position: absolute; inset-inline-start: 0; top: 50%;
+  width: 10px; height: 1px; background: var(--line-2);
+}
+.stop:hover { background: var(--bg-2); border-inline-start-color: var(--edge-line); }
+.stop .num { color: var(--ink-3); font-size: 13px; padding-inline-start: 14px; }
+.stop b { font-weight: 500; font-size: 15px; }
+.stop .hook { color: var(--ink-3); font-size: 13px; line-height: 1.6; }
+.stop .seen { color: var(--in); font-size: 12px; font-style: normal; }
+.stop.locked { opacity: 0.45; }
+.stop.locked b::after { content: ' ·'; }
+.map-note, .resume { color: var(--ink-3); font-size: 13px; margin-top: 16px; }
+.resume a { color: var(--edge-line); border-bottom: 1px solid currentColor; }
+
+/* ── التفاصيل المطويّة ── */
+.intro { padding-top: 16px; display: grid; gap: 2px; }
+.intro details { background: var(--bg-2); border-inline-start: 2px solid var(--line-2); }
+.intro summary { cursor: pointer; padding: 12px 16px; font-size: 15px; color: var(--ink-2); }
+.intro details[open] { border-inline-start-color: var(--edge-line); }
+.intro .prose { padding: 0 16px 16px; }
+
+/* ── صفحة الإقليم ── */
+.region { display: grid; grid-template-columns: 210px 1fr; gap: 40px; padding-top: 32px; }
+.trail { position: sticky; top: 70px; align-self: start; font-size: 13px; }
+.trail .n { color: var(--ink-3); }
+.trail b { display: block; margin: 2px 0 14px; font-weight: 500; font-size: 15px; }
+.trail ol { list-style: none; margin: 0; padding: 0; border-inline-start: 1px solid var(--line-2); }
+.trail li button {
+  display: block; width: 100%; text-align: start; cursor: pointer;
+  background: none; border: 0; padding: 5px 12px;
+  color: var(--ink-3); font: inherit; line-height: 1.5;
+}
+.trail li.now button { color: var(--ink); box-shadow: inset 2px 0 0 var(--edge-line); }
+.trail li button:hover { color: var(--ink-2); }
+
+.shot { min-width: 0; }
+.shot > h2 { font-size: 26px; margin: 0 0 22px; font-weight: 600; }
+.lead { padding-bottom: 26px; margin-bottom: 26px; border-bottom: 1px solid var(--line); }
+.lead h1 { font-size: clamp(26px, 4vw, 40px); font-weight: 700; margin-bottom: 16px; }
+.lead .prose p { color: var(--ink-2); }
+
+/* ── النثر ── */
+.prose { max-width: 68ch; }
+.prose p { margin: 0 0 15px; }
+.prose b, .prose strong { font-weight: 600; color: var(--ink); }
+.prose code { background: var(--bg-2); padding: 1px 5px; border-radius: var(--r); font-size: 0.9em; color: var(--in); }
+.prose ul, .prose ol { padding-inline-start: 22px; margin: 0 0 15px; }
+.prose li { margin-bottom: 6px; }
+.prose blockquote {
+  margin: 0 0 16px; padding: 12px 16px;
+  border-inline-start: 2px solid var(--edge-line);
+  background: var(--bg-2); color: var(--ink-2);
+  text-align: start; unicode-bidi: isolate;
+}
+/* المصدر الإنجليزيّ وحده يأخذ اتّجاهاً وخطّاً أحادياً — العربية تبقى كما هي */
+.prose blockquote.src { font-family: var(--mono); font-size: 13.5px; line-height: 1.7; }
+.prose table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 0 0 18px; }
+.prose th, .prose td { text-align: start; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.prose thead th { color: var(--ink-3); font-weight: 500; font-size: 13px; }
+
+/* ── الهيكل: شجرةٌ وحوافّ ── */
+.layout { margin: 0 0 22px; border: 1px solid var(--line-2); border-radius: var(--r-lg); background: var(--bg-2); }
+.layout figcaption {
+  display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  padding: 10px 14px; border-bottom: 1px solid var(--line);
+}
+.layout figcaption b { font-weight: 600; }
+.layout .id { color: var(--ink-3); font-size: 12px; }
+.layout .policy { margin-inline-start: auto; color: var(--ink-3); font-size: 12px; }
+.guard { font-size: 11px; padding: 2px 7px; border-radius: var(--r); border: 1px solid; }
+.g-import { color: var(--in); border-color: var(--in-dim); background: var(--in-dim); }
+.g-runtime { color: var(--out); border-color: var(--out-dim); background: var(--out-dim); }
+.g-review { color: var(--ink-3); border-color: var(--line-2); }
+
+.layout-body { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+@media (max-width: 820px) { .layout-body { grid-template-columns: 1fr; } .region { grid-template-columns: 1fr; } .trail { position: static; } }
+
+.tree { list-style: none; margin: 0; padding: 12px 14px; border-inline-end: 1px solid var(--line); }
+.tree li {
+  display: flex; align-items: baseline; gap: 8px;
+  padding-inline-start: calc(var(--d) * 16px);
+  font-family: var(--mono); direction: ltr; unicode-bidi: isolate;
+  font-size: 12.5px; line-height: 2;
+}
+.tree .dir .name { color: var(--ink-3); }
+.tree .role { font-size: 10.5px; padding: 0 5px; border-radius: var(--r); }
+.tree .owns { display: flex; gap: 4px; margin-inline-start: auto; }
+.tree .owns i { font-size: 10px; color: var(--ink-3); font-style: normal; }
+
+.fam-in .name { color: var(--in); }
+.fam-in .role { color: var(--in); background: var(--in-dim); }
+.fam-out .name { color: var(--out); }
+.fam-out .role { color: var(--out); background: var(--out-dim); }
+.fam-wire .name { color: var(--wire); }
+.fam-wire .role { color: var(--wire); background: var(--wire-dim); }
+
+.edges { list-style: none; margin: 0; padding: 12px 14px; font-size: 12px; }
+.edges li { display: flex; gap: 6px; align-items: baseline; line-height: 1.9; color: var(--ink-3); }
+.edges em { font-style: normal; color: var(--line-2); }
+.edges li.fam-in em { color: var(--in); }
+.edges li.fam-out em { color: var(--out); }
+.edges li.cross { color: var(--ink-2); }
+.edges li.cross em { color: var(--bad); }
+
+/* ── لوحة المقاييس ── */
+.score { margin: 0 0 24px; border: 1px solid var(--line-2); border-radius: var(--r-lg); overflow: hidden; }
+.score header {
+  display: flex; justify-content: space-between; gap: 10px;
+  padding: 9px 14px; background: var(--bg-2);
+  border-bottom: 1px solid var(--line); font-size: 13px; color: var(--ink-2);
+}
+.score .vs { color: var(--ink-3); }
+.gauges { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1px; margin: 0; background: var(--line); }
+.gauges > div { background: var(--bg); padding: 10px 14px; }
+.gauges dt { color: var(--ink-3); font-size: 12px; }
+.gauges dd { margin: 2px 0 0; font-size: 20px; font-weight: 600; display: flex; align-items: baseline; gap: 6px; }
+.gauges .bad dd { color: var(--bad); }
+.delta { font-size: 12px; font-style: normal; font-weight: 500; }
+.delta.better { color: var(--in); }
+.delta.worse { color: var(--out); }
+.score table.changes { border-top: 1px solid var(--line); }
+.changes .measures { color: var(--ink-3); font-size: 13px; }
+.score footer { padding: 8px 14px; color: var(--ink-3); font-size: 12px; background: var(--bg-2); }
+
+/* ── اللوحات والأوامر ── */
+.panel { margin: 0 0 20px; }
+.panel .note { display: block; color: var(--ink-3); font-size: 12px; margin-bottom: 6px; }
+pre.report, pre.cmd, pre.figure {
+  margin: 0 0 20px; padding: 14px 16px; overflow-x: auto;
+  background: var(--bg-2); border: 1px solid var(--line);
+  border-radius: var(--r-lg); font-size: 12.5px; line-height: 1.75;
+  color: var(--ink-2);
+}
+pre.cmd { border-inline-start: 2px solid var(--edge-line); color: var(--ink); }
+
+/* ── البوّابة ── */
+.gate { margin: 0 0 20px; padding: 14px 16px; background: var(--bg-2); border: 1px solid var(--line-2); border-radius: var(--r-lg); }
+.gate label { display: block; color: var(--ink-2); font-size: 14px; margin-bottom: 8px; }
+.gate textarea {
+  width: 100%; background: var(--bg); color: var(--ink);
+  border: 1px solid var(--line-2); border-radius: var(--r);
+  padding: 8px 10px; font: inherit; font-size: 14px; resize: vertical;
+}
+.gate button {
+  margin-top: 8px; padding: 6px 14px; cursor: pointer;
+  background: var(--edge-line); color: var(--bg); font: inherit; font-weight: 600;
+  border: 0; border-radius: var(--r);
+}
+.gate button:disabled { background: var(--line-2); color: var(--ink-3); cursor: not-allowed; }
+.gate.open { border-color: var(--line); }
+.gate .mine { margin: 0 0 10px; color: var(--ink-2); font-size: 14px; }
+.gate .mine span { color: var(--ink-3); font-size: 12px; padding-inline-end: 6px; }
+.gate pre.report { margin: 0; }
+
+/* ── يستفيد · ومضادّ ── */
+.verdict { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); margin-bottom: 20px; }
+@media (max-width: 820px) { .verdict { grid-template-columns: 1fr; } }
+.verdict article { background: var(--bg); padding: 16px 18px; }
+.verdict h3 { font-size: 15px; margin-bottom: 12px; font-weight: 600; }
+.verdict .v-good { border-top: 2px solid var(--in); }
+.verdict .v-bad { border-top: 2px solid var(--out); }
+.verdict .v-good h3 { color: var(--in); }
+.verdict .v-bad h3 { color: var(--out); }
+.verdict .prose { font-size: 14.5px; }
+
+/* ── الملاحة ── */
+.seed-door {
+  display: flex; align-items: baseline; gap: 12px; margin-top: 32px;
+  padding: 16px 18px; background: var(--bg-2);
+  border: 1px solid var(--line-2); border-inline-start: 2px solid var(--edge-line);
+  border-radius: var(--r-lg);
+}
+.seed-door:hover { background: var(--panel); }
+.seed-door span { color: var(--ink-3); font-size: 13px; }
+.seed-door b { font-weight: 600; font-size: 17px; }
+.pager { display: flex; gap: 10px; margin-top: 32px; }
+.pager button {
+  padding: 9px 16px; cursor: pointer; font: inherit; font-size: 14px;
+  background: var(--bg-2); color: var(--ink);
+  border: 1px solid var(--line-2); border-radius: var(--r);
+}
+.pager button:last-child { margin-inline-start: auto; border-inline-start: 2px solid var(--edge-line); }
+.pager button:disabled { color: var(--ink-3); cursor: not-allowed; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+/* ══ «ما توقّعتَه» ══════════════════════════════════════════════════════════
+   أثرُ القارئ لا درجته: التوقّع فوق اللوحة، بلا نسبةٍ ولا صواب/خطأ.
+   وحدّ البطاقة من عائلة «الحدّ» لأن ما يُقاس هنا حدسُ القارئ عند حدٍّ عبره. */
+.gap { padding: 52px 0; border-top: 1px solid var(--line); }
+.gap h2 { font-size: 22px; margin-bottom: 6px; }
+.gap-note { color: var(--ink-3); font-size: 14px; margin: 0 0 22px; }
+.gap ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.gap li {
+  padding: 14px 16px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-inline-start: 2px solid var(--edge-line);
+  border-radius: var(--r-lg);
+}
+.gap .where { display: flex; align-items: baseline; gap: 10px; text-decoration: none; color: inherit; }
+.gap .where:hover b { color: var(--edge-line); }
+.gap .where .num { color: var(--ink-3); font-size: 12px; }
+.gap .where b { font-weight: 500; font-size: 15px; }
+.gap .mine { margin: 10px 0; color: var(--ink-2); font-size: 14px; }
+.gap .mine span { color: var(--ink-3); font-size: 12px; padding-inline-end: 6px; }
+.gap pre.report { margin: 0; }
+
+/* تشديدُ المؤلّف داخل نصٍّ مستخرَج من جدول: وزنٌ لا لون — السطر بارزٌ أصلاً،
+   واللون في هذا الموقع يحمل اتّجاه الاعتماد فلا يُنفَق على توكيدٍ لغويّ. */
+.principles b b, .map .hook b { font-weight: 700; color: var(--ink); }

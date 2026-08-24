@@ -1,0 +1,50 @@
+/* ══ الاستثناء الوحيد من منع الألوان الحرفية ══
+   إعادة إنتاج ثيم VS Code Dark+ بقيمه الرسمية. يُستعمل **عمداً وحده** حين يكون
+   «مظهر VS Code حرفياً» هو المطلوب.
+
+   المسار الافتراضي غيره: استورد `derive.css` فيرث المحرّر هوية منهجك
+   (`--ck-primary` وأخواتها) بلا قيمة حرفية واحدة. */
+
+.ck-editor {
+  --ck-ed-bg: #1e1e1e;
+  --ck-ed-fg: #d4d4d4;
+  --ck-ed-caret: #aeafad;
+  --ck-ed-selection: #264f78;
+  --ck-ed-selection-match: #3a3d41;
+  --ck-ed-active-line: #ffffff0a;
+  --ck-ed-gutter: #858585;
+  --ck-ed-gutter-active: #c6c6c6;
+  --ck-ed-gutter-border: #ffffff14;
+  --ck-ed-bracket: #888888;
+  --ck-ed-whitespace: #e3e4e229;
+
+  --ck-ed-keyword: #569cd6;
+  --ck-ed-keyword-control: #c586c0;
+  --ck-ed-string: #ce9178;
+  --ck-ed-number: #b5cea8;
+  --ck-ed-comment: #6a9955;
+  --ck-ed-function: #dcdcaa;
+  --ck-ed-type: #4ec9b0;
+  --ck-ed-variable: #9cdcfe;
+  --ck-ed-constant: #4fc1ff;
+  --ck-ed-punctuation: #d4d4d4;
+  --ck-ed-meta: #c586c0;
+  --ck-ed-invalid: #f44747;
+  --ck-ed-link: #3794ff;
+
+  --ck-ed-font: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* إطارُ المحرّر — اسمُ الملفّ وأزراره — نصُّ **واجهة المنهج** لا نصُّ محرّر،
+     وقد يكون عربياً: والخليّة الثابتة تفكّ وصل الحروف. فيتبع خطّ الجسم. */
+  --ck-ed-ui-font: var(--ck-font-body, system-ui, sans-serif);
+  --ck-ed-font-size: 13.5px;
+  --ck-ed-line-height: 1.6;
+
+  /* الإطار حول المحرّر — يرثه المنهج إن أراد */
+  --ck-ed-chrome-bg: #252526;
+  --ck-ed-chrome-fg: #cccccc;
+  --ck-ed-chrome-line: #ffffff14;
+  --ck-ed-accent: #0e639c;
+  --ck-ed-accent-fg: #ffffff;
+  --ck-ed-ok: #4ec9b0;
+  --ck-ed-err: #f44747;
+}

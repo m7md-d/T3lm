@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- خطُّ الحدّ: ما داخله وما خارجه -->
+  <rect width="32" height="32" rx="5" fill="#0e1116"/>
+  <path d="M16 4v24" stroke="#3aa0a0" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M6 10h6M6 16h6M6 22h6" stroke="#7d8896" stroke-width="2" stroke-linecap="round"/>
+  <path d="M20 16h6" stroke="#d9873f" stroke-width="2" stroke-linecap="round"/>
+  <path d="M23.5 13l2.5 3-2.5 3" stroke="#d9873f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>

@@ -1,0 +1,57 @@
+/* ══ الاشتقاق: المحرّر يرث هوية المنهج ══
+   استورد هذا الملف، ثم عرّف هوية منهجك العالمية (`--ck-primary` وأخواتها) في
+   ملفّ التوكنز عندك — يتبعها المحرّر تلقائياً بلا أن تعرّف شيئاً من `--ck-ed-*`.
+
+   لا توجد هنا قيمة واحدة: كلها إحالات. */
+
+.ck-editor {
+  /* السطح */
+  --ck-ed-bg:               var(--ck-surface);
+  --ck-ed-fg:               var(--ck-text);
+  --ck-ed-caret:            var(--ck-primary);
+  --ck-ed-selection:        color-mix(in oklab, var(--ck-primary) 30%, transparent);
+  --ck-ed-selection-match:  color-mix(in oklab, var(--ck-primary) 14%, transparent);
+  --ck-ed-active-line:      color-mix(in oklab, var(--ck-text) 4%, transparent);
+  --ck-ed-gutter:           var(--ck-text-faint);
+  --ck-ed-gutter-active:    var(--ck-text-dim);
+  --ck-ed-gutter-border:    var(--ck-line);
+  --ck-ed-bracket:          var(--ck-text-dim);
+  --ck-ed-whitespace:       color-mix(in oklab, var(--ck-text) 24%, transparent);
+
+  /* التوكنة — مشتقّة من اللون المهيمن والثانوي والدلالي */
+  --ck-ed-keyword:          var(--ck-primary);
+  --ck-ed-keyword-control:  var(--ck-secondary);
+  --ck-ed-string:           var(--ck-ok);
+  --ck-ed-number:           var(--ck-warn);
+  --ck-ed-comment:          var(--ck-text-faint);
+  --ck-ed-function:         var(--ck-secondary);
+  --ck-ed-type:             var(--ck-primary-soft, var(--ck-primary));
+  --ck-ed-variable:         var(--ck-text);
+  --ck-ed-constant:         var(--ck-warn);
+  --ck-ed-punctuation:      var(--ck-text-dim);
+  --ck-ed-meta:             var(--ck-secondary);
+  --ck-ed-invalid:          var(--ck-danger);
+  --ck-ed-link:             var(--ck-primary);
+
+  /* الإطار */
+  --ck-ed-chrome-bg:        var(--ck-surface-2, var(--ck-surface));
+  --ck-ed-chrome-fg:        var(--ck-text-dim);
+  --ck-ed-chrome-line:      var(--ck-line);
+  --ck-ed-accent:           var(--ck-primary);
+  --ck-ed-accent-fg:        var(--ck-bg);
+  --ck-ed-ok:               var(--ck-ok);
+  --ck-ed-warn:             var(--ck-warn);
+  --ck-ed-err:              var(--ck-danger);
+
+  /* الشكل — المستورِد يقرّر: حادّ أم ناعم */
+  --ck-ed-r:                var(--ck-r, 0px);
+  --ck-ed-r-sm:             calc(var(--ck-ed-r) * 0.5);
+  --ck-ed-match-r:          var(--ck-ed-r-sm);
+  --ck-ed-border:           var(--ck-border-w, 1px);
+
+  /* الطباعة — الخطّ من المنهج، لا من العدّة */
+  --ck-ed-font:             var(--ck-font-mono);
+  --ck-ed-ui-font:          var(--ck-font-body, inherit);
+  --ck-ed-font-size:        var(--ck-ed-size, 0.845rem);
+  --ck-ed-line-height:      1.7;
+}

@@ -1,0 +1,8 @@
+set name ali
+set lang c
+get name
+list
+del name
+list
+get name
+quit

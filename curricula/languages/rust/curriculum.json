@@ -1,0 +1,15 @@
+{
+  "slug": "rust",
+  "category": "languages",
+  "title": "Rust — ما يثبته المترجم",
+  "tagline": "تفكيك Rust من المِلكية إلى نظام أنواعها — لمن يعرف C ولم يكتب Rust",
+  "url": "https://rust.nodeksa.com",
+  "profile": "default",
+  "status": "building",
+  "layout": "canonical",
+  "site": {
+    "stack": "kit",
+    "deploy": "t3lm-rust",
+    "live": true
+  }
+}
