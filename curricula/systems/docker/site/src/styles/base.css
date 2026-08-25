@@ -1,0 +1,86 @@
+/* الأساس: الطباعة وثنائية اللغة. **لا لون حرفيّ** — كلُّه من tokens.css. */
+@import '@t3lm/kit/styles/reset.css';
+@import './tokens.css';
+
+html { color-scheme: dark; }
+
+body {
+  background: var(--dk-bg);
+  color: var(--dk-fg);
+  font-family: var(--dk-font-body);
+  font-size: 16px;
+  line-height: 1.85;
+  /* عمقٌ بالطبقات: توهّجٌ باردٌ واحدٌ من أعلى، وأرضٌ أعمق تحته */
+  background-image:
+    radial-gradient(120% 60% at 50% -10%, var(--dk-surface) 0%, transparent 60%),
+    linear-gradient(var(--dk-bg), var(--dk-void));
+  background-attachment: fixed;
+}
+
+/* ── العناوين ── */
+h1, h2, h3, h4 { font-weight: 600; line-height: 1.4; text-wrap: balance; }
+h1 { font-size: clamp(28px, 4vw, 44px); letter-spacing: 0; }
+h2 { font-size: clamp(21px, 2.4vw, 27px); }
+h3 { font-size: clamp(17px, 1.8vw, 20px); color: var(--dk-muted); }
+p  { text-wrap: pretty; }
+
+a { color: var(--dk-kernel); text-decoration-color: var(--dk-kernel-dim); text-underline-offset: 3px; }
+a:hover { color: var(--dk-kernel-soft); text-decoration-color: currentColor; }
+
+hr { border: 0; border-top: 1px solid var(--dk-line-faint); margin: var(--dk-gap-lg) 0; }
+
+/* ═══ ثنائية اللغة ═══
+   الأحاديّ **للكود والأرقام الإنجليزية فقط**. الخليّة الثابتة تفكّ وصل العربية،
+   وletter-spacing يقطعها حرفاً حرفاً. ولا وسم عربيٍّ بأيٍّ منهما. */
+code, pre, samp, kbd, .en {
+  font-family: var(--dk-font-mono);
+  font-variant-ligatures: none;   /* رباط `!=` ⇐ `≠` عيبٌ وقع فعلاً */
+  direction: ltr;
+  unicode-bidi: isolate;
+  font-feature-settings: 'tnum' 1;
+}
+:is(p, li, td, th, h1, h2, h3, h4, figcaption) > code {
+  font-size: 0.92em;
+  background: var(--dk-raised);
+  border: 1px solid var(--dk-line);
+  border-radius: var(--dk-r);
+  padding: 0.05em 0.35em;
+  color: var(--dk-kernel-soft);
+}
+pre { overflow-x: auto; overscroll-behavior-x: contain; }
+
+/* الرقم يُقارَن عمودياً: المنهج يقيس */
+.num { font-family: var(--dk-font-mono); font-variant-numeric: tabular-nums; }
+
+/* ── الجداول: RTL محترمة ── */
+table { border-collapse: collapse; width: 100%; font-size: 0.94em; }
+th, td {
+  text-align: start;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--dk-line-faint);
+  vertical-align: top;
+}
+th { color: var(--dk-muted); font-weight: 600; }
+.table-scroll { overflow-x: auto; overscroll-behavior-x: contain; }
+
+/* ── القوائم ── */
+ul, ol { padding-inline-start: 1.4em; }
+li { margin-block: 0.35em; }
+
+blockquote {
+  border-inline-start: 2px solid var(--dk-line-strong);
+  padding-inline-start: var(--dk-gap);
+  color: var(--dk-muted);
+  margin-block: var(--dk-gap);
+}
+
+/* ── التركيز مرئيٌّ دائماً ── */
+:focus-visible { outline: 2px solid var(--dk-kernel); outline-offset: 2px; }
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap;
+}
+
+/* المخطّطات تبقى LTR كما تعرضها أدوات التحليل؛ ويحاذيها نصٌّ عربيٌّ شارح */
+.ltr-figure { direction: ltr; unicode-bidi: isolate; }

@@ -1,0 +1,11 @@
+{
+  "slug": "docker",
+  "category": "systems",
+  "title": "دوكر من البدائيات",
+  "tagline": "تركيب العزل بيدك من نطاقات لينكس وحدوده، ثم تفكيك ما بناه Docker وrunc وcontainerd فوقه",
+  "url": "https://docker.nodeksa.com",
+  "profile": "default",
+  "status": "building",
+  "adopted": true,
+  "layout": "canonical"
+}

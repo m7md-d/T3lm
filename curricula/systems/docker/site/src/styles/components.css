@@ -1,0 +1,406 @@
+/* المكوّنات. اللون كلُّه بالإحالة، والشكل من التوكنز. */
+
+/* ═══ سلّم السلطة: أربع فئاتٍ من ستّة وسوم ═══
+   القناة الثانية **وسمٌ نصّيٌّ واحد**، ولا أيقونة معه ولا حدٌّ ثالث. */
+[data-auth]            { --auth: var(--dk-run);    --auth-dim: var(--dk-run-dim); }
+[data-auth='kernel']   { --auth: var(--dk-kernel); --auth-dim: var(--dk-kernel-dim); }
+[data-auth='tool']     { --auth: var(--dk-tool);   --auth-dim: var(--dk-tool-dim); }
+[data-auth='env']      { --auth: var(--dk-env);    --auth-dim: var(--dk-env-dim); }
+[data-auth='run']      { --auth: var(--dk-run);    --auth-dim: var(--dk-run-dim); }
+
+.authtag {
+  font-family: var(--dk-font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;          /* إنجليزيّ فقط */
+  color: var(--auth);
+  border: 1px solid var(--auth-dim);
+  border-radius: var(--dk-r);
+  padding: 1px 6px;
+  white-space: nowrap;
+}
+.authtag[data-auth='run'] { border-style: dashed; }
+
+/* ═══ لوحة المخرَج ═══
+   مسجَّلة دائماً — لا زرّ تشغيل في هذا الموقع (النواة ليست في المتصفّح). */
+.panel {
+  border: 1px solid var(--dk-line);
+  border-inline-start: 2px solid var(--auth, var(--dk-line-strong));
+  border-radius: var(--dk-r);
+  background: var(--dk-code);
+  overflow: hidden;
+}
+.panel__bar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 6px 10px;
+  background: var(--dk-surface);
+  border-bottom: 1px solid var(--dk-line-faint);
+  font-size: 0.78rem;
+}
+.panel__spacer { flex: 1; }
+.panel__cmd {
+  margin: 0; padding: 12px 14px;
+  font-size: 0.86rem; line-height: 1.7;
+  background: var(--dk-surface);
+  overflow-x: auto; overscroll-behavior-x: contain;
+}
+/* الفصل بين ما تكتبه وما يردّه. وسمٌ يقول ما هو، لا شارة «تمّ» */
+.panel__cut {
+  display: flex; align-items: center; gap: 10px;
+  padding: 5px 14px;
+  border-block: 1px solid var(--dk-line-faint);
+  background: var(--dk-bg);
+  color: var(--dk-faint); font-size: 0.72rem;
+}
+.panel__cut::after { content: ''; flex: 1; height: 1px; background: var(--dk-line-faint); }
+.panel__body { padding: 12px 14px; font-size: 0.86rem; line-height: 1.75; color: var(--dk-muted); }
+.panel--gated .panel__body { filter: blur(6px); user-select: none; pointer-events: none; }
+
+/* السطر وحدةُ القراءة هنا، وتشريحُه بجانبه لا تحته (d ≈ 0.80) */
+.oline { display: grid; grid-template-columns: 1fr; gap: 0; }
+.panel__body--noted .oline { grid-template-columns: minmax(0, 1fr) minmax(0, 15rem); gap: var(--dk-gap); align-items: baseline; }
+.oline__t { display: block; white-space: pre; overflow-x: auto; overscroll-behavior-x: contain; }
+.oline__note {
+  direction: rtl;
+  font-family: var(--dk-font-body);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--dk-dim);
+  border-inline-start: 1px solid var(--dk-line);
+  padding-inline-start: 10px;
+}
+@media (max-width: 720px) {
+  .panel__body--noted .oline { grid-template-columns: 1fr; }
+  .oline__note { border-inline-start: 0; border-block-start: 1px solid var(--dk-line); padding: 4px 0 8px; }
+}
+
+/* ═══ معجم المخرَج: كلُّ رمزٍ بلون مالكه ═══
+   وهو سلّم السلطة نفسه — بلا فئةٍ خامسة. */
+.o-kernel { color: var(--dk-kernel-soft); }
+.o-tool   { color: var(--dk-tool-soft); }
+.o-vol    { color: var(--dk-faint); }          /* ما يخصّ هذا التشغيل وحده */
+.o-key    { color: var(--dk-fg); font-weight: 700; }
+
+/* موضع التنفيذ: أيقونة + نصّ. محورٌ آخر غير السلطة، فلا يحمل لوناً دلالياً. */
+.sitetag {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: var(--dk-font-mono); font-size: 0.74rem;
+  color: var(--dk-dim);
+}
+.sitetag svg { width: 13px; height: 13px; }
+
+/* `…` ادّعاءٌ لا حذف: ما لا تضمنه اللوحة */
+.wild {
+  color: var(--dk-run);
+  border-bottom: 1px dashed var(--dk-run-dim);
+  cursor: help;
+}
+
+/* ═══ الكود ═══ */
+.codeblock { border: 1px solid var(--dk-line); border-radius: var(--dk-r); background: var(--dk-code); overflow: hidden; }
+.codeblock__bar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 6px 10px; background: var(--dk-surface);
+  border-bottom: 1px solid var(--dk-line-faint);
+  font-family: var(--dk-font-mono); font-size: 0.74rem; color: var(--dk-dim);
+}
+.codeblock__body { margin: 0; padding: 12px 14px; font-size: 0.86rem; line-height: 1.7; }
+/* رموز الكود من العائلات نفسها: بنية اللغة زرقاء، وقيمُها كهرمانية،
+   والتعليق خافتٌ لأنه ليس ممّا يُتتبَّع. */
+.codeblock__body, .boxmap__code { color: var(--dk-muted); }
+.tok-keyword, .tok-controlKeyword, .tok-moduleKeyword,
+.tok-operatorKeyword, .tok-definitionKeyword { color: var(--dk-kernel); font-weight: 500; }
+.tok-typeName, .tok-className, .tok-namespace { color: var(--dk-kernel-soft); }
+.tok-macroName, .tok-meta, .tok-processingInstruction { color: var(--dk-kernel-soft); }
+.tok-string, .tok-string2, .tok-character, .tok-special { color: var(--dk-tool-soft); }
+.tok-number, .tok-integer, .tok-float, .tok-bool, .tok-atom { color: var(--dk-tool); }
+.tok-comment, .tok-lineComment, .tok-blockComment { color: var(--dk-faint); font-style: italic; }
+.tok-variableName { color: var(--dk-fg); }
+.tok-propertyName, .tok-attributeName { color: var(--dk-muted); }
+.tok-operator, .tok-punctuation, .tok-separator, .tok-bracket { color: var(--dk-dim); }
+.tok-invalid { color: var(--dk-env); }
+
+.copybtn {
+  display: inline-flex; align-items: center; gap: 5px;
+  color: var(--dk-dim); font-size: 0.76rem;
+  border: 1px solid transparent; border-radius: var(--dk-r);
+  padding: 2px 6px;
+  transition: color var(--dk-t-fast) var(--dk-ease), border-color var(--dk-t-fast) var(--dk-ease);
+}
+.copybtn:hover { color: var(--dk-fg); border-color: var(--dk-line); }
+.copybtn svg { width: 13px; height: 13px; }
+
+/* مقتطفٌ من برنامجٍ في programs/ — الملفّ كاملاً برابط، بلا نسخ نصّ */
+.partref {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--dk-font-mono); font-size: 0.74rem; color: var(--dk-dim);
+}
+.partref svg { width: 13px; height: 13px; }
+
+/* ═══ `@vm`: يُرفَع من داخل اللوحة إلى إطارٍ يسبقها ═══ */
+.vmnotice {
+  border: 1px solid var(--dk-env-dim);
+  border-radius: var(--dk-r);
+  background: color-mix(in srgb, var(--dk-env) 6%, var(--dk-surface));
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  color: var(--dk-muted);
+}
+.vmnotice strong { color: var(--dk-env-soft); font-weight: 600; }
+
+/* ═══ البوّابة — عشرون موضعاً، حيث طلبها النصّ ═══ */
+.gate {
+  border: 1px solid var(--dk-line-strong);
+  border-radius: var(--dk-r);
+  background: var(--dk-surface);
+  padding: var(--dk-gap);
+}
+.gate__head { display: flex; align-items: center; gap: 8px; color: var(--dk-fg); font-weight: 600; }
+.gate__head svg { width: 15px; height: 15px; color: var(--dk-dim); }
+.gate__ask { color: var(--dk-muted); margin-block: 8px 12px; }
+.gate textarea {
+  width: 100%; min-height: 72px; resize: vertical;
+  background: var(--dk-code); color: var(--dk-fg);
+  border: 1px solid var(--dk-line); border-radius: var(--dk-r);
+  padding: 10px 12px; line-height: 1.7;
+}
+.gate__row { display: flex; align-items: center; gap: var(--dk-gap); margin-top: 10px; }
+.gate__open {
+  border: 1px solid var(--dk-kernel-dim); border-radius: var(--dk-r);
+  color: var(--dk-kernel); padding: 5px 14px; font-size: 0.9rem;
+  transition: background var(--dk-t-fast) var(--dk-ease);
+}
+.gate__open:hover:not(:disabled) { background: var(--dk-kernel-dim); }
+.gate__open:disabled { color: var(--dk-faint); border-color: var(--dk-line); cursor: not-allowed; }
+.gate__note { color: var(--dk-faint); font-size: 0.82rem; }
+
+/* فرق الإتقان: توقّعك بجانب ما كان. بلا صواب/خطأ — الحكم لك. */
+.mastery { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--dk-line-faint); border: 1px solid var(--dk-line); border-radius: var(--dk-r); }
+.mastery__cell { background: var(--dk-surface); padding: 12px 14px; }
+.mastery__label { color: var(--dk-dim); font-size: 0.78rem; margin-bottom: 6px; }
+@media (max-width: 620px) { .mastery { grid-template-columns: 1fr; } }
+
+/* ═══ اللقطة ═══ */
+.shot { scroll-margin-top: calc(var(--dk-topbar-h) + 24px); }
+.shot__head { display: flex; align-items: baseline; gap: 10px; margin-bottom: var(--dk-gap); }
+.shot__n { font-family: var(--dk-font-mono); font-variant-numeric: tabular-nums; color: var(--dk-faint); font-size: 0.9rem; }
+.shot__body { display: flex; flex-direction: column; gap: var(--dk-gap); }
+.shot__body > * { max-width: var(--dk-measure); }
+.shot__body > .panel,
+.shot__body > .codeblock,
+.shot__body > .table-scroll,
+.shot__body > .ltr-figure { max-width: none; }
+
+/* شريطٌ للّقطة وحدها. لا عدَّ تنازليّ ولا نسبةَ إنجاز. */
+.shotbar { height: 2px; background: var(--dk-line-faint); border-radius: var(--dk-r); overflow: hidden; }
+.shotbar__fill { height: 100%; background: var(--dk-kernel); transition: width var(--dk-t) var(--dk-ease); }
+
+/* جلسة المختبر واحدةٌ للإقليم: خطٌّ يصل لوحات lab المتتابعة */
+.labchain { position: relative; padding-inline-start: 14px; }
+.labchain::before {
+  content: ''; position: absolute; inset-block: 0; inset-inline-start: 4px;
+  width: 1px; background: var(--dk-kernel-dim);
+}
+
+/* الانتقال بضغطةٍ واحدة، في نفس الموضع، ويسمّي ما بعده */
+.next {
+  display: flex; align-items: center; gap: 10px;
+  border: 1px solid var(--dk-line); border-radius: var(--dk-r);
+  background: var(--dk-surface); padding: 12px var(--dk-gap);
+  width: 100%; text-align: start;
+  transition: border-color var(--dk-t-fast) var(--dk-ease), transform var(--dk-t-fast) var(--dk-ease);
+}
+.next:hover { border-color: var(--dk-line-strong); transform: translateY(-1px); }
+.next__label { color: var(--dk-dim); font-size: 0.8rem; }
+.next__title { color: var(--dk-fg); }
+.next svg { width: 16px; height: 16px; color: var(--dk-dim); flex: none; }
+
+/* ═══ البذرة: نهاية الإقليم، وهي رابط التالي ═══ */
+.seed {
+  border: 1px solid var(--dk-line);
+  border-inline-start: 2px solid var(--dk-kernel-dim);
+  border-radius: var(--dk-r);
+  background: var(--dk-surface);
+  padding: var(--dk-gap) var(--dk-gap-lg);
+}
+.seed__label { color: var(--dk-dim); font-size: 0.8rem; margin-bottom: 8px; }
+.seed__body { color: var(--dk-muted); }
+.seed__to { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; color: var(--dk-kernel); }
+.seed__to svg { width: 15px; height: 15px; }
+
+/* ═══ الخلاصة: جدولٌ في المصدر، وحوافُّ شبكةٍ في الموقع ═══ */
+.summary { border: 1px solid var(--dk-line); border-radius: var(--dk-r); overflow: hidden; }
+.summary__row { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--dk-line-faint); }
+.summary__cell { background: var(--dk-surface); padding: 11px 14px; font-size: 0.92rem; }
+.summary__cell--node { color: var(--dk-muted); }
+@media (max-width: 620px) { .summary__row { grid-template-columns: 1fr; } }
+
+/* ═══ التمرين: العدد في العنوان، ولا حلول ═══ */
+.exercise { border: 1px dashed var(--dk-line-strong); border-radius: var(--dk-r); padding: var(--dk-gap) var(--dk-gap-lg); }
+.exercise__head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; }
+.exercise__count { font-family: var(--dk-font-mono); color: var(--dk-dim); font-size: 0.8rem; }
+.exercise__no-solutions { color: var(--dk-faint); font-size: 0.82rem; margin-top: var(--dk-gap); }
+
+/* ═══ الموتيف: بطاقة العملية — أربعة حقول (الإقليم ٣٣) ═══
+   ولا صندوق ولا مكعّب ولا حوت في هذا الموقع (الإقليم ٠٧ يدفن ذلك النموذج). */
+.proccard {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+  background: var(--dk-line-faint);
+  border: 1px solid var(--dk-line); border-radius: var(--dk-r);
+}
+.proccard__f {
+  background: var(--dk-surface); padding: 12px 14px;
+  display: flex; flex-direction: column; gap: 6px;
+  transition: background var(--dk-t) var(--dk-ease);
+}
+.proccard__f[data-on='true'] { background: var(--dk-raised); }
+.proccard__f[data-on='true'] .proccard__name { color: var(--dk-kernel-soft); }
+.proccard__name { color: var(--dk-dim); font-size: 0.9rem; }
+.proccard__val { font-family: var(--dk-font-mono); font-variant-numeric: tabular-nums; font-size: 0.8rem; color: var(--dk-faint); }
+@media (max-width: 700px) { .proccard { grid-template-columns: repeat(2, 1fr); } }
+
+/* ═══ شريط النطاقات السبع: يملك | يتقاسم (البديهية ٢) ═══ */
+.nsstrip { display: flex; gap: 4px; flex-wrap: wrap; }
+.nsslot {
+  font-family: var(--dk-font-mono); font-size: 0.72rem;
+  border: 1px solid var(--dk-line); border-radius: var(--dk-r);
+  padding: 2px 7px; color: var(--dk-faint);
+  background: var(--dk-surface);
+}
+.nsslot[data-own='true'] { color: var(--dk-kernel); border-color: var(--dk-kernel-dim); background: var(--dk-raised); }
+.nsslot[data-own='false'] { border-style: dashed; }
+
+/* ═══ الخريطة: box.c بأسطره، والحزم فوقه ═══ */
+.boxmap { border: 1px solid var(--dk-line); border-radius: var(--dk-r); background: var(--dk-code); overflow: hidden; }
+.boxmap__code { margin: 0; padding: var(--dk-gap) 0; font-size: 0.76rem; line-height: 1.55; max-height: 62svh; overflow: auto; overscroll-behavior: contain; }
+.boxmap__ln { display: flex; gap: 12px; padding-inline: 14px; }
+.boxmap__no { color: var(--dk-faint); font-variant-numeric: tabular-nums; min-width: 3ch; text-align: end; user-select: none; }
+.boxmap__src { white-space: pre; color: var(--dk-dim); }
+.boxmap__ln[data-hit='true'] { background: var(--dk-kernel-dim); }
+.boxmap__ln[data-hit='true'] .boxmap__src { color: var(--dk-fg); }
+.boxmap__ln[data-dim='true'] .boxmap__src { opacity: 0.28; }
+.boxmap__ln[data-hit='true'] .boxmap__no { color: var(--dk-kernel); }
+
+/* ═══ بطاقة الحزمة — وفارقها من المصدر: السطر الذي تفكّكه ═══ */
+.pkgcard {
+  border: 1px solid var(--dk-line); border-radius: var(--dk-r);
+  background: var(--dk-surface);
+  transition: border-color var(--dk-t-fast) var(--dk-ease);
+}
+.pkgcard:hover { border-color: var(--dk-line-strong); }
+.pkgcard[data-open='true'] { border-color: var(--dk-kernel-dim); background: var(--dk-raised); }
+.pkgcard__head { display: block; width: 100%; text-align: start; padding: var(--dk-gap) var(--dk-gap-lg); }
+.pkgcard__chev {
+  width: 15px; height: 15px; color: var(--dk-faint);
+  transition: transform var(--dk-t) var(--dk-ease);
+}
+.pkgcard[data-open='true'] .pkgcard__chev { transform: rotate(180deg); }
+.pkgcard__body { padding: 0 var(--dk-gap-lg) var(--dk-gap); border-top: 1px solid var(--dk-line-faint); }
+.pkgcard__more { display: inline-block; margin-top: 10px; font-size: 0.84rem; }
+.pkgcard__top { display: flex; align-items: center; gap: 10px; }
+.pkgcard__range { font-family: var(--dk-font-mono); font-variant-numeric: tabular-nums; color: var(--dk-kernel); font-size: 0.82rem; }
+.pkgcard__name { color: var(--dk-fg); font-weight: 600; }
+.pkgcard__takes { color: var(--dk-muted); font-size: 0.9rem; margin-top: 6px; }
+.pkgcard__line { color: var(--dk-dim); font-size: 0.84rem; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--dk-line-faint); }
+.pkgcard__line-label { color: var(--dk-faint); }
+
+.pkggrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--dk-gap); }
+
+/* ═══ أقاليم الحزمة ═══ */
+.rail { display: flex; flex-direction: column; }
+.railrow {
+  display: flex; align-items: baseline; gap: 12px;
+  padding: 11px 4px; border-bottom: 1px solid var(--dk-line-faint);
+  transition: padding-inline-start var(--dk-t-fast) var(--dk-ease);
+}
+.railrow:hover { padding-inline-start: 10px; }
+.railrow__no { font-family: var(--dk-font-mono); font-variant-numeric: tabular-nums; color: var(--dk-faint); min-width: 3ch; }
+.railrow__title { color: var(--dk-fg); }
+.railrow__gist { color: var(--dk-dim); font-size: 0.88rem; }
+.railrow[data-seen='true'] .railrow__no { color: var(--dk-kernel); }
+
+/* ═══ البديهيات الخمس: بعمود «أوّل ما يتساقط» ═══ */
+.axiom { display: grid; grid-template-columns: 2ch 1fr 1fr; gap: var(--dk-gap); padding-block: 14px; border-bottom: 1px solid var(--dk-line-faint); }
+.axiom__n { font-family: var(--dk-font-mono); color: var(--dk-faint); }
+.axiom__claim { color: var(--dk-fg); }
+.axiom__falls { color: var(--dk-dim); font-size: 0.92rem; }
+@media (max-width: 760px) { .axiom { grid-template-columns: 2ch 1fr; } .axiom__falls { grid-column: 2; } }
+
+/* ═══ الأثر: محتوًى لا نقاط ═══ */
+.trace { display: flex; flex-direction: column; gap: 2px; }
+.tracerow { display: grid; grid-template-columns: 5ch 1fr; gap: var(--dk-gap); padding: 9px 0; border-bottom: 1px solid var(--dk-line-faint); }
+.tracerow__from { font-family: var(--dk-font-mono); font-variant-numeric: tabular-nums; color: var(--dk-faint); font-size: 0.8rem; }
+.tracerow__what { color: var(--dk-muted); font-size: 0.94rem; }
+.trace__empty { color: var(--dk-faint); }
+
+/* ═══ موضع مختبرٍ محقونٍ بعد لقطته ═══ */
+.labslot { border: 1px solid var(--dk-line-strong); border-radius: var(--dk-r); background: var(--dk-surface); overflow: hidden; }
+.labslot__bar { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-bottom: 1px solid var(--dk-line-faint); background: var(--dk-raised); font-size: 0.82rem; }
+.labslot__claim { color: var(--dk-muted); }
+.labslot__body { padding: var(--dk-gap); }
+.labslot__sim { color: var(--dk-faint); font-size: 0.78rem; padding: 8px 12px; border-top: 1px solid var(--dk-line-faint); }
+
+/* ═══ الواجهة الرئيسية ═══ */
+.hero { padding-block: clamp(32px, 8vh, 88px) var(--dk-gap-lg); }
+.hero__word { font-size: clamp(40px, 9vw, 104px); font-weight: 700; line-height: 1.1; color: var(--dk-fg); }
+.hero__word[data-torn='true'] { color: var(--dk-faint); text-decoration: line-through; text-decoration-color: var(--dk-env-dim); }
+.hero__sub { color: var(--dk-muted); max-width: var(--dk-measure); margin-top: var(--dk-gap); font-size: 1.05rem; }
+.hero__tagline {
+  color: var(--dk-dim); max-width: var(--dk-measure);
+  margin-top: var(--dk-gap-lg); padding-top: var(--dk-gap);
+  border-top: 1px solid var(--dk-line-faint);
+  font-size: 0.94rem;
+}
+.hero__tear { display: inline-flex; align-items: center; gap: 8px; margin-top: var(--dk-gap-lg); color: var(--dk-kernel); border: 1px solid var(--dk-kernel-dim); border-radius: var(--dk-r); padding: 6px 14px; }
+.hero__tear:hover { background: var(--dk-kernel-dim); }
+.hero__tear svg { width: 15px; height: 15px; }
+
+/* ═══ النثر المصرَّف من الماركداون ═══
+   ما يخرج من `marked` يُنسَّق هنا، فيبقى المصدر ماركداون خالصاً. */
+.prose > * + * { margin-top: 0.9em; }
+.prose h2, .prose h3, .prose h4 { margin-top: 1.6em; }
+.prose pre {
+  background: var(--dk-code);
+  border: 1px solid var(--dk-line);
+  border-inline-start: 2px solid var(--dk-line-strong);
+  border-radius: var(--dk-r);
+  padding: 12px 14px;
+  font-size: 0.86rem;
+  line-height: 1.7;
+  color: var(--dk-muted);
+}
+.prose pre code { background: none; border: 0; padding: 0; color: inherit; font-size: inherit; }
+.prose table { display: block; overflow-x: auto; overscroll-behavior-x: contain; }
+.prose img, .prose svg { max-width: 100%; }
+.prose strong { color: var(--dk-fg); font-weight: 600; }
+.prose hr { margin-block: var(--dk-gap-lg); }
+
+/* عنوانٌ فيه مصطلحٌ إنجليزيّ: الشيفرة داخله لا تكبر معه */
+.next__title code, .railrow__title code, .topbar__where code { font-size: 0.9em; }
+
+/* ═══ العمق ═══
+   الطبقة معنًى في هذا الموضوع لا زينة (الإقليم ٠٨: lower · upper · work):
+   لكل لوحٍ حافّةٌ عليا مضيئةٌ بمقدار شعرة، فتُقرأ الألواح مكدّسةً لا مرصوفة.
+   ولا ظلالَ منتشرة ولا تدرّجاتٍ زخرفية: أثر التماسك يحذف ما لا يعلّم (d ≈ 0.86). */
+.panel, .codeblock, .pkgcard, .gate, .summary, .mastery,
+.labslot, .proccard, .boxmap, .trail, .exercise, .seed, .next, .vmnotice {
+  box-shadow: inset 0 1px 0 var(--dk-line-faint);
+}
+.panel, .codeblock, .boxmap { box-shadow: inset 0 1px 0 var(--dk-line); }
+
+/* رأس القسم: خطٌّ قصيرٌ باللون المهيمن يسبق العنوان — إشارةٌ لا زخرفة */
+.section-head { position: relative; }
+.section-head::before {
+  content: '';
+  position: absolute; inset-block-start: -1px; inset-inline-start: 0;
+  inset-block-end: -1px; width: 0;
+}
+.section-head h1, .section-head h2 { position: relative; padding-inline-start: 0; }
+.section-head::after {
+  content: '';
+  position: absolute; inset-block-end: -1px; inset-inline-end: 0;
+  width: 56px; height: 1px; background: var(--dk-kernel);
+}
+
+/* الواجهة: الكلمة أضخم، والمعنى تحتها مباشرةً */
+.hero__word { letter-spacing: -0.01em; }
+.hero__sub { min-height: 2.6em; }

@@ -124,7 +124,8 @@ curricula/<category>/<slug>/
 في اليوم نفسه: `media-formats` · `networks-roots` · `networks-electron` ·
 `web-infra` · `roots-trilogy` · `fullstack` — لأن أسماءها كانت تحجز حدَّ
 الموضوع على شكله القديم، وحدُّه يُعاد رسمه. فبقيت مقترحاتٍ ثلاثة: `typescript`
-و`docker` و`react`.
+و`docker` و`react`. ثم **بُني `docker` منهجاً** (٢٠٢٦-٠٨-٢٤) فخرج من المقترحات،
+ومادّته القديمة باقيةٌ في `archive/` ولم يُبنَ عليها.
 
 **وحين يُعاد رسم الحدّ، موضعُه ريدمي التصنيف لا ريدمي مقترَح** — فالتصنيف يقول
 ما يحتاجه قبل أن يوجد له اسم. `curricula/media/README.md` يطلب **ثلاثة** مناهج
