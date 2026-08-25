@@ -342,14 +342,6 @@
 /* ═══ الواجهة الرئيسية ═══ */
 .hero { padding-block: clamp(32px, 8vh, 88px) var(--dk-gap-lg); }
 .hero__word { font-size: clamp(40px, 9vw, 104px); font-weight: 700; line-height: 1.1; color: var(--dk-fg); }
-.hero__word[data-torn='true'] { color: var(--dk-faint); text-decoration: line-through; text-decoration-color: var(--dk-env-dim); }
-.hero__sub { color: var(--dk-muted); max-width: var(--dk-measure); margin-top: var(--dk-gap); font-size: 1.05rem; }
-.hero__tagline {
-  color: var(--dk-dim); max-width: var(--dk-measure);
-  margin-top: var(--dk-gap-lg); padding-top: var(--dk-gap);
-  border-top: 1px solid var(--dk-line-faint);
-  font-size: 0.94rem;
-}
 .hero__tear { display: inline-flex; align-items: center; gap: 8px; margin-top: var(--dk-gap-lg); color: var(--dk-kernel); border: 1px solid var(--dk-kernel-dim); border-radius: var(--dk-r); padding: 6px 14px; }
 .hero__tear:hover { background: var(--dk-kernel-dim); }
 .hero__tear svg { width: 15px; height: 15px; }
@@ -403,4 +395,45 @@
 
 /* الواجهة: الكلمة أضخم، والمعنى تحتها مباشرةً */
 .hero__word { letter-spacing: -0.01em; }
-.hero__sub { min-height: 2.6em; }
+
+/* ═══ المدخل ═══
+   من لا يعرف الموضوع يقف هنا: كلمةٌ، ثم حقيقةٌ واحدة، ثم بابٌ يدخل منه.
+   ولا كودَ في هذه الشاشة — يُفتَح آخر الصفحة بطلب. */
+.hero { padding-block: clamp(48px, 12vh, 128px) var(--dk-gap-xl); }
+.hero__hook {
+  font-size: clamp(19px, 2.4vw, 27px);
+  line-height: 1.7;
+  color: var(--dk-kernel-soft);
+  max-width: 34ch;
+  margin-top: var(--dk-gap-lg);
+}
+.hero__cta { display: flex; align-items: center; gap: var(--dk-gap-lg); margin-top: var(--dk-gap-xl); flex-wrap: wrap; }
+.cta {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 11px 22px; border-radius: var(--dk-r);
+  border: 1px solid var(--dk-kernel-dim);
+  background: color-mix(in srgb, var(--dk-kernel) 10%, transparent);
+  color: var(--dk-kernel-soft); text-decoration: none;
+  transition: background var(--dk-t) var(--dk-ease), border-color var(--dk-t) var(--dk-ease);
+}
+.cta:hover { background: var(--dk-kernel-dim); border-color: var(--dk-kernel); }
+.cta svg { width: 16px; height: 16px; }
+.cta--quiet { border-color: transparent; background: none; color: var(--dk-dim); padding-inline: 0; }
+.cta--quiet:hover { background: none; color: var(--dk-fg); }
+
+.tear { padding-block: var(--dk-gap-xl); border-top: 1px solid var(--dk-line-faint); }
+.tear__head { display: flex; align-items: center; gap: var(--dk-gap-lg); flex-wrap: wrap; }
+.tear__say { color: var(--dk-muted); max-width: var(--dk-measure); margin-block: var(--dk-gap) var(--dk-gap-lg); min-height: 3.4em; }
+
+.lead-dim { color: var(--dk-dim); }
+
+.peek {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-top: var(--dk-gap);
+  padding: 9px 16px; border-radius: var(--dk-r);
+  border: 1px dashed var(--dk-line-strong);
+  color: var(--dk-muted);
+  transition: border-color var(--dk-t-fast) var(--dk-ease), color var(--dk-t-fast) var(--dk-ease);
+}
+.peek:hover { border-color: var(--dk-kernel-dim); color: var(--dk-fg); }
+.peek svg { width: 15px; height: 15px; }

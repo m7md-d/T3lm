@@ -7,5 +7,6 @@
   "profile": "default",
   "status": "building",
   "adopted": true,
-  "layout": "canonical"
+  "layout": "canonical",
+  "hook": "افتح كود نواة لينكس وابحث عن «container» — لن تجد شيئاً بهذا الاسم."
 }
