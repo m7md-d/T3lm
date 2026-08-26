@@ -9,6 +9,7 @@
   "layout": "canonical",
   "site": {
     "stack": "kit",
-    "deploy": "t3lm-project-layout"
+    "deploy": "t3lm-project-layout",
+    "live": true
   }
 }

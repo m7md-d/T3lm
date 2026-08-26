@@ -8,6 +8,7 @@
     "preview": "vite preview",
     "typecheck": "tsc -b",
     "smoke": "vite build --ssr scripts/ssr-check.tsx --outDir .ssr --logLevel error && node .ssr/ssr-check.js",
+    "swcheck": "node ../../../../tools/swcheck.mjs .",
     "measure": "node ../tools/measure.mjs --check",
     "shots": "node ../tools/shots.mjs",
     "assets": "node ../../../../tools/assets.mjs .",

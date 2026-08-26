@@ -8,6 +8,7 @@
     "preview": "vite preview",
     "typecheck": "tsc -b",
     "smoke": "vite build --ssr scripts/ssr-check.tsx --outDir .ssr --logLevel error && node .ssr/ssr-check.js",
+    "swcheck": "node ../../../../tools/swcheck.mjs .",
     "outputs": "python3 ../tools/verify.py",
     "bidi": "python3 ../tools/bidi.py",
     "assets": "node ../../../../tools/assets.mjs .",

@@ -10,6 +10,7 @@
   "layout": "canonical",
   "site": {
     "stack": "kit",
-    "deploy": "t3lm-c"
+    "deploy": "t3lm-c",
+    "live": true
   }
 }

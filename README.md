@@ -36,7 +36,7 @@
 
 | المنهج | الموضوع | الموقع | الحالة |
 |---|---|---|---|
-| [`c`](curricula/languages/c) | C — اللغة الأولى | `c.nodeksa.com` | ✅ |
+| [`c`](curricula/languages/c) | C — اللغة الأولى | [زُر ↗](https://c.nodeksa.com) | ✅ |
 | [`dart`](curricula/languages/dart) | Dart — لغةٌ مُدارة بعد لغةٍ عارية | `dart.nodeksa.com` | 🔨 |
 | [`go`](curricula/languages/go) | Go — من الجذور | [زُر ↗](https://go.nodeksa.com) | 🔨 |
 | [`rust`](curricula/languages/rust) | Rust — ما يثبته المترجم | [زُر ↗](https://rust.nodeksa.com) | 🔨 |
@@ -56,7 +56,7 @@
 
 | المنهج | الموضوع | الموقع | الحالة |
 |---|---|---|---|
-| [`project-layout`](curricula/architecture/project-layout) | هيكلة المشروع — أين يسكن كل شيء، ولماذا | `project-layout.nodeksa.com` | 🔨 |
+| [`project-layout`](curricula/architecture/project-layout) | هيكلة المشروع — أين يسكن كل شيء، ولماذا | [زُر ↗](https://project-layout.nodeksa.com) | 🔨 |
 
 <!-- doctor:curricula:end -->
 

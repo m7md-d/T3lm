@@ -209,6 +209,20 @@ npm run bidi        # ../tools/bidi.py — انضباط اللغتين في ال
 5. **كل رقم إقليمٍ في عمود «أين يعود» موجودٌ فعلاً**، وعددُ البديهيات والسلطات
    والحِزَم كما يعلنه المنهج.
 
+**و`npm run swcheck` يفحص ما بعد سيطرة عامل الخدمة** — بعد البناء، لأنه يقرأ
+`dist/`:
+
+```bash
+npm run build && npm run swcheck
+```
+
+ثلاث زياراتٍ لا واحدة: الأولى تثبّت العامل، والثانية والثالثة **تحت سيطرته**.
+وخادمُه يقلّد Cloudflare Pages في نقطةٍ واحدة حاسمة — **`/index.html` يردّ ٣٠٧
+إلى `/`** — وهي النقطة التي قتلت الموقع بعد أوّل رفع: التخزين المسبق كان يحفظ
+استجابةً بعَلَم `redirected`، وردُّها على طلب تنقّلٍ وضعُ تحويله `manual` خطأُ
+شبكةٍ في المواصفة، فيموت الموقع عند كل زيارةٍ لاحقة حتى يُمسح المخزن. **وخادم
+`screens.mjs` لا يحوّل، فمرّ العيب من تحته.**
+
 **واللقطة في متصفّحٍ حقيقيّ** هي وحدها التي ترى الخطّ واللون والتخطيط:
 
 ```bash
@@ -225,7 +239,8 @@ FULL=0 node ../../../../tools/screens.mjs . /tmp/shots "#/trace"
 ## ٨) الإصدار
 
 ```bash
-npm run typecheck && npm run smoke && npm run build
+npm run typecheck && npm run smoke && npm run outputs && npm run bidi
+npm run build && npm run swcheck
 rm -f dart.zip && (cd dist && zip -qr ../dart.zip . -x '.DS_Store' '**/.DS_Store' '__MACOSX/*')
 unzip -l dart.zip | head -5
 ```

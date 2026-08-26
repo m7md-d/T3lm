@@ -8,6 +8,7 @@
     "preview": "vite preview",
     "typecheck": "tsc -b",
     "smoke": "vite build --ssr scripts/ssr-check.tsx --outDir .ssr --logLevel error && node .ssr/ssr-check.js",
+    "swcheck": "node ../../../../tools/swcheck.mjs .",
     "assets": "node ../../../../tools/assets.mjs .",
     "fonts": "node ../../../../tools/fonts.mjs . \"https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700;800&display=swap\""
   },

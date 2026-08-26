@@ -69,8 +69,26 @@ const VERSION = '${version}';
 const CACHE = 't3lm-' + VERSION;
 const PRECACHE = ${JSON.stringify(precache, null, 2)};
 
+/* الاستضافة تردّ على /index.html بتحويلٍ إلى / — والتخزين المسبق يحفظ الاستجابة
+   بعَلَم redirected. وطلبُ التنقّل وضعُ تحويله manual، فردُّ استجابةٍ محوَّلة عليه
+   خطأُ شبكةٍ في المواصفة. فتُعاد بناءً قبل التخزين، فيسقط العَلَم. */
+async function store(cache, url) {
+  const res = await fetch(url, { cache: 'reload' });
+  if (!res.ok) throw new Error(url + ' → ' + res.status);
+  await cache.put(
+    url,
+    res.redirected
+      ? new Response(await res.blob(), { status: 200, statusText: 'OK', headers: res.headers })
+      : res
+  );
+}
+
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(PRECACHE)).then(() => self.skipWaiting()));
+  e.waitUntil(
+    caches.open(CACHE)
+      .then((c) => Promise.all(PRECACHE.map((u) => store(c, u))))
+      .then(() => self.skipWaiting())
+  );
 });
 
 self.addEventListener('activate', (e) => {
@@ -87,7 +105,11 @@ self.addEventListener('fetch', (e) => {
 
   /* التنقّل: الصدفة من المخزن دائماً — والمسار يعيش بعد # فلا يصل هنا أصلاً. */
   if (req.mode === 'navigate') {
-    e.respondWith(caches.match('./index.html').then((r) => r || fetch(req)));
+    e.respondWith(
+      caches.match('./index.html')
+        .then((r) => (r && !r.redirected ? r : fetch(req)))
+        .catch(() => fetch(req))
+    );
     return;
   }
 
@@ -95,7 +117,7 @@ self.addEventListener('fetch', (e) => {
     caches.match(req).then((hit) => {
       if (hit) return hit;
       return fetch(req).then((res) => {
-        if (res.ok && res.type === 'basic') {
+        if (res.ok && res.type === 'basic' && !res.redirected) {
           const copy = res.clone();
           caches.open(CACHE).then((c) => c.put(req, copy));
         }

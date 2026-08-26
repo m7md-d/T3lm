@@ -10,7 +10,8 @@
   "layout": "canonical",
   "site": {
     "stack": "kit",
-    "deploy": "t3lm-dart"
+    "deploy": "t3lm-dart",
+    "live": false
   },
   "hook": "في C تعرف متى تموت كل قيمة، لأنك أنت من يقتلها. في Dart لا يوجد free — فمن يقتلها، ومتى؟"
 }
