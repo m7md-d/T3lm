@@ -1,0 +1,39 @@
+<!doctype html>
+<!-- بطاقة المشاركة: علامة Dart الرسمية كما هي، ورفضٌ حقيقيّ من المترجم
+     منقولٌ من الإقليم ٠٣ — البديهية الثانية: النوع لا يكذب، وحيث عجز
+     البرهان زُرع فحص. -->
+<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../public/fonts/fonts.css">
+<style>
+  :root{--bg:#080b18;--surface:#0e1224;--line:#202742;--ink:#dfe6f5;--dim:#a6b1cc;
+        --faint:#4d5674;--lit:#39CEFD;--fold:#16B9FD;--deep:#03569B;--crease:#1A237E;--no:#f9718a}
+  *{margin:0;box-sizing:border-box}
+  body{width:1200px;height:630px;background:var(--bg);color:var(--ink);
+       font-family:'Cairo',system-ui,sans-serif;padding:60px 72px;
+       display:flex;flex-direction:column;justify-content:center;gap:30px;position:relative;overflow:hidden}
+  body::before{content:'';position:absolute;inset:0;
+       background:radial-gradient(120% 62% at 50% -12%, var(--surface) 0%, transparent 62%)}
+  .row{display:flex;align-items:center;gap:26px;position:relative}
+  h1{font-size:62px;font-weight:800;letter-spacing:-1px;line-height:1.15}
+  p{font-size:27px;color:var(--dim);font-weight:400;max-width:940px;line-height:1.6;position:relative}
+  .err{position:relative;direction:ltr;unicode-bidi:isolate;background:var(--surface);
+       border:1px solid var(--line);border-inline-start:3px solid var(--no);border-radius:2px;
+       padding:20px 24px;font-family:'Roboto Mono',ui-monospace,monospace;font-size:17px;
+       line-height:1.8;color:var(--dim)}
+  .err b{color:var(--no);font-weight:600}
+  .err i{color:var(--faint);font-style:normal}
+  .foot{display:flex;align-items:center;gap:14px;font-size:22px;color:var(--faint);
+        font-family:'Roboto Mono',ui-monospace,monospace;direction:ltr;position:relative}
+  .dot{width:9px;height:9px;background:var(--lit)}
+</style></head><body>
+  <div class="row">
+    <img src="../public/dart.svg" alt="" width="104" height="104">
+    <h1>لغةٌ مُدارة<br>بعد لغةٍ عارية</h1>
+  </div>
+  <p>تفكيك Dart من نظام أنواعها إلى حلقة أحداثها وisolatها — لمن أنهى C ولم يفتح Dart.</p>
+  <div class="err">
+<i>main.dart:7:19: </i><b>Error</b>: Property 'length' cannot be accessed on 'String?'<br>
+because it is potentially null.
+  </div>
+  <div class="foot"><span class="dot"></span><span>dart.nodeksa.com</span></div>
+</body></html>

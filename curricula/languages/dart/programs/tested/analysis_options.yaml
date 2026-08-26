@@ -1,0 +1,8 @@
+# اللِّنتات **تُطلَب ولا تُفترَض**. وهذا الملفّ هو الطلب.
+
+linter:
+  rules:
+    - hash_and_equals
+    - implementation_imports
+    - unawaited_futures
+    - avoid_dynamic_calls

@@ -18,13 +18,14 @@
 | `@t3lm/kit/terminal` | `Terminal` — لوحة مخرَج |
 | `@t3lm/kit/md` | `parseChapter(md)` · `slugify(s)` |
 | `@t3lm/kit/highlight` | `highlightWith(parser, code)` · `escapeOnly` |
-| `@t3lm/kit/highlight/go` · `/rust` | `highlightToHtml(code)` |
+| `@t3lm/kit/highlight/c` · `/dart` · `/go` · `/rust` · `/sh` | `highlightToHtml(code, lang?)` |
 | `@t3lm/kit/progress` | `makeStore(key)` — اللقطات المعبورة وتوقّعات القارئ |
 | `@t3lm/kit/styles/reset.css` · `contract.css` | التصفير، وعقد المتغيّرات |
 | `@t3lm/kit/editor/*.css` · `terminal/*.css` | `editor` و`terminal` للبنية، و`derive` للاشتقاق، و`vscode-dark` |
 
-`highlight/go` و`highlight/rust` منفصلان لأن كلّاً منهما يستورد محلّله وحده، فلا
-تحمل صفحة Rust محلّل Go معها.
+ولكلّ لغةٍ **مدخلها** لأن كلّاً منها يستورد محلّله وحده، فلا تحمل صفحة Rust
+محلّل Go معها. و`dart` يحمل `yaml` أيضاً — `pubspec.yaml` عدّةُ Dart لا لغةٌ
+أخرى تُعرَض. و`sh` يحمل `dockerfile` للسبب نفسه.
 
 ---
 
@@ -169,7 +170,7 @@ import '@t3lm/kit/editor/derive.css';     // يشتقّ --ck-ed-* منها
 src/
 ├── editor/     CodeEditor · Runner · theme.ts · whitespace.ts · presets/ · runtimes/
 ├── terminal/   Terminal.tsx + terminal.css + derive.css
-├── highlight/  index.ts (المحرّك) · go.ts · rust.ts
+├── highlight/  index.ts (المحرّك) · c.ts · dart.ts · go.ts · rust.ts · sh.ts
 ├── md/         parseChapter: العنوان، والأجزاء `## `، واللقطات `### `
 ├── progress/   makeStore: التوقّعات، واللقطات المعبورة، وآخر موضع
 └── styles/     contract.css · reset.css

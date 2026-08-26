@@ -16,3 +16,8 @@ target/
 archive/*
 !archive/discussions/
 .lab/
+
+# Dart — ناتجُ pub والترجمة، ولا يُلتزَم (الإقليم ١٨)
+.dart_tool/
+pubspec.lock
+*.dylib

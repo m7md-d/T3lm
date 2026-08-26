@@ -10,6 +10,7 @@
     "./editor/vscode-dark.css": "./src/editor/presets/vscode-dark.css",
     "./highlight": "./src/highlight/index.ts",
     "./highlight/c": "./src/highlight/c.ts",
+    "./highlight/dart": "./src/highlight/dart.ts",
     "./highlight/go": "./src/highlight/go.ts",
     "./highlight/rust": "./src/highlight/rust.ts",
     "./highlight/sh": "./src/highlight/sh.ts",

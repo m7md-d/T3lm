@@ -1,0 +1,138 @@
+/* الأساس: الطباعة وثنائية اللغة. **لا لون حرفيّ** — كلُّه من tokens.css. */
+@import '@t3lm/kit/styles/reset.css';
+@import './tokens.css';
+
+html { color-scheme: dark; }
+
+body {
+  background: var(--fl-bg);
+  color: var(--fl-fg);
+  font-family: var(--fl-font-body);
+  font-size: 16px;
+  line-height: 1.85;
+  /* توهّجٌ باردٌ واحدٌ من أعلى — وهو التدرّج الشعاعيّ الأبيض في الشعار نفسه،
+     وأرضٌ أعمق تحته: ظلُّ الطيّ في الشعار مهبوطاً إلى الظلام. */
+  background-image:
+    radial-gradient(120% 62% at 50% -12%, var(--fl-surface) 0%, transparent 62%),
+    linear-gradient(var(--fl-bg), var(--fl-void));
+  background-attachment: fixed;
+}
+
+h1, h2, h3, h4 { font-weight: 700; line-height: 1.4; text-wrap: balance; }
+h1 { font-size: clamp(28px, 4vw, 44px); }
+h2 { font-size: clamp(21px, 2.4vw, 27px); }
+h3 { font-size: clamp(17px, 1.8vw, 20px); color: var(--fl-muted); }
+p  { text-wrap: pretty; }
+
+a { color: var(--fl-ok); text-decoration-color: var(--fl-ok-dim); text-underline-offset: 3px; }
+a:hover { color: var(--fl-ok-soft); text-decoration-color: currentColor; }
+
+hr { border: 0; border-top: 1px solid var(--fl-line-faint); margin: var(--fl-gap-lg) 0; }
+
+/* ═══ ثنائية اللغة ═══
+   الأحاديّ **للكود والأرقام الإنجليزية فقط**. الخليّة الثابتة تفكّ وصل العربية،
+   وletter-spacing يقطعها حرفاً حرفاً. ولا وسم عربيٍّ بأيٍّ منهما. */
+code, pre, samp, kbd, .en {
+  font-family: var(--fl-font-mono);
+  font-variant-ligatures: none;   /* رباط `!=` ⇐ `≠` عيبٌ وقع فعلاً */
+  direction: ltr;
+  unicode-bidi: isolate;
+  font-feature-settings: 'tnum' 1;
+}
+:is(p, li, td, th, figcaption, summary) > code {
+  font-size: 0.92em;
+  background: var(--fl-raised);
+  border: 1px solid var(--fl-line);
+  border-radius: var(--fl-r);
+  padding: 0.05em 0.35em;
+  color: var(--fl-ok-soft);
+}
+/* الكود في العنوان لا يُنفَخ بحجمه: `assert` في عنوانٍ يبتلعه */
+:is(h1, h2, h3, h4) > code {
+  font-size: 0.8em;
+  color: var(--fl-ok-soft);
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+pre { overflow-x: auto; overscroll-behavior-x: contain; }
+
+/* **العربية داخل لوحة المخرَج** تعود إلى خطّ المتن: تسعٌ وخمسون لوحةً من ١٤٣
+   تطبع نصّاً عربياً، والخليّة الأحادية تفكّ وصل الحروف.
+   **وخطٌّ فقط، بلا اتّجاه**: ترتيب السطر يقرّره `dir="auto"` عليه — أوّلُ حرفٍ
+   قويٍّ يحدّد اتّجاه السطر، وهو ما تفعله الطرفية التي طبعته أصلاً. وبلا ذلك
+   يخرج «الحدث وصل بعد 26 م.ث» مقلوباً. */
+.ar {
+  font-family: var(--fl-font-body);
+  font-variant-ligatures: normal;
+  font-size: 0.95em;
+}
+
+/* سطرُ مخرَجٍ واحد — الاتّجاه عليه لا على اللوحة كلِّها */
+.oline { white-space: pre-wrap; overflow-wrap: anywhere; min-height: 1lh; }
+
+.num { font-family: var(--fl-font-mono); font-variant-numeric: tabular-nums; }
+.spacer { flex: 1; }
+
+table { border-collapse: collapse; width: 100%; font-size: 0.94em; }
+th, td {
+  text-align: start;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--fl-line-faint);
+  vertical-align: top;
+}
+th { color: var(--fl-muted); font-weight: 600; }
+
+ul, ol { padding-inline-start: 1.4em; }
+li { margin-block: 0.35em; }
+
+blockquote {
+  border-inline-start: 2px solid var(--fl-line-strong);
+  padding-inline-start: var(--fl-gap);
+  color: var(--fl-muted);
+  margin-block: var(--fl-gap);
+}
+
+:focus-visible { outline: 2px solid var(--fl-facet-lit); outline-offset: 2px; }
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap;
+}
+
+/* ── ألوان محلّل CodeMirror: أصنافٌ قياسية، وقيمُها من التوكنز ── */
+.tok-keyword          { color: var(--fl-facet-lit); }
+.tok-controlKeyword   { color: var(--fl-facet-lit); }
+.tok-definitionKeyword{ color: var(--fl-facet-lit); }
+.tok-modifier         { color: var(--fl-facet-lit); }
+.tok-typeName,
+.tok-className        { color: var(--fl-c-soft); }
+.tok-string,
+.tok-string2          { color: var(--fl-ok-soft); }
+.tok-number,
+.tok-bool,
+.tok-atom             { color: var(--fl-no-soft); }
+.tok-comment,
+.tok-lineComment,
+.tok-blockComment     { color: var(--fl-faint); font-style: italic; }
+.tok-variableName     { color: var(--fl-fg); }
+.tok-propertyName,
+.tok-function         { color: var(--fl-fg); }
+.tok-operator,
+.tok-punctuation,
+.tok-separator,
+.tok-bracket          { color: var(--fl-dim); }
+.tok-meta             { color: var(--fl-dim); }
+
+/* ── معجم المخرَج (../lib/dartlex.ts) ── */
+.d-no   { color: var(--fl-no); }
+.d-loc  { color: var(--fl-faint); }
+.d-type { color: var(--fl-ok-soft); }
+.d-key  { color: var(--fl-fg); font-weight: 600; }
+.d-vol  { color: var(--fl-vol); }
+.wild   { color: var(--fl-vol); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}

@@ -1,0 +1,358 @@
+/* المكوّنات. **لا لون حرفيّ ولا نصف قطر حرفيّ** — كلُّه من tokens.css. */
+
+/* ════════ أزرارٌ ووسومٌ عامّة ════════ */
+.copybtn, .chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 11px;
+  background: var(--fl-raised);
+  border: 1px solid var(--fl-line);
+  border-radius: var(--fl-r);
+  color: var(--fl-muted);
+  font: inherit; font-size: 0.82rem; line-height: 1.6;
+  cursor: pointer;
+  transition: color var(--fl-t-fast) var(--fl-ease), border-color var(--fl-t-fast) var(--fl-ease);
+}
+.copybtn:hover, .chip:hover { color: var(--fl-fg); border-color: var(--fl-line-strong); }
+.copybtn svg, .chip svg { width: 14px; height: 14px; }
+.copybtn:disabled, .chip:disabled { opacity: 0.45; cursor: default; }
+.chip[data-on='true'] { color: var(--fl-facet-lit); border-color: var(--fl-facet-lit); background: var(--fl-ok-dim); }
+.chip--go { color: var(--fl-fg); border-color: var(--fl-facet-fold); }
+.chip--warn { color: var(--fl-no-soft); border-color: var(--fl-no-dim); }
+.chip--wide { margin-inline-start: auto; }
+
+.cta {
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 11px 20px;
+  border: 1px solid var(--fl-facet-fold);
+  border-radius: var(--fl-r);
+  background: var(--fl-ok-dim);
+  color: var(--fl-fg); text-decoration: none; font-weight: 600;
+  transition: background var(--fl-t) var(--fl-ease), border-color var(--fl-t) var(--fl-ease);
+}
+.cta:hover { background: var(--fl-raised); border-color: var(--fl-facet-lit); color: var(--fl-fg); }
+.cta svg { width: 17px; height: 17px; }
+.cta--quiet { background: none; border-color: var(--fl-line); color: var(--fl-muted); font-weight: 400; }
+
+.peek {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 16px; margin-top: var(--fl-gap);
+  background: none; border: 1px dashed var(--fl-line-strong); border-radius: var(--fl-r);
+  color: var(--fl-muted); font: inherit; cursor: pointer;
+}
+.peek:hover { color: var(--fl-fg); border-color: var(--fl-facet-fold); }
+.peek svg { width: 16px; height: 16px; }
+
+/* ════════ المشهد ════════ */
+.hero { padding-block: var(--fl-gap-lg) var(--fl-gap-xl); }
+.mark { display: block; }
+.hero__mark { margin-bottom: var(--fl-gap-lg); }
+.hero__title { font-size: clamp(32px, 6vw, 62px); font-weight: 800; line-height: 1.18; }
+.hero__tagline {
+  max-width: 58ch; margin-top: var(--fl-gap);
+  color: var(--fl-muted); font-size: clamp(16px, 1.6vw, 19px);
+}
+.hero__cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: var(--fl-gap-lg); }
+
+/* الادّعاء يُقلَب بيد القارئ: لغتان، جوابان */
+.flip {
+  margin-block: var(--fl-gap-xl);
+  padding: var(--fl-gap-lg);
+  background: var(--fl-surface);
+  border: 1px solid var(--fl-line-faint);
+  border-radius: var(--fl-r);
+}
+.flip__tabs { display: flex; gap: 8px; }
+.flip__say {
+  margin-top: var(--fl-gap); max-width: 62ch;
+  font-size: clamp(17px, 2vw, 22px); line-height: 1.75; color: var(--fl-fg);
+  animation: fold-in var(--fl-t) var(--fl-ease);
+}
+@keyframes fold-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+/* ════════ البديهيات ════════ */
+.axioms { list-style: none; padding: 0; margin: 0; display: grid; gap: 1px; background: var(--fl-line-faint); border: 1px solid var(--fl-line-faint); }
+.axiom { display: grid; grid-template-columns: 44px 1fr; gap: var(--fl-gap); margin: 0; padding: var(--fl-gap); background: var(--fl-surface); }
+/* رقمٌ عربيّ-هنديّ ⇒ **خطّ المتن**: الأحاديّ لا يحمله، والاحتياط يكسره */
+.axiom__n { color: var(--fl-facet-lit); font-size: 1.35rem; line-height: 1.5; text-align: center; font-family: var(--fl-font-body); }
+.axiom__claim { font-weight: 600; }
+.axiom__falls { color: var(--fl-dim); font-size: 0.92rem; margin-top: 2px; }
+
+/* ════════ السلطات ════════ */
+.auth { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+.auth li { display: flex; align-items: baseline; gap: 12px; margin: 0; color: var(--fl-muted); }
+
+/* ════════ الحِزَم ════════ */
+.packgrid { display: grid; gap: var(--fl-gap); grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.pack {
+  background: var(--fl-surface);
+  border: 1px solid var(--fl-line-faint);
+  border-radius: var(--fl-r);
+  padding: var(--fl-gap);
+  position: relative;
+}
+.pack[data-open='true'] { grid-column: 1 / -1; border-color: var(--fl-line-strong); }
+.pack__head {
+  display: flex; align-items: center; gap: 10px; width: 100%;
+  background: none; border: 0; padding: 0; color: inherit; font: inherit; cursor: pointer; text-align: start;
+}
+.pack__range { color: var(--fl-facet-lit); font-size: 0.85rem; }
+.pack__name { font-weight: 700; }
+.pack__chev { width: 16px; height: 16px; color: var(--fl-dim); transition: transform var(--fl-t) var(--fl-ease); }
+.pack[data-open='true'] .pack__chev { transform: rotate(180deg); }
+.pack__takes { color: var(--fl-dim); font-size: 0.9rem; margin-top: 8px; }
+.pack__list { list-style: none; padding: 0; margin: var(--fl-gap) 0 0; display: grid; gap: 1px; background: var(--fl-line-faint); }
+.pack__list li { margin: 0; }
+.pack__list a {
+  display: grid; grid-template-columns: 3ch 1fr; gap: 12px; align-items: baseline;
+  padding: 10px 12px; background: var(--fl-raised); text-decoration: none; color: var(--fl-fg);
+}
+.pack__list a:hover { background: var(--fl-ok-dim); }
+.pack__n { color: var(--fl-faint); font-size: 0.85rem; }
+.pack__t { display: grid; gap: 2px; }
+.pack__title { font-weight: 600; }
+.pack__brief { color: var(--fl-dim); font-size: 0.88rem; line-height: 1.7; }
+
+/* ════════ اللقطة ════════ */
+.shot { max-width: var(--fl-measure); }
+.shot__head { display: flex; align-items: baseline; gap: 12px; margin-bottom: var(--fl-gap-lg); }
+.shot__n { color: var(--fl-faint); font-size: 0.9rem; }
+.shot__body > * + * { margin-top: var(--fl-gap-lg); }
+.prose > * + * { margin-top: var(--fl-gap); }
+.prose h3 { margin-top: var(--fl-gap-lg); }
+.lead { color: var(--fl-muted); }
+
+/* ════════ الكود ════════ */
+.code, .panel, .figure {
+  background: var(--fl-code);
+  border: 1px solid var(--fl-line);
+  border-radius: var(--fl-r);
+  overflow: hidden;
+  margin: 0;
+}
+.code__bar, .panel__bar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 12px;
+  background: var(--fl-surface);
+  border-bottom: 1px solid var(--fl-line);
+  font-size: 0.78rem; color: var(--fl-dim);
+}
+.code__file { color: var(--fl-dim); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+.code__file:hover { color: var(--fl-ok); }
+.code__file svg { width: 14px; height: 14px; }
+.code__cut { display: inline-flex; align-items: center; gap: 5px; color: var(--fl-vol); }
+.code__cut svg { width: 13px; height: 13px; }
+.code__body, .panel__out, .panel__cmd, .figure__body {
+  padding: 14px 16px;
+  font-size: 0.86rem;
+  line-height: 1.75;
+  white-space: pre;
+  tab-size: 2;
+}
+.figure__body { color: var(--fl-muted); }
+
+/* ════════ اللوحة ════════ */
+.panel__verdict {
+  padding: 1px 8px; border-radius: var(--fl-r);
+  border: 1px solid currentColor; font-size: 0.74rem;
+}
+.panel[data-verdict='ok'] .panel__verdict { color: var(--fl-ok); }
+.panel[data-verdict='no'] .panel__verdict { color: var(--fl-no); }
+.panel[data-verdict='c']  .panel__verdict { color: var(--fl-c); }
+.panel[data-verdict='ok'] { border-inline-start: 2px solid var(--fl-ok-dim); }
+.panel[data-verdict='no'] { border-inline-start: 2px solid var(--fl-no); }
+.panel[data-verdict='c']  { border-inline-start: 2px solid var(--fl-c-dim); }
+
+.mtag {
+  padding: 1px 7px; border-radius: var(--fl-r);
+  background: var(--fl-raised); color: var(--fl-muted);
+  font-size: 0.74rem; letter-spacing: 0;
+}
+.mtag[data-machine='@web'] { color: var(--fl-c-soft); background: var(--fl-c-dim); }
+.mtag[data-machine='@aot'] { color: var(--fl-c-soft); background: var(--fl-c-dim); }
+.mtag[data-machine='C']    { color: var(--fl-c-soft); background: var(--fl-c-dim); }
+
+.panel__vol { display: inline-flex; align-items: center; gap: 5px; color: var(--fl-vol); font-size: 0.74rem; }
+.panel__vol svg { width: 13px; height: 13px; }
+.panel__cmd { background: var(--fl-surface); color: var(--fl-muted); border-bottom: 1px solid var(--fl-line-faint); }
+.panel__step + .panel__step { border-top: 1px solid var(--fl-line-faint); }
+
+/* الفاصل بين ما تكتبه وما يخرج — وظيفةٌ لا زخرفة: معيّنٌ صغير على خطّ. */
+.panel__crease {
+  position: relative; height: 1px; background: var(--fl-line-faint);
+  margin-block: 0; display: flex; align-items: center; justify-content: center;
+}
+.panel__crease span {
+  position: relative; top: 0;
+  background: var(--fl-code); padding-inline: 10px;
+  color: var(--fl-faint); font-size: 0.7rem;
+}
+.panel__crease::before {
+  content: ''; position: absolute; inset-inline-start: 12px;
+  width: 7px; height: 7px; transform: rotate(45deg);
+  background: var(--fl-facet-fold); opacity: 0.55;
+}
+.panel__out { color: var(--fl-fg); }
+
+/* جوابان لسؤالٍ واحد، متقابلان */
+.facets { display: grid; gap: var(--fl-gap); grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); position: relative; }
+.facets--runs { align-items: start; }
+.facets__side { min-width: 0; display: flex; flex-direction: column; gap: var(--fl-gap); }
+
+/* ════════ البوّابة ════════ */
+.gate {
+  border: 1px solid var(--fl-line-strong);
+  border-radius: var(--fl-r);
+  background: var(--fl-surface);
+  padding: var(--fl-gap);
+}
+.gate__head { display: flex; align-items: center; gap: 8px; color: var(--fl-facet-lit); font-weight: 600; font-size: 0.92rem; }
+.gate__head svg { width: 15px; height: 15px; }
+.gate__ask { margin-top: 10px; color: var(--fl-muted); font-size: 0.94rem; }
+.gate textarea {
+  width: 100%; margin-top: var(--fl-gap);
+  background: var(--fl-code); color: var(--fl-fg);
+  border: 1px solid var(--fl-line); border-radius: var(--fl-r);
+  padding: 10px 12px; font: inherit; font-size: 0.92rem; resize: vertical;
+}
+.gate__row { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+.gate__fix {
+  padding: 6px 14px; border-radius: var(--fl-r);
+  border: 1px solid var(--fl-facet-fold); background: var(--fl-ok-dim);
+  color: var(--fl-fg); font: inherit; font-size: 0.85rem; cursor: pointer;
+}
+.gate__fix:disabled { opacity: 0.4; cursor: default; }
+.gate__note { color: var(--fl-faint); font-size: 0.8rem; margin-top: 10px; }
+
+/* ════════ الملاحة ════════ */
+.next {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px var(--fl-gap);
+  background: var(--fl-surface); border: 1px solid var(--fl-line);
+  border-radius: var(--fl-r); color: var(--fl-fg);
+  text-align: start; font: inherit; cursor: pointer; text-decoration: none;
+  transition: border-color var(--fl-t) var(--fl-ease), background var(--fl-t) var(--fl-ease);
+}
+.next:hover { border-color: var(--fl-facet-fold); background: var(--fl-raised); }
+.next svg { width: 18px; height: 18px; color: var(--fl-facet-lit); flex: none; }
+.next__label { display: block; color: var(--fl-dim); font-size: 0.76rem; }
+.next__title { display: block; font-weight: 600; }
+
+.seed {
+  border: 1px solid var(--fl-line);
+  border-inline-start: 2px solid var(--fl-facet-fold);
+  border-radius: var(--fl-r);
+  background: var(--fl-surface);
+  padding: var(--fl-gap);
+}
+.seed__label { color: var(--fl-facet-lit); font-size: 0.78rem; font-weight: 600; }
+.seed__body { margin-top: 8px; color: var(--fl-muted); }
+.seed__to {
+  display: inline-flex; align-items: center; gap: 8px; margin-top: var(--fl-gap);
+  color: var(--fl-fg); text-decoration: none; font-weight: 600;
+}
+.seed__to svg { width: 16px; height: 16px; color: var(--fl-facet-lit); }
+.seed__to:hover { color: var(--fl-ok-soft); }
+
+/* ════════ التمرين والخلاصة ════════ */
+.exercise { border-top: 1px solid var(--fl-line-faint); padding-top: var(--fl-gap-lg); }
+.exercise h2 { font-size: 1.05rem; color: var(--fl-muted); margin-bottom: var(--fl-gap); }
+
+.summary { display: grid; gap: 1px; background: var(--fl-line-faint); border: 1px solid var(--fl-line-faint); font-size: 0.9rem; }
+/* `minmax(0, …)` لا `fr` وحدها: خليّةٌ فيها `code` طويل تدفع الشبكة فوق عرض
+   الصفحة، فيمرّ المتن أفقياً — والمتن لا يمرّ أفقياً أبداً. */
+.summary__head, .summary__row { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 1fr); gap: 1px; }
+.summary__head { background: var(--fl-line-faint); }
+.summary__head > span { background: var(--fl-surface); padding: 8px 12px; color: var(--fl-dim); font-size: 0.8rem; }
+.summary__saw, .summary__axiom, .summary__next {
+  background: var(--fl-surface); padding: 11px 12px;
+  min-width: 0; overflow-wrap: anywhere;
+}
+.summary__axiom { color: var(--fl-muted); }
+.summary__next { display: flex; flex-wrap: wrap; gap: 6px; align-content: start; color: var(--fl-dim); }
+.rlink {
+  display: inline-flex; align-items: baseline; gap: 6px;
+  padding: 2px 8px; border: 1px solid var(--fl-line); border-radius: var(--fl-r);
+  color: var(--fl-muted); text-decoration: none; font-size: 0.82rem;
+}
+.rlink:hover { border-color: var(--fl-facet-fold); color: var(--fl-fg); }
+.rlink__n { color: var(--fl-facet-lit); }
+
+.mastery { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--fl-line-faint); border: 1px solid var(--fl-line-faint); }
+.mastery__cell { background: var(--fl-surface); padding: var(--fl-gap); }
+.mastery__label { color: var(--fl-dim); font-size: 0.78rem; margin-bottom: 6px; }
+.mastery__cell .panel__out { padding: 0; background: none; }
+
+@media (max-width: 700px) {
+  .summary__head, .summary__row { grid-template-columns: 1fr; }
+  .mastery { grid-template-columns: 1fr; }
+}
+
+/* ════════ المختبرات ════════
+   يُحقَن كلٌّ بعد لقطته، ولكلٍّ حالةٌ مفاجئة. */
+.lab {
+  margin-top: var(--fl-gap-xl);
+  background: var(--fl-surface);
+  border: 1px solid var(--fl-line);
+  border-radius: var(--fl-r);
+  padding: var(--fl-gap);
+}
+.lab--loading { min-height: 180px; }
+.lab__head h3 { color: var(--fl-fg); }
+.lab__claim { color: var(--fl-muted); font-size: 0.92rem; margin-top: 6px; max-width: 62ch; }
+.lab__controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: var(--fl-gap); }
+.lab__field { display: inline-flex; align-items: center; gap: 8px; color: var(--fl-dim); font-size: 0.85rem; }
+.lab__field input {
+  background: var(--fl-code); color: var(--fl-fg);
+  border: 1px solid var(--fl-line); border-radius: var(--fl-r);
+  padding: 7px 10px; font-size: 0.9rem; width: 22ch;
+}
+.lab__ops { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.lab__facets { display: flex; align-items: stretch; gap: 12px; margin-top: var(--fl-gap); }
+.lab__facet {
+  flex: 1; min-width: 0;
+  background: var(--fl-code); border: 1px solid var(--fl-line);
+  border-radius: var(--fl-r); padding: 12px;
+}
+.lab__facet[data-machine='@vm']  { border-block-start: 2px solid var(--fl-ok); }
+.lab__facet[data-machine='@web'] { border-block-start: 2px solid var(--fl-c); }
+.lab__facet-tag { color: var(--fl-dim); font-size: 0.74rem; }
+.lab__value { font-size: clamp(19px, 3vw, 27px); color: var(--fl-fg); margin-top: 6px; overflow-x: auto; }
+.lab__note { color: var(--fl-faint); font-size: 0.72rem; margin-top: 6px; }
+/* الفاصل بين الجوابين: معيّنٌ بلا اتّجاهٍ يوحي بأن أحدهما أصلُ الآخر */
+.lab__seam { width: 12px; height: 12px; align-self: center; flex: none;
+  background: var(--fl-facet-fold); transform: rotate(45deg); }
+.lab__facets[data-same='false'] .lab__seam { background: var(--fl-no); }
+
+.lab__verdict { margin-top: var(--fl-gap); font-size: 0.95rem; color: var(--fl-muted); }
+.lab__verdict[data-same='false'] { color: var(--fl-no-soft); }
+.lab__disclaimer { margin-top: var(--fl-gap); color: var(--fl-faint); font-size: 0.8rem; max-width: 62ch; }
+
+/* ── مختبر الطابورين ── */
+.loop__prog { margin-top: var(--fl-gap); background: var(--fl-code); border: 1px solid var(--fl-line); border-radius: var(--fl-r); }
+.loop__proghead { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-bottom: 1px solid var(--fl-line-faint); }
+.loop__label { color: var(--fl-dim); font-size: 0.8rem; }
+.loop__lines, .loop__printed { list-style: none; padding: 8px 12px; margin: 0; }
+.loop__lines li, .loop__printed li { display: flex; align-items: baseline; gap: 10px; margin: 0; font-size: 0.85rem; color: var(--fl-fg); line-height: 1.9; }
+.loop__n { color: var(--fl-faint); font-size: 0.78rem; }
+.loop__del { margin-inline-start: auto; background: none; border: 0; color: var(--fl-faint); cursor: pointer; font-size: 1rem; line-height: 1; }
+.loop__del:hover { color: var(--fl-no); }
+.loop__palette { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px 12px; border-top: 1px solid var(--fl-line-faint); }
+
+.loop__queues { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: var(--fl-gap); }
+.loop__q { background: var(--fl-code); border: 1px solid var(--fl-line); border-radius: var(--fl-r); padding: 10px 12px; }
+.loop__q[data-q='micro'] { border-block-start: 2px solid var(--fl-ok); }
+.loop__q[data-q='event'] { border-block-start: 2px solid var(--fl-c); }
+.loop__qhead { display: flex; justify-content: space-between; align-items: baseline; color: var(--fl-dim); font-size: 0.8rem; border-bottom: 1px solid var(--fl-line-faint); padding-bottom: 6px; }
+.loop__q ul { list-style: none; padding: 0; margin: 8px 0 0; }
+.loop__q li { margin: 0; font-size: 0.82rem; color: var(--fl-muted); line-height: 1.9; }
+.loop__more { color: var(--fl-vol); font-size: 0.78rem; }
+.loop__outrow { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; margin-top: var(--fl-gap); }
+.loop__printed { background: var(--fl-code); border: 1px solid var(--fl-line); border-radius: var(--fl-r); min-height: 3lh; }
+
+@media (max-width: 700px) {
+  .lab__facets { flex-direction: column; }
+  .lab__seam { transform: rotate(90deg); }
+  .loop__queues { grid-template-columns: 1fr; }
+  .loop__outrow { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,121 @@
+/* الهيكل: شريطٌ علويّ + متن. والقاعدة: ما له تمريره الخاصّ لوحٌ مستقلٌّ معتم. */
+
+.shell { min-height: 100svh; display: flex; flex-direction: column; }
+
+/* الشريط شفّاف عمداً — المتن يمرّ تحته، واللوح المستقلّ لا يمرّ */
+.topbar {
+  position: sticky; top: 0; z-index: 20;
+  height: var(--fl-topbar-h);
+  display: flex; align-items: center; gap: var(--fl-gap);
+  padding-inline: var(--fl-gap-lg);
+  border-bottom: 1px solid var(--fl-line-faint);
+  background: color-mix(in srgb, var(--fl-bg) 82%, transparent);
+  backdrop-filter: blur(10px);
+}
+.topbar__home { display: flex; align-items: center; gap: 9px; color: var(--fl-fg); text-decoration: none; font-weight: 600; }
+.topbar__where { color: var(--fl-dim); font-size: 0.88rem; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.topbar__act { color: var(--fl-muted); font-size: 0.86rem; text-decoration: none; }
+.topbar__act:hover { color: var(--fl-fg); }
+
+/* شريط اللقطة وحدها — لا المنهج. ولا رقمَ معه ولا نسبة. */
+.shotbar { position: sticky; top: var(--fl-topbar-h); z-index: 19; height: 2px; background: var(--fl-line-faint); }
+.shotbar__fill { height: 100%; background: var(--fl-facet-fold); transition: width var(--fl-t) var(--fl-ease); }
+
+:target, [id] { scroll-margin-top: calc(var(--fl-topbar-h) + 16px); }
+
+.main {
+  flex: 1; width: 100%; max-width: 1100px; margin-inline: auto;
+  padding: var(--fl-gap-xl) var(--fl-gap-lg) calc(var(--fl-gap-xl) * 2);
+}
+.measure { max-width: var(--fl-measure); }
+.lead-dim { color: var(--fl-muted); }
+
+.stack    { display: flex; flex-direction: column; gap: var(--fl-gap); }
+.stack-lg { display: flex; flex-direction: column; gap: var(--fl-gap-lg); }
+
+/* رأس القسم: حدُّه السفليّ يبدأ بقطعةٍ ملوّنة على طرفه */
+.section-head {
+  display: flex; align-items: baseline; gap: 12px;
+  margin-block: var(--fl-gap-xl) var(--fl-gap);
+  padding-block-end: 10px;
+  border-bottom: 1px solid var(--fl-line-faint);
+  position: relative;
+}
+.section-head::after {
+  content: ''; position: absolute; inset-block-end: -1px; inset-inline-start: 0;
+  width: 34px; height: 1px; background: var(--fl-facet-fold);
+}
+.section-head__kicker { color: var(--fl-dim); font-size: 0.8rem; }
+.section-head a { text-decoration: none; color: inherit; }
+.section-head a:hover { color: var(--fl-ok); }
+
+@media (max-width: 760px) {
+  .main { padding: var(--fl-gap-lg) var(--fl-gap) var(--fl-gap-xl); }
+  .topbar { padding-inline: var(--fl-gap); }
+}
+
+/* ═══ الإقليم: متنٌ + لوحُ أثرٍ قائمٌ بذاته ═══ */
+.regionshell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 268px;
+  gap: var(--fl-gap-lg);
+  max-width: 1260px;
+  margin-inline: auto;
+  align-items: start;
+}
+.main--region { max-width: none; margin-inline: 0; padding-inline: var(--fl-gap-lg); }
+
+.trail {
+  position: sticky;
+  top: calc(var(--fl-topbar-h) + var(--fl-gap-lg));
+  max-height: calc(100svh - var(--fl-topbar-h) - var(--fl-gap-xl));
+  overflow: auto;
+  overscroll-behavior: contain;
+  background: var(--fl-surface);
+  border: 1px solid var(--fl-line-faint);
+  border-radius: var(--fl-r);
+  padding: 12px;
+  margin-block: var(--fl-gap-xl);
+}
+.trail__part {
+  font-size: 0.76rem; color: var(--fl-dim);
+  padding: 10px 6px 6px;
+  border-top: 1px solid var(--fl-line-faint);
+  margin-top: 6px;
+}
+.trail__list > li:first-child .trail__part { border-top: 0; margin-top: 0; padding-top: 0; }
+.trail__list { list-style: none; padding: 0; margin: 0; }
+.trail__list > li { margin: 0; }
+.trail__item {
+  display: grid; grid-template-columns: 3ch 1fr; gap: 8px;
+  width: 100%; text-align: start; align-items: baseline;
+  padding: 6px; border-radius: var(--fl-r);
+  color: var(--fl-dim); font-size: 0.84rem; line-height: 1.5;
+  background: none; border: 0; cursor: pointer;
+  transition: color var(--fl-t-fast) var(--fl-ease), background var(--fl-t-fast) var(--fl-ease);
+}
+.trail__item:hover { color: var(--fl-fg); background: var(--fl-raised); }
+.trail__item[data-at='true'] { color: var(--fl-fg); background: var(--fl-raised); }
+.trail__item[data-at='true'] .trail__n { color: var(--fl-facet-lit); }
+.trail__n { color: var(--fl-faint); }
+.trail__t code { font-size: 0.9em; }
+
+.crumb { color: var(--fl-dim); font-size: 0.84rem; margin-bottom: var(--fl-gap-lg); min-height: 1lh; }
+.crumb__sep { color: var(--fl-faint); }
+
+.shotnav {
+  display: flex; align-items: center; gap: var(--fl-gap);
+  margin-top: var(--fl-gap-xl);
+  max-width: var(--fl-measure);
+}
+.shotnav > .next, .shotnav > .seed { flex: 1; }
+
+/* أرضيّة الإقليم: ما ينغلق عنده */
+.floor { margin-top: var(--fl-gap-xl); padding-top: var(--fl-gap-lg); border-top: 1px solid var(--fl-line-faint); }
+.floor h2 { font-size: 1.05rem; color: var(--fl-muted); }
+
+@media (max-width: 1060px) {
+  .regionshell { grid-template-columns: 1fr; }
+  .trail { position: static; max-height: none; margin-block: 0 var(--fl-gap-lg); order: -1; }
+  .main--region { padding-inline: var(--fl-gap); }
+}

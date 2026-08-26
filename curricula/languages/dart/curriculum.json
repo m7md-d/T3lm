@@ -1,0 +1,16 @@
+{
+  "slug": "dart",
+  "category": "languages",
+  "title": "Dart — لغةٌ مُدارة بعد لغةٍ عارية",
+  "tagline": "تفكيك Dart من نظام أنواعها إلى حلقة أحداثها وisolatها — لمن أنهى C ولم يفتح Dart",
+  "url": "https://dart.nodeksa.com",
+  "profile": "default",
+  "status": "building",
+  "adopted": true,
+  "layout": "canonical",
+  "site": {
+    "stack": "kit",
+    "deploy": "t3lm-dart"
+  },
+  "hook": "في C تعرف متى تموت كل قيمة، لأنك أنت من يقتلها. في Dart لا يوجد free — فمن يقتلها، ومتى؟"
+}

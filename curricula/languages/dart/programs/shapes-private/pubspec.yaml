@@ -1,0 +1,6 @@
+name: shapes
+description: حزمةٌ صغيرة تُري حدّ المكتبة وما يُصدَّر منه.
+version: 0.1.0
+
+environment:
+  sdk: ^3.0.0

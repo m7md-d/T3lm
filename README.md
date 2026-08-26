@@ -37,6 +37,7 @@
 | المنهج | الموضوع | الموقع | الحالة |
 |---|---|---|---|
 | [`c`](curricula/languages/c) | C — اللغة الأولى | `c.nodeksa.com` | ✅ |
+| [`dart`](curricula/languages/dart) | Dart — لغةٌ مُدارة بعد لغةٍ عارية | `dart.nodeksa.com` | 🔨 |
 | [`go`](curricula/languages/go) | Go — من الجذور | [زُر ↗](https://go.nodeksa.com) | 🔨 |
 | [`rust`](curricula/languages/rust) | Rust — ما يثبته المترجم | [زُر ↗](https://rust.nodeksa.com) | 🔨 |
 
