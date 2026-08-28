@@ -1,0 +1,42 @@
+<!doctype html>
+<meta charset="utf-8" />
+<!--
+  بطاقة المشاركة: العلامة الرسمية، والعنوان بخطّ الموقع نفسه المستضاف محلياً.
+  ولا أرقامَ محتوى فيها — الأرقام تُقاس عند القارئ، وبطاقةٌ ساكنةٌ تجمّدها.
+-->
+<link rel="stylesheet" href="../public/fonts/fonts.css" />
+<style>
+  html, body { margin: 0; height: 100%; }
+  body {
+    width: 1200px; height: 630px;
+    box-sizing: border-box;
+    padding: 76px 84px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    background: #0b1017;
+    background-image: radial-gradient(80% 60% at 18% -10%, #18222e 0%, transparent 62%),
+                      linear-gradient(160deg, #0b1017, #070b10);
+    color: #dbe4ee;
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    direction: rtl;
+  }
+  img { height: 62px; width: auto; }
+  h1 { font-size: 62px; line-height: 1.25; margin: 0; font-weight: 700; }
+  p { font-size: 27px; line-height: 1.6; margin: 18px 0 0; color: #9fb0c3; max-width: 24ch; }
+  .rungs { display: flex; flex-direction: column; gap: 9px; width: 320px; }
+  .rungs i { display: block; height: 9px; border-radius: 999px; background: #5a9fd4; }
+  .rungs i:nth-child(2) { width: 34%; }
+  .rungs i:nth-child(1) { width: 12%; }
+  .rungs i:nth-child(3) { width: 88%; }
+  .rungs i:nth-child(4) { width: 92%; }
+  .foot { display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; }
+  .host { font-family: 'JetBrains Mono', monospace; direction: ltr; color: #6b7f93; font-size: 22px; }
+</style>
+<img src="../public/python-logo.svg" alt="" />
+<div>
+  <h1>الاسم والكائن والمصفوفة والحدّ</h1>
+  <p>تفكيك نموذج الكائنات والمفسّر والمصفوفة والحدّ مع C</p>
+</div>
+<div class="foot">
+  <span class="host">python.nodeksa.com</span>
+  <span class="rungs"><i></i><i></i><i></i><i></i></span>
+</div>

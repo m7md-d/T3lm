@@ -12,6 +12,7 @@
     "./highlight/c": "./src/highlight/c.ts",
     "./highlight/dart": "./src/highlight/dart.ts",
     "./highlight/go": "./src/highlight/go.ts",
+    "./highlight/python": "./src/highlight/python.ts",
     "./highlight/rust": "./src/highlight/rust.ts",
     "./highlight/sh": "./src/highlight/sh.ts",
     "./md": "./src/md/index.ts",
