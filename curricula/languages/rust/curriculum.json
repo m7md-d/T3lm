@@ -5,7 +5,7 @@
   "tagline": "تفكيك Rust من المِلكية إلى نظام أنواعها — لمن يعرف C ولم يكتب Rust",
   "url": "https://rust.nodeksa.com",
   "profile": "default",
-  "status": "building",
+  "status": "published",
   "layout": "canonical",
   "site": {
     "stack": "kit",

@@ -5,12 +5,12 @@
   "tagline": "تفكيك نموذج الكائنات والمفسّر والمصفوفة والحدّ مع C — لمن C مرساتُه وكتب سكربتات صغيرة",
   "url": "https://python.nodeksa.com",
   "profile": "default",
-  "status": "building",
+  "status": "published",
   "layout": "canonical",
-  "python": "3.14",
   "site": {
     "stack": "kit",
     "deploy": "t3lm-python",
-    "live": false
-  }
+    "live": true
+  },
+  "python": "3.14"
 }
