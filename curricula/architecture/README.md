@@ -6,6 +6,10 @@
 | المنهج | الموضوع | الموقع | الأسلوب | الحالة |
 |---|---|---|---|---|
 | [`project-layout`](project-layout) | فلسفة تنظيم المشروع وفصل المسؤوليات: من المسطّح إلى Hexagonal وClean وDDD — بقياسٍ لا بذوق | [زُر ↗](https://project-layout.nodeksa.com) | `default` | 🔨 |
+
+**مقترحات** — موضوعٌ محجوزٌ بريدمي يقول متطلّباته، بلا منهجٍ بعد:
+
+- [`representation`](representation/README.md)
 <!-- doctor:list:end -->
 
 البنية والاتفاقات: [`.claude/conventions/repo-layout.md`](../../.claude/conventions/repo-layout.md)

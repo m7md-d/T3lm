@@ -21,3 +21,12 @@ archive/*
 .dart_tool/
 pubspec.lock
 *.dylib
+
+# Python — بيئةُ الفحص تُبنى ولا تُلتزَم
+.venv/
+pycache/
+*.pyc
+*.pyo
+*.pyd
+
+my_idea/
