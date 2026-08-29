@@ -1,0 +1,16 @@
+{
+  "slug": "path-to-pixel",
+  "category": "media",
+  "title": "من المسار إلى البكسل — الملء والخطّ والتركيب واللون",
+  "tagline": "بناءُ مصيّرٍ ثنائيّ الأبعاد بـC من الأوّل، وكلُّ صورةٍ تُقاس ضدّ مصيّرٍ ناضج — لمن أنهى C",
+  "url": "https://path-to-pixel.nodeksa.com",
+  "profile": "default",
+  "status": "building",
+  "layout": "canonical",
+  "site": {
+    "stack": "kit",
+    "deploy": "t3lm-path-to-pixel",
+    "live": false
+  },
+  "hook": "لماذا يخرج خطُّك الرقيق رمادياً؟ الجواب ليس في شاشتك — هو الجواب الصحيح الوحيد الذي تملكه شبكة."
+}
