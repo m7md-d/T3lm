@@ -239,10 +239,7 @@ FULL=0 node ../../../../tools/screens.mjs . /tmp/shots "#/trace"
 ## ٨) الإصدار
 
 ```bash
-npm run typecheck && npm run smoke && npm run outputs && npm run bidi
-npm run build && npm run swcheck
-rm -f dart.zip && (cd dist && zip -qr ../dart.zip . -x '.DS_Store' '**/.DS_Store' '__MACOSX/*')
-unzip -l dart.zip | head -5
+node tools/release.mjs curricula/languages/dart/site   # من جذر المستودع
 ```
 
 **الضغط من داخل `dist/` لا من فوقه**: Cloudflare Pages يجعل جذر المضغوط جذر

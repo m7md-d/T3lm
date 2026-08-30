@@ -134,10 +134,7 @@ npm run build && npm run swcheck
 ## ٦) الإصدار
 
 ```bash
-npm run typecheck && npm run outputs && npm run bidi && npm run smoke
-npm run build && npm run swcheck
-rm -f python.zip && (cd dist && zip -qr ../python.zip . -x '.DS_Store' '**/.DS_Store' '__MACOSX/*')
-unzip -l python.zip | head -5
+node tools/release.mjs curricula/languages/python/site   # من جذر المستودع
 ```
 
 المشروع `t3lm-python`، والعنوان `https://python.nodeksa.com` — مشتقٌّ يكتبه

@@ -133,8 +133,7 @@ node ../../../../tools/doctor.mjs   # البنية والتوثيق
 ## ٨. النشر
 
 ```bash
-npm run build
-cd dist && zip -r ../path-to-pixel.zip . && cd ..
+node tools/release.mjs curricula/media/path-to-pixel/site   # من جذر المستودع
 ```
 
 المشروع `t3lm-path-to-pixel`، والعنوان `path-to-pixel.nodeksa.com` — يكتبه

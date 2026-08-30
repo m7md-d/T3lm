@@ -210,10 +210,7 @@ OFFLINE=1 npm run runno      58 · 47 مطابقة · والشبكة مقطوع�
 تحت `/dist/` ويعطي الجذر ٤٠٤.
 
 ```bash
-python3 ../tools/verify.py && npm run smoke && npm run runno && npm run build
-node ../../../../tools/doctor.mjs
-rm -f c.zip && (cd dist && zip -qr ../c.zip . -x '.DS_Store' '**/.DS_Store' '__MACOSX/*')
-unzip -l c.zip | head -5
+node tools/release.mjs curricula/languages/c/site   # من جذر المستودع
 ```
 
 ثم `node tools/doctor.mjs --probe --fix` ليكتب `site.live` من الواقع لا من

@@ -125,9 +125,7 @@ wasm-src/build.sh  يفحص الاستيرادات ثم يبني مفسّر Go �
 الأمر كاملاً، من الفحص إلى المضغوط:
 
 ```bash
-npm run smoke && npm run build
-rm -f go.zip && (cd dist && zip -qr ../go.zip . -x '.DS_Store' '**/.DS_Store' '__MACOSX/*')
-unzip -l go.zip | head -5      # index.html في جذر المضغوط لا داخل مجلّد
+node tools/release.mjs curricula/languages/go/site   # من جذر المستودع
 ```
 
 **الضغط من داخل `dist/`، لا من فوقه.** Cloudflare Pages يجعل جذر المضغوط جذر

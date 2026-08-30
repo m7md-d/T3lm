@@ -108,9 +108,7 @@ npm run outputs  يترجم كل لوحةٍ في المنهج ويقارنها �
 الأمر كاملاً، من الفحص إلى المضغوط:
 
 ```bash
-npm run outputs && npm run smoke && npm run build
-rm -f rust.zip && (cd dist && zip -qr ../rust.zip . -x '.DS_Store' '**/.DS_Store' '__MACOSX/*')
-unzip -l rust.zip | head -5      # index.html في جذر المضغوط لا داخل مجلّد
+node tools/release.mjs curricula/languages/rust/site   # من جذر المستودع
 ```
 
 **الضغط من داخل `dist/`، لا من فوقه.** Cloudflare Pages يجعل جذر المضغوط جذر

@@ -8,6 +8,8 @@
   ],
   "scripts": {
     "doctor": "node tools/doctor.mjs",
-    "doctor:fix": "node tools/doctor.mjs --fix"
+    "doctor:fix": "node tools/doctor.mjs --fix",
+    "release": "node tools/release.mjs",
+    "icons": "node tools/icons.mjs"
   }
 }

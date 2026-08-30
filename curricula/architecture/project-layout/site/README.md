@@ -91,9 +91,7 @@ npm run shots     ميزانية اللقطة: ≤٢٥٠ كلمة و≤بلوك�
 الأمر كاملاً، من الفحص إلى المضغوط:
 
 ```bash
-npm run measure && npm run shots && npm run smoke && npm run build
-rm -f project-layout.zip && (cd dist && zip -qr ../project-layout.zip . -x '.DS_Store' '**/.DS_Store' '__MACOSX/*')
-unzip -l project-layout.zip | head -5      # index.html في جذر المضغوط لا داخل مجلّد
+node tools/release.mjs curricula/architecture/project-layout/site   # من جذر المستودع
 ```
 
 **الضغط من داخل `dist/`، لا من فوقه.** Cloudflare Pages يجعل جذر المضغوط جذر

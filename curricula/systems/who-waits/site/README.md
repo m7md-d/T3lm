@@ -98,9 +98,7 @@ npm run dev      # التطوير
 الأمر كاملاً، من الفحص إلى المضغوط:
 
 ```bash
-npm run verify && npm run smoke && npm run build
-rm -f who-waits.zip && (cd dist && zip -qr ../who-waits.zip . -x '.DS_Store' '**/.DS_Store' '__MACOSX/*')
-unzip -l who-waits.zip | head -5      # index.html في جذر المضغوط لا داخل مجلّد
+node tools/release.mjs curricula/systems/who-waits/site   # من جذر المستودع
 ```
 
 **الضغط من داخل `dist/`، لا من فوقه.** Cloudflare Pages يجعل جذر المضغوط جذر
