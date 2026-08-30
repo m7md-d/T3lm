@@ -11,6 +11,7 @@
     "swcheck": "node ../../../../tools/swcheck.mjs .",
     "outputs": "python3 ../tools/verify.py",
     "assets": "node ../../../../tools/assets.mjs .",
+    "icons": "node ../../../../tools/icons.mjs .",
     "fonts": "node ../../../../tools/fonts.mjs . \"https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap\""
   },
   "dependencies": {

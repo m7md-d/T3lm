@@ -12,6 +12,7 @@
     "outputs": "python3 ../tools/verify.py",
     "bidi": "python3 ../tools/bidi.py",
     "assets": "node ../../../../tools/assets.mjs .",
+    "icons": "node ../../../../tools/icons.mjs .",
     "fonts": "node ../../../../tools/fonts.mjs . \"https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600;700&display=swap\""
   },
   "dependencies": {

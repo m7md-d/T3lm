@@ -12,6 +12,7 @@
     "measure": "node ../tools/measure.mjs --check",
     "shots": "node ../tools/shots.mjs",
     "assets": "node ../../../../tools/assets.mjs .",
+    "icons": "node ../../../../tools/icons.mjs .",
     "fonts": "node ../../../../tools/fonts.mjs . \"https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap\""
   },
   "dependencies": {

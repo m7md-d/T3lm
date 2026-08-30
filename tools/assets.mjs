@@ -14,7 +14,7 @@
 import { mkdir } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
-import { shot } from './shot.mjs';
+import { session } from './shot.mjs';
 
 const site = process.argv[2];
 if (!site) {
@@ -34,9 +34,10 @@ const jobs = [
   ['icon-maskable.html', 'icons/icon-maskable-192.png', 192],
 ];
 
+const { shot, close } = await session();
 let n = 0;
 for (const [from, to, size] of jobs) {
-  if (!existsSync(src(from))) { console.error(`✗ ناقص: ${src(from)}`); process.exit(1); }
+  if (!existsSync(src(from))) { await close(); console.error(`✗ ناقص: ${src(from)}`); process.exit(1); }
   const bytes = await shot(src(from), pub(to), size, size);
   console.log(`  ${to.padEnd(34)} ${String(size).padStart(4)}²  ${(bytes / 1024).toFixed(1)}ك`);
   n++;
@@ -48,4 +49,5 @@ if (existsSync(src('og.html'))) {
   n++;
 }
 
+await close();
 console.log(`✓ ${n} أصلاً في ${pub('')}`);

@@ -10,6 +10,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import { checkSite } from './icons.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const FIX = process.argv.includes('--fix');
@@ -298,6 +299,20 @@ function checkLinks(dir) {
   }
 }
 checkLinks(ROOT);
+
+/* ── أصول التطبيق ──
+   الأيقونة ملفٌّ **موجودٌ وخاطئ**: اسمُها ومقاسها سليمان ومحتواها ركنٌ مكبَّر
+   من الرسم. لا يراها فحصُ بنيةٍ ولا لقطةُ سطح مكتب، ولا تظهر إلا على شاشة هاتف
+   بعد التثبيت — فتُقاس بكسلاتُها هنا. والتفصيل في `tools/icons.mjs`. */
+for (const cat of fs.readdirSync(path.join(ROOT, 'curricula'), { withFileTypes: true })) {
+  if (!cat.isDirectory()) continue;
+  for (const c of fs.readdirSync(path.join(ROOT, 'curricula', cat.name), { withFileTypes: true })) {
+    if (!c.isDirectory()) continue;
+    const site = path.join(ROOT, 'curricula', cat.name, c.name, 'site');
+    if (!fs.existsSync(path.join(site, 'public', 'icons'))) continue;
+    for (const e of checkSite(site)) err(e.replace(ROOT + path.sep, ''));
+  }
+}
 
 /* ── التقرير ── */
 console.log(`\nمناهج: ${items.length} · تصنيفات: ${new Set(items.map(i => i.category)).size} · أساليب: ${[...profiles].join(', ')}`);
