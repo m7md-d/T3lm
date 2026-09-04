@@ -1,0 +1,37 @@
+{
+  "name": "@t3lm/site-representation",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build && node ../../../../tools/sw.mjs .",
+    "preview": "vite preview",
+    "typecheck": "tsc -b",
+    "conform": "vite build --ssr scripts/conform.ts --outDir .conform --logLevel error && node .conform/conform.js",
+    "smoke": "vite build --ssr scripts/ssr-check.tsx --outDir .ssr --logLevel error && node .ssr/ssr-check.js",
+    "swcheck": "node ../../../../tools/swcheck.mjs .",
+    "outputs": "python3 ../tools/verify.py",
+    "examples": "python3 ../tools/examples.py",
+    "verify": "python3 ../tools/examples.py && npm run conform",
+    "bidi": "python3 ../tools/bidi.py",
+    "assets": "node ../../../../tools/assets.mjs .",
+    "icons": "node ../../../../tools/icons.mjs .",
+    "fonts": "node ../../../../tools/fonts.mjs . \"https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap\""
+  },
+  "dependencies": {
+    "@t3lm/kit": "*",
+    "lucide-react": "^1.33.0",
+    "marked": "^16.4.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-router-dom": "^6.26.2"
+  },
+  "devDependencies": {
+    "@types/node": "^26.3.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "typescript": "^5.6.0",
+    "vite": "^7.0.0"
+  }
+}

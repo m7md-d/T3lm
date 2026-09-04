@@ -1,0 +1,80 @@
+/* الأساس: الطباعة وثنائية اللغة. **لا لون حرفيّ** — كلُّه من tokens.css. */
+@import '@t3lm/kit/styles/reset.css';
+@import './tokens.css';
+
+html { color-scheme: dark; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ar);
+  font-size: 16px;
+  line-height: 1.9;
+  /* حِبرٌ يفتح من أعلى قليلاً — ضوءٌ واحدٌ بلا زخرفة. */
+  background-image:
+    radial-gradient(120% 50% at 50% -12%, var(--surface) 0%, transparent 62%),
+    linear-gradient(var(--bg), var(--bg-deep));
+  background-attachment: fixed;
+}
+
+h1, h2, h3, h4 { font-weight: 600; line-height: 1.35; text-wrap: balance; }
+h1 { font-size: clamp(26px, 3.8vw, 40px); }
+h2 { font-size: clamp(20px, 2.3vw, 26px); }
+h3 { font-size: clamp(16px, 1.7vw, 19px); color: var(--ink-2); }
+p { text-wrap: pretty; }
+
+a { color: var(--accent); text-underline-offset: 3px; text-decoration-color: var(--accent-dim); }
+a:hover { text-decoration-color: currentColor; }
+
+hr { border: 0; border-top: 1px solid var(--line-soft); margin: 2rem 0; }
+
+/* ــــ ثنائية اللغة: الكود معزولٌ دائماً، والعربية لا تمسّها المونو ــــ */
+code, pre, .en, .num {
+  font-family: var(--font-mono);
+  direction: ltr;
+  unicode-bidi: isolate;
+  font-variant-ligatures: none;
+}
+.num { font-variant-numeric: tabular-nums; }
+
+/* المونو للكود والأرقام فقط. الوسمُ العربيّ بخطّ النصّ وبلا تباعد حروف. */
+.tag, .kicker, .label { font-family: var(--font-ar); letter-spacing: 0; }
+
+:is(p, li, td, th) > code {
+  background: var(--surface-2);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-sm);
+  padding: 0.05em 0.34em;
+  font-size: 0.88em;
+}
+
+blockquote {
+  margin: 0;
+  padding-inline-start: 1rem;
+  border-inline-start: 2px solid var(--g-convention-dim);
+  color: var(--ink-2);
+}
+
+table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+th, td {
+  text-align: start;
+  padding: 0.5rem 0.7rem;
+  border-bottom: 1px solid var(--line-soft);
+  vertical-align: top;
+}
+th { color: var(--ink-3); font-weight: 500; }
+td .num, td code { font-variant-numeric: tabular-nums; }
+
+ul, ol { padding-inline-start: 1.3rem; }
+li::marker { color: var(--ink-4); }
+
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

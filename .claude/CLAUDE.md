@@ -128,7 +128,8 @@ archive/  ما ليس منهجاً
 
 التصنيفات: `languages` · `systems` · `networks` · `web` · `media` · `architecture`.
 
-**والمناهج سبعة:** `c` · `go` · `rust` · `dart` · `project-layout` · `who-waits` · `docker`.
+**والمناهج ثمانية:** `c` · `go` · `rust` · `dart` · `project-layout` · `representation` ·
+`who-waits` · `docker`.
 
 وما سواها **مقترَحات**: موضوعٌ يسكن مكانه بريدمي يقول متطلّباته، ومادّتُه
 القديمة في `archive/`. لا يُبنى عليه ولا يُقاس بالخطة، وتُقرأ المقترحات معاً

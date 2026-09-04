@@ -6,6 +6,12 @@
   "url": "https://representation.nodeksa.com",
   "profile": "default",
   "status": "building",
+  "adopted": true,
   "layout": "canonical",
+  "site": {
+    "stack": "kit",
+    "deploy": "t3lm-representation",
+    "live": false
+  },
   "hook": "ملفُّك صحيحُ الصيغة ومعناه مستحيل. من كان يفترض أن يمنع ذلك — القواعد، أم المتحقِّق، أم العُرف؟"
 }

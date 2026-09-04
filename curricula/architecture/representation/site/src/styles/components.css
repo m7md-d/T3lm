@@ -1,0 +1,338 @@
+/* المكوّنات. **لا لون حرفيّ** — كلُّه من tokens.css. */
+
+/* ــــ الوسوم ــــ */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  color: var(--ink-3);
+  background: var(--surface-2);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-pill);
+  padding: 0.08rem 0.55rem;
+  white-space: nowrap;
+}
+.kicker { font-size: 0.76rem; color: var(--ink-4); }
+
+/* ــــ الأزرار ــــ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: inherit;
+  font-size: 0.85rem;
+  color: var(--ink-2);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 0.35rem 0.75rem;
+  cursor: pointer;
+  transition: color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
+}
+.btn svg { width: 15px; height: 15px; }
+.btn:hover:not(:disabled) { color: var(--ink); border-color: var(--ink-4); }
+.btn:disabled { opacity: 0.45; cursor: default; }
+.btn--go { color: var(--accent); border-color: var(--accent-dim); background: var(--accent-dim); }
+.btn--go:hover:not(:disabled) { color: var(--accent); border-color: var(--accent); }
+.btn--ghost { background: none; }
+
+/* ــــ القسم ــــ */
+.shot__part { font-size: 0.76rem; color: var(--ink-4); margin-block-end: 0.35rem; }
+.shot__title { margin-block-end: 0.5rem; }
+.shot__meter {
+  height: var(--r-hair);
+  background: var(--line-soft);
+  border-radius: var(--r-pill);
+  margin-block-end: 1.5rem;
+  overflow: hidden;
+}
+.shot__meter i { display: block; height: 100%; background: var(--accent); }
+.shot__intro { color: var(--ink-2); margin-block-end: 1.6rem; }
+
+/* ــــ كتلة كود ــــ */
+.code {
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: var(--bg-deep);
+  overflow: hidden;
+}
+.code__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.7rem;
+  border-bottom: 1px solid var(--line-soft);
+  background: var(--surface);
+}
+.code__file {
+  font-family: var(--font-mono);
+  direction: ltr;
+  unicode-bidi: isolate;
+  font-size: 0.74rem;
+  color: var(--ink-3);
+}
+.code--task { border-color: var(--g-solver-dim); }
+.code pre, .panel pre {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  overflow-x: auto;
+  font-size: 0.83rem;
+  line-height: 1.75;
+}
+
+/* ــــ كتلة تُقرأ نصّاً ــــ */
+.panel {
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: var(--surface);
+  overflow: hidden;
+}
+.panel__head {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+  padding: 0.35rem 0.7rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+.panel__note { font-size: 0.76rem; color: var(--ink-4); }
+.panel pre { background: var(--bg-deep); }
+.panel--spec pre, .panel--math pre { background: var(--surface-2); }
+.panel--diagram pre { background: var(--bg-deep); color: var(--ink-2); }
+
+/* ــــ ألوان الضوامن: لونُ الرمز لونُ من يضمنه ــــ */
+.g-grammar { color: var(--g-grammar); }
+.g-validator { color: var(--g-validator); }
+.g-solver { color: var(--g-solver); }
+.g-convention { color: var(--g-convention); }
+
+/* ــــ أصناف التلوين الساكن ــــ */
+.tok-keyword, .tok-definition { color: var(--g-validator); }
+.tok-string { color: var(--g-solver); }
+.tok-number { color: var(--g-solver); }
+.tok-comment { color: var(--ink-4); font-style: normal; }
+.tok-variableName, .tok-propertyName { color: var(--ink); }
+.tok-typeName, .tok-className, .tok-typeName2 { color: var(--g-grammar); }
+.tok-operator, .tok-punctuation { color: var(--ink-3); }
+.tok-function { color: var(--g-grammar); }
+.tok-bool, .tok-null, .tok-atom { color: var(--g-convention); }
+
+/* ــــ سؤال التوقّع ــــ */
+.gate {
+  border: 1px dashed var(--line);
+  border-radius: var(--r);
+  padding: 0.9rem 1rem;
+  background: var(--surface);
+}
+.gate__q { color: var(--ink-2); font-size: 0.92rem; margin-block-end: 0.6rem; }
+.gate textarea {
+  width: 100%;
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: var(--ink);
+  background: var(--bg-deep);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 0.5rem 0.7rem;
+  resize: vertical;
+}
+.gate__mine {
+  border-inline-start: 2px solid var(--g-solver);
+  padding-inline-start: 0.8rem;
+  color: var(--ink-2);
+  font-size: 0.9rem;
+}
+
+/* ــــ البطاقة ــــ */
+.card {
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  padding: 1.1rem 1.2rem;
+}
+.card__k { font-size: 0.76rem; color: var(--ink-4); margin-block-end: 0.7rem; }
+.card--exercise { border-color: var(--g-solver-dim); }
+.floor { display: flex; flex-direction: column; gap: 1.2rem; }
+.trail { display: flex; flex-direction: column; gap: 0.45rem; }
+.trail__row { display: flex; gap: 0.7rem; align-items: baseline; font-size: 0.88rem; }
+.trail__row .num { color: var(--ink-4); font-size: 0.78rem; }
+
+/* ــــ المدخل ــــ */
+.hero { padding-block: clamp(1.5rem, 6vw, 3.4rem) 1.6rem; }
+.hero h1 { font-size: clamp(30px, 5.4vw, 56px); letter-spacing: -0.01em; }
+.hero__sub { color: var(--ink-2); max-width: 46ch; margin-block-start: 0.9rem; }
+.hero__mark { margin-block-end: 1.4rem; }
+
+.stage {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  color: var(--ink-4);
+  font-size: 0.78rem;
+}
+.stage b { font-weight: 500; color: var(--ink-2); }
+
+.who {
+  display: grid;
+  gap: 0.55rem;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+}
+.who__row {
+  border: 1px solid var(--line);
+  border-inline-start-width: 2px;
+  border-radius: var(--r);
+  padding: 0.7rem 0.85rem;
+  background: var(--surface);
+}
+.who__row--grammar { border-inline-start-color: var(--g-grammar); }
+.who__row--validator { border-inline-start-color: var(--g-validator); }
+.who__row--solver { border-inline-start-color: var(--g-solver); }
+.who__row--convention { border-inline-start-color: var(--g-convention); }
+.who__tag { font-family: var(--font-mono); direction: ltr; unicode-bidi: isolate; font-size: 0.8rem; }
+.who__row--grammar .who__tag { color: var(--g-grammar); }
+.who__row--validator .who__tag { color: var(--g-validator); }
+.who__row--solver .who__tag { color: var(--g-solver); }
+.who__row--convention .who__tag { color: var(--g-convention); }
+.who__meaning { color: var(--ink-2); font-size: 0.84rem; margin-block-start: 0.25rem; }
+.who__gives { color: var(--ink-4); font-size: 0.76rem; margin-block-start: 0.35rem; }
+
+.pack {
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  padding: 0.9rem 1rem;
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+.pack:hover { border-color: var(--ink-4); }
+.pack__no { font-family: var(--font-mono); direction: ltr; unicode-bidi: isolate; font-size: 0.74rem; color: var(--ink-4); }
+.pack__name { font-size: 1rem; margin-block: 0.2rem 0.4rem; }
+.pack__gist { color: var(--ink-3); font-size: 0.84rem; line-height: 1.7; }
+
+.breaks { display: grid; gap: 0.6rem; }
+.break {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.2rem 0.8rem;
+  border-inline-start: 2px solid var(--g-convention);
+  padding: 0.5rem 0.9rem;
+  background: var(--surface);
+  border-radius: 0 var(--r) var(--r) 0;
+}
+.break__n { font-family: var(--font-mono); direction: ltr; unicode-bidi: isolate; color: var(--g-convention); font-size: 0.8rem; }
+.break__name { font-size: 0.95rem; }
+.break__sym { grid-column: 2; color: var(--ink-3); font-size: 0.82rem; }
+.break__dies { grid-column: 2; color: var(--ink-4); font-size: 0.78rem; margin-block-start: 0.2rem; }
+
+/* ــــ المختبر: نصٌّ يُكتَب، ورفضٌ أو صورة ــــ */
+.lab {
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  overflow: hidden;
+}
+.lab__head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  padding: 0.5rem 0.85rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+.lab__claim { color: var(--ink-3); font-size: 0.8rem; }
+.lab__grid { display: grid; grid-template-columns: 1fr 1fr; }
+.lab__pane { min-width: 0; }
+.lab__pane + .lab__pane { border-inline-start: 1px solid var(--line-soft); }
+.lab__k {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.74rem;
+  color: var(--ink-4);
+  border-bottom: 1px solid var(--line-soft);
+}
+/* حقلٌ فوق طبقةِ تلوين: المترين متطابقان — نفسُ الخطّ والمقاس والحشو. */
+.lab__edit { position: relative; background: var(--bg-deep); }
+.lab__ghost, .lab__edit textarea {
+  margin: 0;
+  font-family: var(--font-mono);
+  direction: ltr;
+  unicode-bidi: isolate;
+  font-size: 0.83rem;
+  line-height: 1.75;
+  padding: 0.85rem 1rem;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  tab-size: 2;
+}
+.lab__ghost {
+  min-height: 11rem;
+  overflow: hidden;
+  background: none;
+  pointer-events: none;
+}
+.lab__edit textarea {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  border: 0;
+  resize: none;
+  overflow: hidden;
+  background: transparent;
+  color: transparent;
+  caret-color: var(--ink);
+}
+.lab__edit textarea::selection { background: var(--accent-dim); }
+.lab__edit textarea:focus { outline: 1px solid var(--accent); outline-offset: -1px; }
+.lab pre {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  overflow: auto;
+  max-height: 20rem;
+  font-size: 0.83rem;
+  line-height: 1.75;
+  background: var(--bg-deep);
+}
+.lab__seeds { display: flex; gap: 0.4rem; flex-wrap: wrap; padding: 0.5rem 0.7rem; border-top: 1px solid var(--line-soft); }
+.lab__seed {
+  font-family: inherit;
+  font-size: 0.76rem;
+  color: var(--ink-3);
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  padding: 0.1rem 0.6rem;
+  cursor: pointer;
+}
+.lab__seed:hover { color: var(--ink); border-color: var(--ink-4); }
+.lab__seed--now { color: var(--ink); border-color: var(--accent); }
+.lab__verdict {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.7rem;
+  font-size: 0.78rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+.lab__verdict--ok { color: var(--g-grammar); }
+.lab__verdict--no { color: var(--g-convention); }
+.lab__svg {
+  padding: 1rem;
+  background: var(--bg-deep);
+  overflow-x: auto;
+  direction: ltr;
+}
+.lab__svg svg { display: block; max-width: 100%; height: auto; }
+.lab__svg rect, .lab__svg line { stroke: var(--g-grammar); }
+.lab__svg text { fill: var(--ink); font-family: var(--font-ar); font-size: 13px; }
+
+@media (max-width: 46rem) {
+  .lab__grid { grid-template-columns: 1fr; }
+  .lab__pane + .lab__pane { border-inline-start: 0; border-top: 1px solid var(--line-soft); }
+}
