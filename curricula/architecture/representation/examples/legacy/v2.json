@@ -1,0 +1,4 @@
+{"version": 2,
+ "boxes": [{"id": "a", "label": "المصدر", "size": 2, "kind": "source"},
+           {"id": "b", "label": "المصبّ", "size": 3, "kind": "sink"}],
+ "links": [{"from": "a.out", "to": "b.in"}]}

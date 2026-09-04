@@ -1,31 +1,32 @@
+#include <stddef.h>
 #include <stdlib.h>
-#include <stdint.h>
 
-long long col_sum(const long long *v, long n) {
-    long long s = 0;
-    for (long i = 0; i < n; i++) s += v[i];
-    return s;
+/* جمعُ عمودٍ من ثمانية بايتاتٍ متجاورة. لا تخصيص، ولا مِلكية. */
+long long px_total(const long long *values, size_t n) {
+  long long total = 0;
+  for (size_t i = 0; i < n; i++) total += values[i];
+  return total;
 }
 
-/* تجميعٌ بمفاتيح: لكل صفٍّ مفتاحٌ صغير، تُجمَع القيم في دلوه. */
-void group_sum(const long long *key, const long long *val, long n,
-               long long *out, long k) {
-    for (long i = 0; i < n; i++) {
-        long g = (long)key[i];
-        if (g >= 0 && g < k) out[g] += val[i];
-    }
+/* يضاعف في مكانه: يكتب في مخزن المنادي. */
+void px_double(long long *values, size_t n) {
+  for (size_t i = 0; i < n; i++) values[i] *= 2;
 }
 
-long long *make_zeros(long n) {
-    long long *p = (long long *)calloc((size_t)n, sizeof(long long));
-    return p;
+/* يخصّص ويعيد المِلكية إلى المنادي — وعليه أن ينادي `px_free`. */
+long long *px_scaled(const long long *values, size_t n, long long k) {
+  long long *out = malloc(n * sizeof *out);
+  if (!out) return NULL;
+  for (size_t i = 0; i < n; i++) out[i] = values[i] * k;
+  return out;
 }
 
-void release_zeros(long long *p) { free(p); }
+void px_free(long long *p) { free(p); }
 
-/* حلقةٌ طويلةٌ عمداً، لقياس ما يقع للقفل أثناء تنفيذ C. */
-long long busy(long n) {
-    long long s = 0;
-    for (long i = 0; i < n; i++) s += i % 7;
-    return s;
+/* حلقةٌ طويلةٌ بلا لمس Python: تُقاس بها قابلية التوازي عبر الحدّ.
+ * و`volatile` تمنع المترجم من إغلاق المجموع في صيغةٍ واحدة عند `-O2`. */
+long long px_burn(long long n) {
+  volatile long long x = 0;
+  for (long long i = 0; i < n; i++) x += i;
+  return x;
 }

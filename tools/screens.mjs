@@ -132,6 +132,13 @@ for (const route of routes.length ? routes : ['/']) {
   await send('Runtime.evaluate', { expression: 'document.fonts.ready', awaitPromise: true }, sid);
   await new Promise((r) => setTimeout(r, 400));
 
+  /* EVAL — تعبيرٌ يُنفَّذ قبل اللقطة: يفتح لوحاً، أو يبذر تقدّماً في المخزن
+     المحلّيّ. بلا هذا تُصوَّر أوّلُ زيارةٍ وحدها، وحالاتُ التقدّم لا تُرى. */
+  if (process.env.EVAL) {
+    await send('Runtime.evaluate', { expression: process.env.EVAL, awaitPromise: true }, sid);
+    await new Promise((r) => setTimeout(r, 400));
+  }
+
   const full = FULL ? (await send('Page.getLayoutMetrics', {}, sid)).result?.cssContentSize : null;
   const { result: shot } = await send('Page.captureScreenshot', {
     format: 'png',

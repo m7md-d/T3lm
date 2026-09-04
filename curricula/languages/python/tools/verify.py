@@ -1,28 +1,28 @@
 #!/usr/bin/env python3
 """
-verify — يشغّل كل برنامج Python في `regions/` ويقارن مخرَجه بلوحته في الماركداون.
+verify — يشغّل كل برنامج Python في `regions/` ويقارن مخرَجه بالمخرَج المعروض في الماركداون.
 
     python3 tools/verify.py
 
-سببه أن **المخرَج المتخيَّل لا يُكتشف بالقراءة**. هنا يُكتشف: أي لوحةٍ تخالف
-التشغيل الحقيقيّ تُفشِل الفحص باسم ملفّها وسطرها.
+سببه أن **المخرَج المتخيَّل لا يُكتشف بالقراءة**. هنا يُكتشف: أي مخرَجٍ يخالف
+التشغيل يُفشِل الفحص باسم ملفّها وسطرها.
 
 العلامات:
-    <!-- out -->          اللوحة التالية مخرَجُ آخر برنامجٍ قبلها
+    <!-- out -->          الكتلة التالية مخرَجُ آخر برنامجٍ قبلها
     <!-- out: سبب -->     مثلها، والسبب للقارئ
-    <!-- err: TypeError --> اللوحة التالية مخرَجٌ ينتهي باستثناء — يُشغَّل ويُقارَن
+    <!-- err: TypeError --> الكتلة التالية مخرَجٌ ينتهي باستثناء — يُشغَّل ويُقارَن
     <!-- part: NAME -->   البلوك التالي مقتطع، وبرنامجه الكامل `programs/NAME.py`
-    <!-- runs: NAME -->   **أرقام اللوحة تختلف بين تشغيلين** (زمنٌ أو عنوان):
+    <!-- runs: NAME -->   **الأرقام تختلف بين تشغيلين** (زمنٌ أو عنوان):
                           يُفحَص أن البرنامج يعمل، ولا تُقارَن الأرقام
     <!-- part -->         مقتطعٌ بلا ملفّ — يُفحَص يدوياً، ويُعدّ في التقرير
     <!-- shell -->        مخرَجُ أوامرِ صدفةٍ لا برنامجِ Python — يُفحَص يدوياً
     <!-- task -->         كودُ تمرينٍ يكتبه القارئ — ليس ادّعاءً، ولا يُفحَص
-    المخرَج:              بوّابة تنبّؤ، واللوحة بعدها جوابها
+    المخرَج:              سؤال توقّع، والكتلة بعده جوابه
 
-ولوحةٌ لا يسبقها برنامجٌ **ثقبٌ في الفحص**، فتُعدّ وتُفشِل.
+وكتلةُ مخرَجٍ لا يسبقها برنامج **ثقبٌ في الفحص**، فتُعدّ وتُفشِل.
 
 ويُسوّى قبل المقارنة ما يحمل هويّة جهاز القارئ: مسارُ مجلّد المنهج حيث ظهر
-(اللوحة تحمل مساراً نسبياً)، وعناوينُ الكائنات (`0x...`). **ونصّ الرسالة نفسه
+(المعروض مسارٌ نسبيّ)، وعناوينُ الكائنات (`0x...`). **ونصّ الرسالة نفسه
 يُقارَن حرفياً.**
 """
 import os
@@ -45,7 +45,7 @@ NORM = [
 ]
 
 FENCE = re.compile(r"^```(\w*)\s*$")
-MARK = re.compile(r"^<!--\s*(out|err|part|runs|shell|task)(?::\s*(.*?))?\s*-->\s*$")
+MARK = re.compile(r"^<!--\s*(out|err|part|runs|head|shell|task)(?::\s*(.*?))?\s*-->\s*$")
 
 
 def build_kernel():
@@ -76,12 +76,14 @@ def norm(s):
 def run(name):
     path = PROG / f"{name}.py"
     if not path.exists():
-        return None, f"لا ملفّ: programs/{name}.py"
+        return None, f"لا ملفّ: programs/{name}.py", 1
     r = subprocess.run(
         [str(PY), str(path)], capture_output=True, text=True, timeout=120,
-        cwd=str(ROOT), env={**os.environ, "PYTHONIOENCODING": "utf-8"},
+        cwd=str(ROOT),
+        env={**os.environ, "PYTHONIOENCODING": "utf-8",
+             "PYTHONPATH": str(PROG), "PYTHONHASHSEED": "0"},
     )
-    return norm(r.stdout + r.stderr), None
+    return norm(r.stdout + r.stderr), None, r.returncode
 
 
 def blocks(lines):
@@ -113,7 +115,7 @@ def main():
         g = sum(1 for ln in lines if ln.strip() == "المخرَج:")
         gates += g
         if g > 3:
-            print(f"✗ {md.name}: {g} بوّابات — الحدّ ثلاث في الإقليم")
+            print(f"✗ {md.name}: {g} أسئلة توقّع — الحدّ ثلاث في الفصل")
             fails += 1
         current = None
         for ln, lang, body, mark, arg in blocks(lines):
@@ -122,7 +124,7 @@ def main():
                 if arg:
                     current = arg
                     if mark == "runs":
-                        out, err = run(arg)
+                        out, err, _ = run(arg)
                         if err:
                             print(f"✗ {where}: {err}")
                             fails += 1
@@ -132,6 +134,25 @@ def main():
                     holes += 1
                     print(f"· {where}: مقتطعٌ بلا ملفّ — يدويّ")
                 continue
+            if mark == "head":
+                # مقتطعٌ من ملفٍّ في programs/ — كلُّ سطرٍ فيه يجب أن يوجد هناك
+                src = PROG / (arg or "")
+                if not src.exists():
+                    print(f"✗ {where}: لا ملفّ programs/{arg}")
+                    fails += 1
+                    continue
+                have = {ln.strip() for ln in src.read_text(encoding="utf-8").split("\n")}
+                gone = [ln.strip() for ln in body.split("\n")
+                        if ln.strip() and ln.strip() not in have]
+                if gone:
+                    print(f"✗ {where}: سطرٌ ليس في programs/{arg}: {gone[0]}")
+                    fails += 1
+                else:
+                    checked += 1
+                    stem = PROG / (src.stem + ".py")
+                    if stem.exists():
+                        current = src.stem
+                continue
             if mark == "task":
                 continue
             if mark == "shell":
@@ -140,17 +161,42 @@ def main():
                 continue
             if mark in ("out", "err"):
                 if current is None:
-                    print(f"✗ {where}: لوحةٌ بلا برنامجٍ يسبقها")
+                    print(f"✗ {where}: كتلةٌ بلا برنامجٍ يسبقها")
                     fails += 1
                     continue
-                out, err = run(current)
+                out, err, code = run(current)
                 if err:
                     print(f"✗ {where}: {err}")
                     fails += 1
                     continue
+                if mark == "err":
+                    # المعروض يجوز أن يُقتطع منه أثر المكدّس، ويبقى كلُّ سطرٍ
+                    # فيه سطراً حقيقياً من التشغيل وبترتيبه. والبرنامج يجب أن يفشل.
+                    if code == 0:
+                        print(f"✗ {where}: البرنامج نجح، والمعروض خطأ")
+                        fails += 1
+                        continue
+                    real = out.split("\n")
+                    at = 0
+                    missing = None
+                    for want in norm(body).split("\n"):
+                        while at < len(real) and real[at] != want:
+                            at += 1
+                        if at == len(real):
+                            missing = want
+                            break
+                        at += 1
+                    if missing is not None:
+                        print(f"✗ {where}: سطرٌ ليس في التشغيل ({current}): {missing}")
+                        print("  ── التشغيل ──")
+                        print("\n".join("  " + x for x in real))
+                        fails += 1
+                    else:
+                        checked += 1
+                    continue
                 if out != norm(body):
-                    print(f"✗ {where}: اللوحة تخالف التشغيل ({current})")
-                    print("  ── اللوحة ──")
+                    print(f"✗ {where}: الكتلة تخالف التشغيل ({current})")
+                    print("  ── الكتلة ──")
                     print("\n".join("  " + x for x in norm(body).split("\n")))
                     print("  ── التشغيل ──")
                     print("\n".join("  " + x for x in out.split("\n")))
@@ -187,13 +233,13 @@ def main():
         if not any(p.stem in md.read_text(encoding="utf-8") for md in REG.glob("*.md"))
     )
     print()
-    print(f"لوحاتٌ مفحوصة: {checked} · ثقوب: {holes} · بوّابات: {gates}")
+    print(f"كتلٌ مفحوصة: {checked} · ثقوب: {holes} · أسئلة توقّع: {gates}")
     if orphan:
-        print(f"برامجُ سائبة لا تذكرها الأقاليم: {', '.join(orphan)}")
+        print(f"برامجُ سائبة لا تذكرها الفصول: {', '.join(orphan)}")
     if fails:
         print(f"✗ {fails} مخالفة")
         return 1
-    print("✓ كل لوحةٍ مفحوصةٍ تطابق تشغيلها")
+    print("✓ كل كتلةٍ مفحوصةٍ تطابق تشغيلها")
     return 0
 
 

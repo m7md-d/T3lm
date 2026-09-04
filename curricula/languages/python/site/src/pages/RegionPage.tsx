@@ -1,14 +1,19 @@
 /**
- * صفحة الإقليم — لقطةٌ واحدةٌ في المرّة، والانتقال بيد القارئ.
+ * صفحة الفصل — قسمٌ واحدٌ في المرّة، والانتقال بيد القارئ.
  *
- * والأرضيّة (التمرين والخلاصة) تُعرَض بعد آخر لقطة، ومعها **ما توقّعتَه**:
- * كلُّ ما حفظته البوّابات يُعرَض، بلا نسبةٍ وبلا صواب/خطأ — فالحكم للقارئ.
- * وبنيةُ النصّ هي الملاحة: خلاصةُ الإقليم تنتهي بسؤالٍ يفتحه الذي بعده.
+ * والأرضيّة (التمرين) تُعرَض بعد آخر قسم، ومعها **ما توقّعتَه**: كلُّ ما حُفِظ
+ * يُعرَض، بلا نسبةٍ وبلا صواب/خطأ — فالحكم للقارئ.
+ *
+ * وبنيةُ النصّ هي الملاحة: سطرُ «الفصل التالي» في آخر الماركداون هو ما يسمّي
+ * الزرَّ، فلا pager عامّ بجانبه.
+ *
+ * والانتقال يبدأ من **أعلى** القسم الجديد: قسمٌ نهايتُه مرئيةٌ من بدايته يجب أن
+ * يُدخَل من بدايته، وإلّا وقف القارئ في قاع شيءٍ لم يقرأه.
  */
 import { useEffect } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Blocks, Prose } from '../components/Blocks';
+import { Rail } from '../components/Rail';
 import { Shot, threeWords } from '../components/Shot';
 import { TopBar } from '../components/TopBar';
 import { byNum, regions } from '../content/regions';
@@ -24,7 +29,12 @@ export function RegionPage() {
     if (region && idx >= 0 && idx <= region.shots.length) store.see(region.num, idx);
   }, [region, idx]);
 
-  if (!region) return <><TopBar /><main className="wrap"><p>لا إقليم بهذا الرقم.</p></main></>;
+  /* الانتقال يضع القارئ في أعلى القسم الجديد، لا في الموضع الذي كان فيه. */
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+  }, [no, s]);
+
+  if (!region) return <><TopBar /><main className="wrap"><p>لا فصل بهذا الرقم.</p></main></>;
 
   const last = region.shots.length;
   const at = Math.min(Math.max(idx, 0), last);
@@ -33,13 +43,27 @@ export function RegionPage() {
   const nextRegion = regions.find((r) => r.n === region.n + 1);
   const go = (i: number) => nav(`/r/${region.num}/${i}`);
 
+  /* اسمُ ما بعده بثلاث كلمات: خطوةٌ محدّدةٌ رخيصة المظهر لا قفزةٌ في المجهول. */
+  const nextLabel = onFloor
+    ? nextRegion && `الفصل ${nextRegion.num} · ${threeWords(nextRegion.short)}`
+    : region.shots[at + 1]
+      ? threeWords(region.shots[at + 1]!.title)
+      : region.exercise
+        ? 'التمرين'
+        : undefined;
+
+  const onNext = onFloor
+    ? nextRegion ? () => nav(`/r/${nextRegion.num}/0`) : undefined
+    : () => go(at + 1);
+  const onPrev = at > 0 ? () => go(at - 1) : () => nav('/');
+
   return (
     <>
-      <TopBar here={`الإقليم ${region.num}`} />
-      <main className="wrap" id="main">
+      <TopBar here={`الفصل ${region.num}`} />
+      <main className="wrap region" id="main">
         {at === 0 && (
           <>
-            <div className="shot__part">الإقليم {region.num}</div>
+            <div className="shot__part">الفصل {region.num}</div>
             <Prose className="shot__intro prose-wrap" html={region.intro} />
           </>
         )}
@@ -50,59 +74,33 @@ export function RegionPage() {
 
         {onFloor && (
           <div className="floor">
-            <h1 className="shot__title" dangerouslySetInnerHTML={{ __html: region.titleHtml }} />
+            <h1 className="shot__title" dangerouslySetInnerHTML={{ __html: region.shortHtml }} />
             {region.exercise && (
               <section className="card card--exercise">
                 <div className="card__k">التمرين</div>
                 <Blocks blocks={region.exercise} idBase={`${region.num}:ex`} />
               </section>
             )}
-            {region.summary && (
+            <Predictions region={region.num} shots={last} />
+            {region.next && (
               <section className="card card--summary">
-                <div className="card__k">الخلاصة</div>
-                <Blocks blocks={region.summary} idBase={`${region.num}:su`} />
+                <div className="card__k">الفصل التالي</div>
+                <p className="prose-wrap">{region.next}</p>
               </section>
             )}
-            <Predictions region={region.num} shots={last} />
           </div>
         )}
 
-        <nav className="pager">
-          {at > 0 ? (
-            <button type="button" className="btn" onClick={() => go(at - 1)}>
-              <ArrowRight aria-hidden /> السابق
-            </button>
-          ) : (
-            <Link className="btn" to="/"><ArrowRight aria-hidden /> المدخل</Link>
-          )}
-          <span className="pager__next">
-            {!onFloor && region.shots[at + 1] && (
-              <>
-                <span className="next__label">{threeWords(region.shots[at + 1]!.title)}</span>
-                <button type="button" className="btn btn--go" onClick={() => go(at + 1)}>
-                  التالي <ArrowLeft aria-hidden />
-                </button>
-              </>
-            )}
-            {!onFloor && !region.shots[at + 1] && (
-              <>
-                <span className="next__label">{region.exercise ? 'التمرين' : 'الطريق'}</span>
-                <button type="button" className="btn btn--go" onClick={() => go(last)}>
-                  التالي <ArrowLeft aria-hidden />
-                </button>
-              </>
-            )}
-            {onFloor && nextRegion && (
-              <>
-                <span className="next__label">{threeWords(nextRegion.short)}</span>
-                <Link className="btn btn--go" to={`/r/${nextRegion.num}/0`}>
-                  الإقليم {nextRegion.num} <ArrowLeft aria-hidden />
-                </Link>
-              </>
-            )}
-          </span>
-        </nav>
       </main>
+
+      <Rail
+        region={region}
+        at={at}
+        nextLabel={nextLabel}
+        onPrev={onPrev}
+        onNext={onNext}
+        go={go}
+      />
     </>
   );
 }
@@ -119,7 +117,7 @@ function Predictions({ region, shots }: { region: string; shots: number }) {
   if (!mine.length) return null;
   return (
     <section className="card">
-      <div className="card__k">ما توقّعتَه في هذا الإقليم</div>
+      <div className="card__k">ما توقّعتَه في هذا الفصل</div>
       <div className="trail">
         {mine.map((m) => (
           <div className="trail__row" key={`${m.at}-${m.text}`}>

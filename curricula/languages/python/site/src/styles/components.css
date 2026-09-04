@@ -303,3 +303,55 @@
   font-size: 0.85rem;
 }
 .lab__read { margin: 0.8rem 0 0; color: var(--ink-2); font-size: 0.9rem; }
+
+/* الفصل المُعلَن في جدول الطريق ولم يُكتب: يُقرأ اسمُه ولا يُنقَر. */
+.pack__item--soon { color: var(--ink-4); cursor: default; }
+.pack__item--soon .pack__no { color: var(--ink-4); }
+
+/* ــــ شجرة الأثر: تنمو بالتقدّم، ولا تعرض ما لم يُعبَر ــــ */
+.trailtree { display: flex; flex-direction: column; gap: 0.15rem; }
+.tt__head { display: flex; align-items: center; gap: 0.35rem; }
+.tt__twist {
+  background: none;
+  border: 0;
+  padding: 0.2rem;
+  color: var(--ink-3);
+  display: inline-flex;
+  cursor: pointer;
+}
+.tt__twist svg { width: 16px; height: 16px; transform: rotate(-90deg); transition: transform var(--t-fast) var(--ease); }
+.tt__twist .tt__twist--open { transform: rotate(0deg); }
+.tt__chname {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  padding: 0.3rem 0.2rem;
+  color: var(--ink-2);
+  text-decoration: none;
+  font-weight: 500;
+}
+.tt__chname:hover { color: var(--ink); }
+.tt__ch--here > .tt__head .tt__chname { color: var(--ink); }
+.tt__shots {
+  list-style: none;
+  margin: 0 0 0.5rem;
+  padding-inline-start: 1.55rem;
+  border-inline-start: 1px solid var(--line);
+  margin-inline-start: 0.55rem;
+}
+.tt__part {
+  color: var(--ink-4);
+  font-size: 0.74rem;
+  padding-block: 0.5rem 0.15rem;
+}
+.tt__shot {
+  display: block;
+  padding: 0.26rem 0.4rem;
+  border-radius: var(--r-sm);
+  color: var(--ink-3);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.tt__shot:hover { color: var(--ink); background: var(--surface); }
+.tt__shot--now { color: var(--ink); background: var(--sem-lang-dim); }
+.btn--on { border-color: var(--sem-lang); color: var(--ink); }

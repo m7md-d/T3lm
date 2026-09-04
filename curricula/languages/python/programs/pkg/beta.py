@@ -1,4 +1,3 @@
-print("  beta يُنفَّذ")
 from pkg.alpha import NAME
 
-USES = NAME
+NAME_B = NAME + "-beta"

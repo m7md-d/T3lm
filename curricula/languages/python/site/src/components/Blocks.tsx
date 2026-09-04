@@ -1,5 +1,5 @@
 /**
- * بلوكات اللقطة — كودٌ ولوحةٌ وبوّابة.
+ * كتل القسم — كودٌ ومخرَجٌ وسؤالُ توقّع.
  *
  * والمفردات مفردات الماركداون نفسه: ما يفرضه `tools/verify.py` هو ما يُعرَض،
  * فلا يفترق ما يراه القارئ عمّا يُتحقَّق منه.
@@ -14,17 +14,18 @@ export function Prose({ html, className }: { html: string; className?: string })
   return <div className={className} dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
-/** بلوكُ كودٍ يُقرأ — ملوّنٌ بمحلّل CodeMirror، لا بتعبيرٍ نمطيّ. */
-export function Code({ lang, code, file, task }: {
-  lang: string; code: string; file?: string; task?: boolean;
+/** كتلةُ كودٍ تُقرأ — ملوّنةٌ بمحلّل CodeMirror، لا بتعبيرٍ نمطيّ. */
+export function Code({ lang, code, file, from, task }: {
+  lang: string; code: string; file?: string; from?: string; task?: boolean;
 }) {
-  const cls = ['code', !file && !task ? 'code--bare' : '', task ? 'code--task' : ''].join(' ').trim();
+  const src = file ? `programs/${file}.py` : from ? `programs/${from}` : undefined;
+  const cls = ['code', !src && !task ? 'code--bare' : '', task ? 'code--task' : ''].join(' ').trim();
   return (
     <figure className={cls}>
-      {(file || task) && (
+      {(src || task) && (
         <figcaption className="code__head">
-          {file ? (
-            <span className="code__file">programs/{file}.py</span>
+          {src ? (
+            <span className="code__file">{src}</span>
           ) : (
             <span className="tag">تكتبه أنت</span>
           )}
@@ -37,12 +38,12 @@ export function Code({ lang, code, file, task }: {
   );
 }
 
-/** وسمُ اللوحة: قناةٌ ثانيةٌ واحدةٌ مع اللون، لا ثالثة. */
+/** وسمُ المخرَج: قناةٌ ثانيةٌ واحدةٌ مع اللون، لا ثالثة. وهي أربعةُ المنهج. */
 const TAG: Record<PanelKind, string> = {
-  out: 'مخرَجٌ حتميّ',
+  out: 'المخرَج',
   err: 'رفضٌ من الأداة',
   runs: 'يختلف بين تشغيلين',
-  shell: 'أوامرُ صدفة',
+  shell: 'صدفة',
 };
 
 export function Panel({ kind, text, note, arg }: {
@@ -63,12 +64,11 @@ export function Panel({ kind, text, note, arg }: {
 }
 
 /**
- * البوّابة — حيث كتب المؤلّف `المخرَج:` بعد فقرةٍ يطلب فيها التنبّؤ.
- * ستّ عشرة في المنهج كلِّه، ولا تُقفَل الثلاث والسبعون لوحة: البوّابة بلا
- * مرساةٍ معرفية حاجزٌ إداريٌّ لا تمرين.
+ * سؤال التوقّع — حيث كتب المؤلّف `المخرَج:` بعد فقرةٍ يطلب فيها التوقّع.
+ * قليلٌ بحساب: لا يُقفَل مخرَجٌ لا يملك القارئ ما يتوقّعه به.
  *
  * والمخرج بيد القارئ، ويُبطَّأ عشر ثوانٍ بعد طلبه: يكبح النقر الانعكاسيّ بلا
- * أن يراقبه أحد. وما يُكتَب يُحفَظ ويُعرَض عند نهاية الإقليم.
+ * أن يراقبه أحد. وما يُكتَب يُحفَظ ويُعرَض عند نهاية الفصل.
  */
 export function Gate({ id, children }: { id: string; children: React.ReactNode }) {
   const saved = store.prediction(id);
@@ -96,7 +96,7 @@ export function Gate({ id, children }: { id: string; children: React.ReactNode }
 
   return (
     <div className="gate">
-      <p className="gate__q">اكتب ما تتوقّعه قبل أن ترى اللوحة.</p>
+      <p className="gate__q">اكتب ما تتوقّعه قبل أن ترى المخرَج.</p>
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
@@ -126,11 +126,11 @@ export function Gate({ id, children }: { id: string; children: React.ReactNode }
 }
 
 /**
- * يعرض التسلسل، وتقفل البوّابةُ **اللوحةَ وما بعدها في اللقطة**.
+ * يعرض التسلسل، ويقفل السؤالُ **المخرَجَ وما بعده في القسم**.
  *
- * ولا تقفل اللوحة وحدها: الشرحُ الذي يليها يقول الجواب، فيُقرأ قبل أن يُكشَف
- * ما يفسّره — والبوّابة حينها زينة. وترتيبُ اللقطة في المصدر يجعل هذا صحيحاً:
- * البوّابة تقع بعد الكود وقبل اللوحة، والشرحُ آخرَها.
+ * ولا يقفل المخرَج وحده: الشرحُ الذي يليه يقول الجواب، فيُقرأ قبل أن يُكشَف ما
+ * يفسّره. وترتيبُ القسم في المصدر يجعل هذا صحيحاً: السؤال بعد الكود وقبل
+ * المخرَج، والشرحُ آخرَه.
  */
 export function Blocks({ blocks, idBase, gateNo = 0 }: {
   blocks: Block[]; idBase: string; gateNo?: number;

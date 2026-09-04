@@ -1,16 +1,19 @@
+import array
+
 import numpy as np
 
-buf = bytearray(b"\x01\x00\x00\x00\x00\x00\x00\x00" * 3)
+buf = bytearray(b"0123456789")
 mv = memoryview(buf)
-print("الطول بالبايت:", len(mv), "| للقراءة فقط:", mv.readonly)
 
-as_i64 = mv.cast("q")
-print("مفسَّرةً int64:", list(as_i64))
+print("format:", mv.format, "| itemsize:", mv.itemsize, "| nbytes:", mv.nbytes)
+print("شريحة :", bytes(mv[2:6]))
 
-as_i64[1] = 7
-print("الكتابة تصل إلى الأصل:", buf[8:16])
+mv[2:6] = b"ABCD"
+print("بعد الكتابة في الشريحة:", buf)
 
-a = np.arange(4, dtype=np.int64)
-m = memoryview(a)
-print("\nمن ndarray: format=", m.format, "| shape=", m.shape, "| strides=", m.strides)
-print("بلا نسخة:", m.obj is a)
+arr = array.array("q", [1, 2, 3])
+nd = np.arange(3, dtype=np.int64)
+
+for name, obj in (("array('q')", arr), ("ndarray", nd), ("bytes", b"abc")):
+    m = memoryview(obj)
+    print(f"{name:12} format={m.format:>3} itemsize={m.itemsize} readonly={m.readonly}")

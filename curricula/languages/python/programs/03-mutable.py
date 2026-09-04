@@ -1,15 +1,9 @@
-xs = [1, 2]
-s = "ab"
-xs_before, s_before = id(xs), id(s)
+values = [1, 2]
+print(f"list  قبل: {id(values):#x}")
+values.append(3)
+print(f"list  بعد: {id(values):#x}  {values}")
 
-xs += [3]
-s += "c"
-
-print("القائمة بقيت الكائن نفسه:", id(xs) == xs_before)
-print("والنصّ صار كائناً آخر   :", id(s) == s_before)
-print(xs, s)
-
-t = (1, 2)
-t_before = id(t)
-t += (3,)
-print("والـtuple كذلك          :", id(t) == t_before, t)
+text = "ab"
+print(f"str   قبل: {id(text):#x}")
+text += "c"
+print(f"str   بعد: {id(text):#x}  {text}")

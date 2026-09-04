@@ -1,8 +1,7 @@
-from tbl import Column, Table
+from table import Table, total
 
-t = Table([Column("id", [1, 2, 3]), Column("v", [10, 20, 30])])
-print(t)
-print(len(t), t["v"][2])
-for row in t.rows():
-    print(row)
-print("المجموع:", t.total("v"))
+t = Table({"city": ["Riyadh", "Jeddah", "Dammam"], "sales": [120, 340, 90]})
+
+print(len(t))
+print(t["sales"])
+print(total(t["sales"]))

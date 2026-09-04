@@ -39,7 +39,7 @@
 | [`c`](curricula/languages/c) | C — اللغة الأولى | [زُر ↗](https://c.nodeksa.com) | ✅ |
 | [`dart`](curricula/languages/dart) | Dart — لغةٌ مُدارة بعد لغةٍ عارية | [زُر ↗](https://dart.nodeksa.com) | ✅ |
 | [`go`](curricula/languages/go) | Go — من الجذور | [زُر ↗](https://go.nodeksa.com) | ✅ |
-| [`python`](curricula/languages/python) | Python بعد C — الاسم والكائن والمصفوفة والحدّ | [زُر ↗](https://python.nodeksa.com) | ✅ |
+| [`python`](curricula/languages/python) | Python — الكائن والمفسّر والحدّ مع C | `python.nodeksa.com` | 🔨 |
 | [`rust`](curricula/languages/rust) | Rust — ما يثبته المترجم | [زُر ↗](https://rust.nodeksa.com) | ✅ |
 
 ### الأنظمة — `systems/`
@@ -66,6 +66,7 @@
 | المنهج | الموضوع | الموقع | الحالة |
 |---|---|---|---|
 | [`project-layout`](curricula/architecture/project-layout) | هيكلة المشروع — أين يسكن كل شيء، ولماذا | [زُر ↗](https://project-layout.nodeksa.com) | 🔨 |
+| [`representation`](curricula/architecture/representation) | التمثيل — بنيةٌ يكتبها إنسانٌ وينفّذها برنامج | `representation.nodeksa.com` | 🔨 |
 
 <!-- doctor:curricula:end -->
 

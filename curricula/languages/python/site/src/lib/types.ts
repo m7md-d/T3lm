@@ -6,7 +6,7 @@ export type PanelKind = 'out' | 'err' | 'runs' | 'shell';
 export type Block =
   | { t: 'prose'; html: string }
   /** بلوكُ كودٍ يُقرأ. `file` اسمُ برنامجه الكامل في `programs/` إن وُجد. */
-  | { t: 'code'; lang: string; code: string; file?: string; task?: boolean }
+  | { t: 'code'; lang: string; code: string; file?: string; from?: string; task?: boolean }
   /** لوحةُ مخرَجٍ للبرنامج الذي قبلها. `note` سببٌ للقارئ، و`arg` اسمُ الاستثناء. */
   | { t: 'panel'; kind: PanelKind; text: string; note?: string; arg?: string }
   /** بوّابةُ تنبّؤ: تقفل اللوحة التي بعدها حتى يكتب القارئ توقّعه. */
@@ -36,10 +36,11 @@ export type Region = {
   /** الاقتباس الذي يفتح الإقليم. */
   intro: string;
   shots: Shot[];
-  /** الأرضيّة: التمرين والخلاصة — تُنتزَع من التسلسل وتُعرَض بعد آخر لقطة.
-   *  وتُصرَّف بلوكات كاللقطة، فكودُ التمرين مُلوَّنٌ كغيره. */
+  /** الأرضيّة: التمرين — يُنتزَع من التسلسل ويُعرَض بعد آخر قسم، مصرَّفاً
+   *  كتلاً فيكون كودُه مُلوَّناً كغيره. */
   exercise?: Block[];
-  summary?: Block[];
+  /** جملةُ «الفصل التالي» — بنيةُ النصّ هي الملاحة. */
+  next?: string;
 };
 
 /** حزمةٌ من حزم الطريق الخمس — تُقرأ من جدول README المنهج. */
@@ -48,4 +49,6 @@ export type Pack = {
   from: number;
   to: number;
   gist: string;
+  /** أسماءُ فصول الحزمة بترتيبها — تُقرأ من نفس الخليّة. */
+  titles: string[];
 };

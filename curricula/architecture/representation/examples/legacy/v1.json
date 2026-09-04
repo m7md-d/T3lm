@@ -1,0 +1,4 @@
+{"version": 1,
+ "boxes": [{"name": "a", "label": "المصدر", "width": 2},
+           {"name": "b", "label": "المصبّ", "width": 3}],
+ "links": [{"from": "a.out", "to": "b.in"}]}

@@ -20,13 +20,26 @@ html, body { overflow-x: clip; }
 .bar__mark img { height: 21px; width: auto; display: block; }
 .bar__spacer { flex: 1; }
 
+/* عرضُ الوِعاء يقارب مقياس القراءة: النثر ٦٦ حرفاً، والكود يأخذ الباقي.
+   وأوسعُ من ذلك يترك فراغاً إلى جانب العمود بلا وظيفة. */
 .wrap {
   width: 100%;
-  max-width: 74rem;
+  max-width: 62rem;
   margin-inline: auto;
   padding-inline: clamp(0.9rem, 3vw, 1.6rem);
 }
 .prose-wrap { max-width: var(--measure); }
+
+/* الـreset ينزع هوامش الفقرات، والنثر المصرَّف يحتاجها. */
+.prose-wrap > * + * { margin-block-start: 0.9rem; }
+.prose-wrap :is(ul, ol) { padding-inline-start: 1.5rem; }
+.prose-wrap :is(ul, ol) > li { list-style: disc; }
+.prose-wrap ol > li { list-style: decimal; }
+.prose-wrap li + li { margin-block-start: 0.3rem; }
+.prose-wrap table { margin-block: 0.4rem; }
+
+/* الجدول العريض يمرّر نفسه، ولا يدفع الصفحة. */
+.prose-wrap :is(table) { display: block; overflow-x: auto; }
 
 main { flex: 1; padding-block: clamp(1.4rem, 4vw, 2.6rem) 5rem; }
 
@@ -66,3 +79,109 @@ pre { max-width: 100%; }
 }
 
 .bar__here { color: var(--ink-3); font-size: 0.82rem; }
+
+/* ــــ الرصيف الجانبيّ: بعرضه، والمتن يُزاح بمقداره فلا يُغطّى ــــ */
+.rail {
+  position: fixed;
+  inset-inline-start: 0;
+  inset-block: var(--bar-h) 0;
+  width: var(--rail-w);
+  z-index: 25;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-deep);
+  border-inline-end: 1px solid var(--line);
+}
+.rail__top {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 0.8rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+.rail__home, .rail__more {
+  display: inline-flex;
+  padding: 0.3rem;
+  border: 0;
+  background: none;
+  color: var(--ink-3);
+  cursor: pointer;
+}
+.rail__home:hover, .rail__more:hover { color: var(--ink); }
+.rail__home svg, .rail__more svg { width: 17px; height: 17px; }
+.rail__more { display: none; margin-inline-start: auto; }
+.rail__ch {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  font-size: 0.86rem;
+  color: var(--ink-2);
+  min-width: 0;
+}
+
+.rail__list {
+  list-style: none;
+  margin: 0;
+  padding: 0.5rem 0.55rem;
+  flex: 1;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.rail__part {
+  color: var(--ink-4);
+  font-size: 0.72rem;
+  padding: 0.6rem 0.45rem 0.2rem;
+}
+.rail__item {
+  display: block;
+  width: 100%;
+  text-align: start;
+  padding: 0.34rem 0.45rem;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: none;
+  color: var(--ink-3);
+  font-family: inherit;
+  font-size: 0.87rem;
+  line-height: 1.55;
+  cursor: pointer;
+}
+.rail__item:hover { color: var(--ink); background: var(--surface); }
+.rail__item--now { color: var(--ink); background: var(--sem-lang-dim); }
+
+.rail__move {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.4rem 0.5rem;
+  align-items: center;
+  padding: 0.7rem 0.8rem;
+  border-top: 1px solid var(--line-soft);
+}
+.rail__next { justify-self: end; }
+.rail__nextlabel {
+  grid-column: 1 / -1;
+  color: var(--ink-4);
+  font-size: 0.76rem;
+  text-align: end;
+}
+
+main.region { margin-inline-start: var(--rail-w); }
+
+/* الشاشة الضيّقة: شريطٌ في القاع، وقائمتُه تُفتَح بطلب ولا تُصبّ. */
+@media (max-width: 60rem) {
+  .rail {
+    inset-block: auto 0;
+    inset-inline: 0;
+    width: auto;
+    border-inline-end: 0;
+    border-top: 1px solid var(--line);
+    max-height: 70vh;
+  }
+  .rail__more { display: inline-flex; }
+  .rail__list { display: none; }
+  .rail--open .rail__list { display: block; }
+  .rail__top { order: 2; border-bottom: 0; }
+  .rail__move { order: 3; border-top: 0; padding-block-start: 0; }
+  .rail__list { order: 1; }
+  main.region { margin-inline-start: 0; padding-block-end: calc(var(--rail-h) * 2 + 2rem); }
+}

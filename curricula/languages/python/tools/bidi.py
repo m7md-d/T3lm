@@ -48,15 +48,18 @@ for css in SRC.rglob('*.css'):
             fail(f'{css.name}:{line}: `{sel}` يجمع المونو مع letter-spacing')
 
 # ١ — العربية داخل عنصرٍ موسومٍ بصنف مونو
-MONO = re.compile(
-    r'<(\w+)[^>]*className=(?:"|\{`)([^"`]*\b(?:en|num|code__file|pack__no|ladder__x)\b[^"`]*)(?:"|`\})[^>]*>([^<{]*)'
-)
+CLS = re.compile(r'<(\w+)[^>]*className=(?:"|\{`)([^"`]*)(?:"|`\})[^>]*>([^<{]*)')
+MONO_CLASS = re.compile(r'\b(?:en|num|code__file|pack__no|ladder__x)\b')
 for tsx in SRC.rglob('*.tsx'):
     text = tsx.read_text(encoding='utf-8')
-    for m in MONO.finditer(text):
+    for m in CLS.finditer(text):
+        # `${...}` تعبيرٌ لا صنف: `r.num` فيه ليس الصنف `num`
+        cls = re.sub(r'\$\{[^}]*\}', ' ', m.group(2))
+        if not MONO_CLASS.search(cls):
+            continue
         if AR.search(m.group(3)):
             line = text[: m.start()].count('\n') + 1
-            fail(f'{tsx.name}:{line}: عربيةٌ داخل عنصرٍ بصنف مونو ({m.group(2)})')
+            fail(f'{tsx.name}:{line}: عربيةٌ داخل عنصرٍ بصنف مونو ({cls.strip()})')
 
 # ٣ — نصّ SVG
 for tsx in SRC.rglob('*.tsx'):

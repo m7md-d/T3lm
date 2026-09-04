@@ -1,6 +1,6 @@
 /**
- * الأقاليم — المصدر الوحيد `../../../regions/*.md` (الثابت ٤).
- * هذه الوحدة تعطي البنية، والتصريف إلى بلوكات في `./compile.ts`.
+ * الفصول — المصدر الوحيد `../../../regions/*.md` (الثابت ٤).
+ * هذه الوحدة تعطي البنية، والتصريف إلى كتل في `./compile.ts`.
  */
 import { splitRegion } from '../lib/chapter';
 import { html, inline, toLatinDigits } from '../lib/md';
@@ -24,13 +24,13 @@ export const regions: Region[] = Object.entries(files)
       slug: m[2]!,
       title: r.title,
       titleHtml: inline(r.title),
-      /* «الإقليم NN — » يتكرّر في كل عنوان، والرقم معروضٌ بجانبه ⇒ يُحذَف
-         من العرض ويبقى في المصدر (الحقل الثابت ليس معلومة). */
-      shortHtml: inline(r.title.replace(/^الإقليم\s+[٠-٩0-9]+\s*—\s*/, '')),
-      short: r.title.replace(/^الإقليم\s+[٠-٩0-9]+\s*—\s*/, ''),
+      /* رقمُ الفصل يفتح كلَّ عنوان، وهو معروضٌ بجانبه ⇒ يُحذَف من العرض
+         ويبقى في المصدر (الحقل الثابت ليس معلومة). */
+      shortHtml: inline(r.title.replace(/^[٠-٩0-9]+\s*—\s*/, '')),
+      short: r.title.replace(/^[٠-٩0-9]+\s*—\s*/, ''),
       intro: html(r.intro),
       exercise: r.exercise ? compileShot(r.exercise) : undefined,
-      summary: r.summary ? compileShot(r.summary) : undefined,
+      next: r.next,
       shots: r.shots.map((s, i) => ({
         id: `${m[1]}-${i}`,
         n: i,

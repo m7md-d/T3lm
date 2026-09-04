@@ -1,2 +1,2 @@
-print("  once يُنفَّذ")
-VALUE = 1
+print("  pkg/once نُفِّذ")
+VALUE = []

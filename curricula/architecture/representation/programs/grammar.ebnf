@@ -1,0 +1,14 @@
+(* لغةُ المخطّطات — القواعد أوّلاً، والكود يتبعها.
+   ويفحص `05-grammar.py` أنّ طرفيّات هذا الملفّ هي بعينها ما يُنتجه المقطِّع. *)
+
+document   = { statement } ;
+statement  = box | link ;
+
+box        = "box" , IDENT , STRING , [ "{" , properties , "}" ] ;
+properties = property , { "," , property } ;
+property   = IDENT , ":" , value ;
+
+link       = "link" , port , "->" , port ;
+port       = IDENT , "." , IDENT ;
+
+value      = NUMBER | STRING | IDENT ;

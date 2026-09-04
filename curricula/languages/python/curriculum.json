@@ -1,16 +1,16 @@
 {
   "slug": "python",
   "category": "languages",
-  "title": "Python بعد C — الاسم والكائن والمصفوفة والحدّ",
-  "tagline": "تفكيك نموذج الكائنات والمفسّر والمصفوفة والحدّ مع C — لمن C مرساتُه وكتب سكربتات صغيرة",
+  "title": "Python — الكائن والمفسّر والحدّ مع C",
+  "tagline": "ما الذي يحدث تحت كل سطر Python تكتبه: الاسم والكائن، والمفسّر، والمصفوفة، ودالّة C يناديها خطُّ Python",
   "url": "https://python.nodeksa.com",
   "profile": "default",
-  "status": "published",
+  "status": "building",
   "layout": "canonical",
   "site": {
     "stack": "kit",
     "deploy": "t3lm-python",
-    "live": true
+    "live": false
   },
-  "python": "3.14"
+  "hook": "الاسم في Python لا يملك قيمة. فماذا يملك، وأين تعيش القيمة؟"
 }

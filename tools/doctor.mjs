@@ -63,13 +63,19 @@ const shapeLiteral = (ln) => {
 };
 const EXEMPT = [/presets\//, /tokens\.css$/, /[\\/]demo[\\/]/];
 
+/* `.venv` فيها آلافُ ملفّات numpy، و`ref/` مستودعاتٌ خارجية: المشي فيهما
+   يجعل الفحص دقائق. */
+const SKIP_DIRS = new Set([
+  'node_modules', 'dist', '.ssr', '.runno', '.git', '.demo-dist', 'target',
+  '.venv', '__pycache__', 'ref',
+]);
 function scanColors(dir, label) {
   const stack = [dir];
   while (stack.length) {
     const d = stack.pop();
     for (const e of fs.readdirSync(d, { withFileTypes: true })) {
       const f = path.join(d, e.name);
-      if (e.isDirectory()) { if (e.name !== 'node_modules' && e.name !== 'dist') stack.push(f); continue; }
+      if (e.isDirectory()) { if (!SKIP_DIRS.has(e.name)) stack.push(f); continue; }
       if (!/\.(css|tsx?|jsx?)$/.test(e.name)) continue;
       const rel = path.relative(ROOT, f);
       if (EXEMPT.some((r) => r.test(rel))) continue;
@@ -274,8 +280,10 @@ for (const [cat, meta] of Object.entries(CATEGORIES)) {
 /* ── روابط التوثيق ──
    **الرابط في التوثيق ادّعاء**، كالعنوان تماماً. ومنهجٌ يُنقَل أو يُحذَف يترك
    خلفه روابط تشير إلى لا شيء، ولا يظهر ذلك إلا حين ينقر أحدهم. */
-const SKIP_DIRS = new Set(['node_modules', 'dist', '.ssr', '.runno', '.git', '.demo-dist', 'target']);
+
 const LINK = /\[[^\]]*\]\(([^)\s]+)\)/g;
+/* البلوكات تُنزَع قبل البحث: `STEPS[version](doc)` في كودٍ ليس رابطاً */
+const prose = (s) => s.replace(/^```[\s\S]*?^```/gm, '').replace(/`[^`\n]*`/g, '');
 
 function checkLinks(dir) {
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -289,7 +297,7 @@ function checkLinks(dir) {
     }
     if (!e.name.endsWith('.md')) continue;
     const rel = path.relative(ROOT, f);
-    for (const m of fs.readFileSync(f, 'utf8').matchAll(LINK)) {
+    for (const m of prose(fs.readFileSync(f, 'utf8')).matchAll(LINK)) {
       const raw = m[1];
       if (/^(https?:|mailto:|#)/.test(raw)) continue;
       const t = raw.split('#')[0];

@@ -1,0 +1,3 @@
+سطر 1، عمود 1: نوعٌ لا تعرفه اللغة: «valve» — المعروف source, filter, sink, meter
+    box a "المصدر" { type: valve }
+    ^

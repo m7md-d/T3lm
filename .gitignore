@@ -24,9 +24,12 @@ pubspec.lock
 
 # Python — بيئةُ الفحص تُبنى ولا تُلتزَم
 .venv/
-pycache/
+__pycache__/
 *.pyc
 *.pyo
 *.pyd
 
 my_idea/
+
+# مراجع خارجية وضعها المؤلّف — مستودعات git مستقلّة
+curricula/languages/python/ref/
