@@ -1,7 +1,8 @@
 # قالب طلب دراسة
 
 انسخ ما بين الخطّين، واملأ `⟨…⟩`، ثم شغّله في أداة بحثٍ عميق. **شغّله مرّتين
-مستقلّتين إن أمكن** — اتفاق التقريرين دليل، واختلافهما موضع فحص.
+مستقلّتين إن أمكن** — اختلافهما موضع فحص، **واتفاقهما ليس دراستين**: التقريران
+أداتا استخراج تقرآن الأدبيات نفسها.
 
 القالب بالإنجليزية عمداً: الأدبيات إنجليزية، والطلب الإنجليزيّ يقلّل الترجمة
 الوسيطة. والمخرَج يُطلَب بالإنجليزية للسبب نفسه.
@@ -26,6 +27,12 @@ learner's browser. Static client-side site: it can execute code, build
 manipulable diagrams, and lock a reveal until the learner writes something.
 **If a recommendation requires a classroom, a cohort, a grader, or telemetry,
 say so and skip it rather than proposing it.**
+
+**Author decisions are constraints, not open questions.** The list below is
+already decided. Do not argue for replacing a decision because the literature
+favours something else — instead, state plainly what the evidence says, what it
+costs us, and where the decision's limits are. A finding that contradicts a
+decision is wanted; a recommendation to abolish it is not.
 
 **Already settled — do not re-derive.** ⟨انسخ من `findings.md` العناوين المحسومة؛
 حالياً:⟩ cognitive load theory · worked-example effect · expertise reversal ·
@@ -52,6 +59,16 @@ sequencing. **Only answer the questions below.**
    studies undergraduates in classrooms — say so when it does.
 6. Do not soften a finding because it flatters the design above. If the evidence
    says the current approach is wrong, say it plainly.
+7. **For every effect size, name the original comparison**: what was measured
+   against what, on which task, with which outcome measure. A bare number is
+   unusable.
+8. **Never turn effect sizes into ratios or multipliers.** Do not divide one
+   effect size by another ("five times better"), do not read `d = 0.65` as
+   "doubles completion", and do not rank features by comparing effect sizes
+   drawn from different studies.
+9. **Say what you actually read** for each source: full text, publisher
+   abstract, or record page only. An abstract does not license a claim about the
+   article's tables or subgroup analyses.
 
 ## Questions
 
@@ -74,6 +91,8 @@ For each question, in this order:
 6. **Rule** — one checkable design rule: *"do X, at this point, under this
    condition, and not when Y."* Generic advice ("balance guidance and autonomy")
    is worthless. It must be a rule whose violation can be detected.
+7. **Read** — for each source cited in this answer: full text / abstract only /
+   record page only.
 
 Close with: a table of conflicts between your own answers and how you resolve
 them; and a source list ranked by strength, marking each as meta-analysis,
