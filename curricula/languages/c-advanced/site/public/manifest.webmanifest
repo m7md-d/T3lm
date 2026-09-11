@@ -1,0 +1,19 @@
+{
+  "id": "/",
+  "name": "C المتقدّم — الذاكرة والملفّ التنفيذيّ والخيط",
+  "short_name": "C المتقدّم",
+  "description": "الجزء الثاني: virtual memory وallocator وABI وlinker وloader وthreads. ولكل لوحةٍ مصدرٌ يضمنها.",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0a0b0c",
+  "theme_color": "#0a0b0c",
+  "icons": [
+    { "src": "./icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./icons/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "./icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

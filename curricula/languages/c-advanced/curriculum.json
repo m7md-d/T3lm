@@ -1,0 +1,16 @@
+{
+  "slug": "c-advanced",
+  "category": "languages",
+  "title": "C المتقدّم — الذاكرة والملفّ التنفيذيّ والخيط",
+  "tagline": "الجزء الثاني: virtual memory وallocator وABI وlinker وloader وthreads",
+  "url": "https://c-advanced.nodeksa.com",
+  "profile": "default",
+  "status": "building",
+  "adopted": true,
+  "layout": "canonical",
+  "site": {
+    "stack": "kit",
+    "live": false,
+    "deploy": "t3lm-c-advanced"
+  }
+}

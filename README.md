@@ -37,6 +37,7 @@
 | المنهج | الموضوع | الموقع | الحالة |
 |---|---|---|---|
 | [`c`](curricula/languages/c) | C — اللغة الأولى | [زُر ↗](https://c.nodeksa.com) | ✅ |
+| [`c-advanced`](curricula/languages/c-advanced) | C المتقدّم — الذاكرة والملفّ التنفيذيّ والخيط | `c-advanced.nodeksa.com` | 🔨 |
 | [`dart`](curricula/languages/dart) | Dart — لغةٌ مُدارة بعد لغةٍ عارية | [زُر ↗](https://dart.nodeksa.com) | ✅ |
 | [`go`](curricula/languages/go) | Go — من الجذور | [زُر ↗](https://go.nodeksa.com) | ✅ |
 | [`python`](curricula/languages/python) | Python — الكائن والمفسّر والحدّ مع C | `python.nodeksa.com` | 🔨 |

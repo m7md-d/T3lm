@@ -6,6 +6,7 @@
 | المنهج | الموضوع | الموقع | الأسلوب | الحالة |
 |---|---|---|---|---|
 | [`c`](c) | مدخل البرمجة من الآلة صعوداً — لمن لم يكتب سطراً قبل اليوم | [زُر ↗](https://c.nodeksa.com) | `default` | ✅ |
+| [`c-advanced`](c-advanced) | الجزء الثاني: virtual memory وallocator وABI وlinker وloader وthreads | `c-advanced.nodeksa.com` | `default` | 🔨 |
 | [`dart`](dart) | تفكيك Dart من نظام أنواعها إلى حلقة أحداثها وisolatها — لمن أنهى C ولم يفتح Dart | [زُر ↗](https://dart.nodeksa.com) | `default` | ✅ |
 | [`go`](go) | تفكيك Go من نظام أنواعها إلى تمثيلها في الذاكرة — لمن يعرف C | [زُر ↗](https://go.nodeksa.com) | `default` | ✅ |
 | [`python`](python) | ما الذي يحدث تحت كل سطر Python تكتبه: الاسم والكائن، والمفسّر، والمصفوفة، ودالّة C يناديها خطُّ Python | `python.nodeksa.com` | `default` | 🔨 |
@@ -13,7 +14,6 @@
 
 **مقترحات** — موضوعٌ محجوزٌ بريدمي يقول متطلّباته، بلا منهجٍ بعد:
 
-- [`c-advanced`](c-advanced/README.md)
 - [`typescript`](typescript/README.md)
 <!-- doctor:list:end -->
 

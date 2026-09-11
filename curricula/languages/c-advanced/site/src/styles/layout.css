@@ -1,0 +1,49 @@
+/* الإيقاع المكانيّ: شريطٌ علويّ، وعمودان في الفصل، وعمودٌ واحد في المستندات. */
+
+.shell { min-height: 100svh; }
+
+.topbar {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; gap: var(--ca-gap);
+  height: var(--ca-topbar-h);
+  padding: 0 var(--ca-gap-lg);
+  background: color-mix(in srgb, var(--ca-bg) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--ca-line);
+  font-size: 14px;
+}
+.topbar-home { color: var(--ca-fg); text-decoration: none; font-weight: 600; white-space: nowrap; }
+.topbar-where { color: var(--ca-dim); border-inline-start: 1px solid var(--ca-line); padding-inline-start: var(--ca-gap); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.topbar-gap { flex: 1; }
+.topbar-act { color: var(--ca-muted); text-decoration: none; white-space: nowrap; }
+.topbar-act:hover { color: var(--ca-spec); }
+
+/* شريطُ القسم الذي تقرؤه وحده — لا شريط منهج، ولا نسبة إنجاز */
+.readbar { position: sticky; top: var(--ca-topbar-h); z-index: 19; height: 2px; background: var(--ca-line-faint); }
+.readbar-fill { height: 100%; background: var(--ca-spec); transition: width var(--ca-t-fast) linear; }
+
+.home, .doc { max-width: 1040px; margin: 0 auto; padding: var(--ca-gap-xl) var(--ca-gap-lg) 140px; }
+.doc-h { font-size: clamp(26px, 3.4vw, 38px); font-weight: 600; line-height: 1.35; margin-bottom: var(--ca-gap); }
+
+.page {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: var(--ca-gap-xl);
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: var(--ca-gap-lg) var(--ca-gap-lg) 140px;
+}
+.side { position: sticky; top: calc(var(--ca-topbar-h) + var(--ca-gap-lg)); align-self: start; max-height: calc(100svh - var(--ca-topbar-h) - var(--ca-gap-lg) * 2); overflow: auto; }
+.main { min-width: 0; max-width: var(--ca-measure); }
+
+.block { margin-top: var(--ca-gap-xl); }
+
+@media (max-width: 1000px) {
+  .page { grid-template-columns: minmax(0, 1fr); gap: var(--ca-gap-lg); }
+  .side { position: static; max-height: none; }
+  .main { max-width: none; }
+}
+@media (max-width: 640px) {
+  .topbar { padding: 0 var(--ca-gap); gap: 10px; font-size: 13px; }
+  .home, .doc, .page { padding-inline: var(--ca-gap); }
+}

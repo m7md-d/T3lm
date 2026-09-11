@@ -1,0 +1,113 @@
+/* الأساس: الطباعة والنثر. كل قيمةٍ تحيل إلى `tokens.css` ولا تعرّف. */
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  background: var(--ca-bg);
+  color: var(--ca-fg);
+  font-family: var(--ca-font-body);
+  font-size: 16px;
+  line-height: 1.85;
+  font-variant-numeric: tabular-nums;
+  /* نسيجٌ خافت: شبكةُ صفحاتٍ منتظمة تحت كل شيء — ولا تُقرأ إلّا بالحافة */
+  background-image:
+    linear-gradient(var(--ca-line-faint) 1px, transparent 1px),
+    linear-gradient(90deg, var(--ca-line-faint) 1px, transparent 1px);
+  background-size: 64px 64px, 64px 64px;
+  background-attachment: fixed;
+}
+
+/* ── الاتجاه: العربية RTL، وكل ما هو إنجليزيّ معزول ── */
+code, pre, kbd, samp, .en {
+  font-family: var(--ca-font-mono);
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+/* تعليقاتُ الكود في هذا المنهج عربية. والأحاديّ بلا عربيةٍ أصلاً فيقع الاحتياط
+   على خطٍّ ثالث، ويقطع `no-contextual` وصلَ الحروف — فتُعطى خطّ الجسم صراحةً. */
+.tok-comment { font-family: var(--ca-font-body); }
+.en { letter-spacing: 0; }
+
+a { color: var(--ca-spec); text-decoration-color: var(--ca-spec-dim); text-underline-offset: 3px; }
+a:hover { text-decoration-color: var(--ca-spec); }
+
+:focus-visible { outline: 2px solid var(--ca-spec); outline-offset: 2px; }
+::selection { background: var(--ca-spec-dim); color: var(--ca-spec-soft); }
+
+/* يُخفى **إلى أعلى** لا إلى الجانب: الإزاحة الجانبية في RTL توسّع مساحة
+   التمرير الأفقيّ، وتقتطع لقطة المتصفّح من الركن الخطأ. */
+.skip {
+  position: absolute; inset-inline-start: 0; top: -120px; z-index: 50;
+  background: var(--ca-raised); border: 1px solid var(--ca-line); padding: 8px 14px;
+}
+.skip:focus { top: 0; }
+
+/* ── سلّم العناوين ── */
+.h2 {
+  font-size: 20px; font-weight: 600; line-height: 1.5;
+  margin: var(--ca-gap-xl) 0 var(--ca-gap);
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--ca-line);
+  text-wrap: balance;
+}
+
+/* ── النثر ── */
+.prose > * + * { margin-top: 1.1em; }
+.prose p { text-wrap: pretty; }
+.prose strong { font-weight: 600; color: var(--ca-fg); }
+.prose em { font-style: normal; color: var(--ca-spec-soft); }
+
+.prose :not(pre) > code {
+  background: var(--ca-code);
+  border: 1px solid var(--ca-line);
+  padding: 1px 5px;
+  font-size: 0.86em;
+  color: var(--ca-spec-soft);
+}
+
+.prose h3 {
+  font-size: 17px; font-weight: 600;
+  margin-top: var(--ca-gap-lg);
+  color: var(--ca-fg);
+}
+.prose h3::before { content: '— '; color: var(--ca-faint); }
+
+.prose ul, .prose ol { padding-inline-start: 1.4em; }
+.prose li + li { margin-top: .4em; }
+
+.prose blockquote {
+  border-inline-start: 2px solid var(--ca-line-strong);
+  padding-inline-start: var(--ca-gap);
+  color: var(--ca-muted);
+}
+
+/* ⚠ يفتح الفقرة في المصدر — حدٌّ جانبيّ يعطيها موضعها بلا أيقونةٍ ثانية */
+.prose p:has(+ p) { }
+
+/* ── الجداول: المنهج يقيس، فالأرقام تصطفّ ── */
+.prose table, .tbl {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--ca-gap) 0;
+  font-size: 15px;
+}
+.prose th, .prose td, .tbl th, .tbl td {
+  border: 1px solid var(--ca-line);
+  padding: 8px 12px;
+  text-align: start;
+  vertical-align: top;
+}
+.prose th, .tbl th {
+  background: var(--ca-surface);
+  font-weight: 600;
+  color: var(--ca-muted);
+  font-size: 14px;
+}
+.prose tbody tr:nth-child(even), .tbl tbody tr:nth-child(even) { background: color-mix(in srgb, var(--ca-surface) 45%, transparent); }
+
+.lede { color: var(--ca-muted); max-width: var(--ca-measure); }
+.fine { color: var(--ca-dim); font-size: 14px; margin-top: var(--ca-gap); }
+
+hr { border: 0; border-top: 1px solid var(--ca-line); margin: var(--ca-gap-lg) 0; }

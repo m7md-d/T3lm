@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- البديهية ٦: عنوانان مختلفان يشيران إلى الذاكرة نفسها.
+       الرمز يُرى بلا نصّ ويحمل ما يُدرَّس، لا اسم الموضوع. -->
+  <g stroke="#58c3bb" stroke-width="5" stroke-linecap="square">
+    <rect x="14" y="14" width="30" height="12" />
+    <rect x="56" y="14" width="30" height="12" />
+    <path d="M29 26 L29 42 L50 42 L50 58" />
+    <path d="M71 26 L71 42 L50 42" />
+  </g>
+  <path d="M42 56 L50 70 L58 56 Z" fill="#58c3bb" />
+  <g stroke="#dda64f" stroke-width="5">
+    <rect x="22" y="70" width="56" height="16" fill="#3d2f11" />
+    <path d="M36 70 L36 86 M50 70 L50 86 M64 70 L64 86" stroke-width="3" opacity="0.6" />
+  </g>
+</svg>
