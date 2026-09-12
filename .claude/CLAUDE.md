@@ -179,7 +179,7 @@ archive/  ما ليس منهجاً
 التصنيفات: `languages` · `systems` · `networks` · `web` · `media` · `architecture`.
 
 **والمناهج تسعة:** `c` · `c-advanced` · `go` · `rust` · `dart` · `project-layout` ·
-`representation` · `who-waits` · `docker`. و`c-advanced` نصُّه مكتمل — سبعةٌ وعشرون فصلاً — وموقعُه لم يُبنَ.
+`representation` · `who-waits` · `docker`. و`c-advanced` مكتمل — سبعةٌ وعشرون فصلاً وموقعٌ مبنيّ لم يُرفَع بعد.
 
 وما سواها **مقترَحات**: موضوعٌ يسكن مكانه بريدمي يقول متطلّباته، ومادّتُه
 القديمة في `archive/`. لا يُبنى عليه ولا يُقاس بالخطة، وتُقرأ المقترحات معاً

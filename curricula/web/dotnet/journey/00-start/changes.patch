@@ -1,0 +1,383 @@
+--- a/.config/dotnet-tools.json
++++ b/.config/dotnet-tools.json
+@@ -0,0 +1 @@
++{"version":1,"isRoot":true,"tools":{"dotnet-ef":{"version":"10.0.12","commands":["dotnet-ef"]}}}
+--- a/.gitignore
++++ b/.gitignore
+@@ -0,0 +1,7 @@
++bin/
++obj/
++*.db
++*.db-shm
++*.db-wal
++TestResults/
++.env
+--- a/ARCHITECTURE.md
++++ b/ARCHITECTURE.md
+@@ -0,0 +1,54 @@
++# TeamBoard · الهيكل السداسي
++
++القلب = Domain + Application. المدخلان في هذا المشروع هما HTTP والاختبار. الأطراف الخارجة هي التخزين والإشعار. لا تعني «سداسي» أن لدينا ست طبقات.
++
++```mermaid
++flowchart LR
++  HTTP[HTTP / Controller] --> IN[IWorkItemService]
++  TEST[Unit test] --> IN
++  IN --> UC[WorkItemService]
++  UC --> DOMAIN[Domain: membership + title rules]
++  UC --> STORE[IBoardStore]
++  UC --> NOTICE[IAssignmentNotifier]
++  EF[EfBoardStore] -. implements .-> STORE
++  MEM[InMemoryBoardStore] -. implements .-> STORE
++  WEB[HttpAssignmentNotifier] -. implements .-> NOTICE
++  LOG[LogAssignmentNotifier] -. implements .-> NOTICE
++  EF --> DB[(PostgreSQL)]
++  WEB --> REMOTE[Notification receiver]
++```
++
++## UML النموذج
++
++```mermaid
++classDiagram
++  User "1" --> "*" ProjectMember
++  Project "1" --> "*" ProjectMember
++  Project "1" --> "*" WorkItem
++  WorkItem "1" --> "*" Comment
++  User "1" --> "*" Comment : author
++  ProjectMember "0..1" <-- "*" WorkItem : assignee membership
++  class User { int Id; string Name }
++  class Project { int Id; string Name }
++  class ProjectMember { int ProjectId; int UserId }
++  class WorkItem { int Id; string Title; bool Done; int ProjectId; int? AssigneeId }
++  class Comment { int Id; int WorkItemId; int AuthorId; string Text }
++```
++
++## أكمل الرسم قبل قراءة implementation
++
++1. لماذا لا يكفي foreign key من AssigneeId إلى User.Id وحده؟
++2. من يملك IBoardStore: القلب أم EF adapter؟
++3. ارسم ProjectReference من Infrastructure. هل هو نفس اتجاه نداء use case وقت التشغيل؟
++
++الإجابات للمقارنة: FK المركب إلى ProjectMember يحمي الانتماء لنفس المشروع؛ المنفذ يملكه Application؛ Infrastructure يعتمد Application مع أن Application ينادي implementation وقت التشغيل عبر العقد.
++
++## حدود مقصودة
++
++- IBoardStore منفذ خاص بحاجات هذا التطبيق، وليس generic repository.
++- بعض نماذج domain هنا بيانات بسيطة؛ لا نزعم أنها DDD كاملة.
++- لا IQueryable ولا DbContext ولا HttpContext في Application.
++- Program.cs يعرف adapters لأنه composition root. Controllers لا تستورد EF.
++- الحفظ يسبق الإشعار. الإشعار best effort؛ فشله لا يتراجع عن الحفظ. لا outbox أو تسليم مضمون في هذه الرحلة.
++- اختبار test authentication يختبر الصلاحية، ولا يثبت JWT signature validation.
++- SQLite في الاختبارات لا يغني عن PostgreSQL عندما نختبر provider أو migrations.
+--- a/README.md
++++ b/README.md
+@@ -0,0 +1,105 @@
++# TeamBoard — مشروع رحلة .NET
++
++هذا المشروع الوحيد في المنهج. استخدم مجلد عمل واحدًا. حزمة البداية تعطيك الشجرة والرسم وأول endpoint؛ ملفات المحطات تضيف أجزاءً إلى نفس المجلد. الحل المرجعي للمقارنة، وليس بديلًا عن تنفيذ التكليف.
++
++## المتطلبات
++
++.NET SDK 10. حزمة البداية تعمل دون database. النسخة النهائية تستخدم PostgreSQL؛ SQLite داخل اختبارات التكامل فقط. تثبت ملفات المشروع إصدارات حزم متوافقة؛ اتبع lockfile عند توفيره.
++
++## تشغيل البداية
++
++```sh
++dotnet restore TeamBoard.slnx
++dotnet run --project src/TeamBoard.Api --urls http://localhost:5080
++curl -i http://localhost:5080/users/42
++```
++
++هذه الأوامر تخص حزمة البداية. بعد محطة controllers تصبح الهوية المحلية التجريبية رقم1، وبعد محطة auth تحتاج JWT.
++
++## تشغيل المرجع الكامل مع PostgreSQL
++
++جهّز حاوية مختبر محلية فقط:
++
++```sh
++docker compose up -d
++dotnet restore TeamBoard.slnx
++dotnet tool restore
++dotnet user-secrets set "ConnectionStrings:Board" "Host=localhost;Port=5438;Database=teamboard;Username=teamboard;Password=local-lab-only" --project src/TeamBoard.Api
++```
++
++لا تطبق migrations على قاعدة الفريق. بعد مراجعة ملفاتها:
++
++```sh
++dotnet ef migrations script --project src/TeamBoard.Infrastructure --startup-project src/TeamBoard.Api
++dotnet ef database update --project src/TeamBoard.Infrastructure --startup-project src/TeamBoard.Api
++dotnet run --project src/TeamBoard.Api --launch-profile Postgres
++```
++
++ملف Postgres يفعّل Development وتهيئة seed. البيانات: Nora رقم1 وOmar رقم2 في المشروع1، وLina رقم3 في المشروع2. أول مهمة رقم1 في المشروع1. قاعدة جديدة لا تشارك بيانات إنتاج.
++
++## هوية التطوير
++
++من مجلد المشروع شغّل الأداة الرسمية؛ ستكتب الإعداد العام في appsettings.Development.json ومفتاح التوقيع في user secrets:
++
++```sh
++dotnet user-jwts create --project src/TeamBoard.Api --name 1 --audience http://localhost:5080
++```
++
++احتفظ بالـtoken محليًا ولا تضعه في ملفات تسلمها أو مستودعك. أعد تشغيل API بعد الإنشاء. استخدمه في terminal ثانٍ (استبدل النص يدويًا):
++
++```sh
++curl -i http://localhost:5080/tasks/1 -H 'Authorization: Bearer YOUR_LOCAL_TOKEN'
++curl -i -X PATCH http://localhost:5080/tasks/1/assignee -H 'Content-Type: application/json' -H 'Authorization: Bearer YOUR_LOCAL_TOKEN' -d '{"userId":2}'
++```
++
++إذا أداة إصدارك تضع subject غير رقمي افحص claims بـ`dotnet user-jwts print ID`، وأنشئ token يطابق عقد sub الرقمي في التطبيق. لا تعطل issuer أو signature validation. خارج Development يحتاج التطبيق Auth:Authority وAuth:Audience من موفر هوية حقيقي؛ التطبيق ليس خدمة إصدار tokens.
++
++## الإشعار: بدّل الطرف
++
++الافتراضي LogAssignmentNotifier؛ يسجل الإشعار محليًا. لتجربة HTTP شغّل مستقبل المختبر المرفق، وهو أداة جاهزة لا مشروع منهج ثانٍ:
++
++```sh
++python3 tools/notification-receiver.py
++```
++
++ثم في terminal آخر:
++
++```sh
++Notifications__Mode=Http Notifications__BaseUrl=http://127.0.0.1:5090/ dotnet run --project src/TeamBoard.Api --launch-profile Postgres
++```
++
++PowerShell: اضبط `$env:Notifications__Mode="Http"` و`$env:Notifications__BaseUrl="http://127.0.0.1:5090/"` ثم شغّل dotnet run.
++
++العميل يرسل POST /notifications. التعيين يُحفظ قبل الإشعار. توقف المستقبل يؤدي إلى warning مع بقاء التعيين محفوظًا. هذا best effort، لا ضمان تسليم. لا retry أو outbox في المنهج.
++
++## الاختبارات
++
++```sh
++dotnet test TeamBoard.slnx
++```
++
++- TitleRulesTests: قواعد العنوان وحدوده.
++- HexagonTests: نفس use case دون ASP.NET أو EF، عبر InMemoryBoardStore وnotifier بديل.
++- ApiTests: HTTP + DI + authorization + SQLite مؤقتة مع foreign keys.
++- NotificationTests: HTTP adapter عبر handler بديل دون شبكة.
++
++Test-User header موجود في test host فقط. لا يقبله API الحقيقي. هذه الاختبارات لا تثبت JWT signatures أو ترجمة PostgreSQL؛ افحصهما بمختبر التشغيل الفعلي.
++
++## الملفات حسب المسؤولية
++
++| الموقع | المسؤولية |
++|---|---|
++| Domain/Model.cs | entities وDTOs المشتركة وقواعد العنوان |
++| Application/Ports.cs | عقود الدخول والخروج، بلا أنواع EF أو HTTP |
++| Application/WorkItemService.cs | إنشاء المهمة وتعيينها والتحقق من العضوية |
++| Application/BoardService.cs | قراءة المشاريع والمستخدمين والتعليقات |
++| Infrastructure/BoardDbContext.cs | model mapping وFK المركب |
++| Infrastructure/EfBoardStore.cs | queries والحفظ عبر EF |
++| Infrastructure/InMemoryBoardStore.cs | طرف تعليمي بديل لا يقلّد كل ضمانات database |
++| Infrastructure/AssignmentNotifiers.cs | طرف Log وطرف HTTP |
++| Api/Program.cs | composition root وmiddleware |
++| Api/Controllers/ | تحويل HTTP إلى use cases ونتائجها إلى response |
++
++## حدود النطاق
++
++تطبيق واحد، بلا microservices وDDD framework وCQRS وMediatR. العضوية seeded لتقليل CRUD الإداري. لا UI خاص بـTeamBoard؛ واجهتك التعليمية هي موقع المنهج، وTeamBoard API هو مشروع التطبيق. كل محطة تضيف معنىً إلى نفس المشروع. اقرأ ARCHITECTURE.md قبل ترتيب ملفات جديدة.
+--- a/TeamBoard.slnx
++++ b/TeamBoard.slnx
+@@ -0,0 +1 @@
++<Solution><Folder Name="/src/"><Project Path="src/TeamBoard.Application/TeamBoard.Application.csproj"/><Project Path="src/TeamBoard.Api/TeamBoard.Api.csproj"/><Project Path="src/TeamBoard.Domain/TeamBoard.Domain.csproj"/><Project Path="src/TeamBoard.Infrastructure/TeamBoard.Infrastructure.csproj"/></Folder><Folder Name="/tests/"><Project Path="tests/TeamBoard.Tests/TeamBoard.Tests.csproj"/></Folder></Solution>
+--- a/compose.yaml
++++ b/compose.yaml
+@@ -0,0 +1,18 @@
++services:
++  db:
++    image: postgres:17
++    environment:
++      POSTGRES_DB: teamboard
++      POSTGRES_USER: teamboard
++      POSTGRES_PASSWORD: local-lab-only
++    ports:
++      - "127.0.0.1:5438:5432"
++    volumes:
++      - board-lab-data:/var/lib/postgresql/data
++    healthcheck:
++      test: ["CMD-SHELL", "pg_isready -U teamboard -d teamboard"]
++      interval: 3s
++      timeout: 3s
++      retries: 15
++volumes:
++  board-lab-data:
+--- a/src/TeamBoard.Api/Program.cs
++++ b/src/TeamBoard.Api/Program.cs
+@@ -0,0 +1,11 @@
++using TeamBoard.Domain;
++var builder = WebApplication.CreateBuilder(args);
++var app = builder.Build();
++app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
++app.MapGet("/users/{id:int}", (int id) =>
++{
++    if (id != 42) return Results.NotFound();
++    return Results.Ok(new UserDto(id, "Nora"));
++});
++app.Run();
++public partial class Program { }
+--- a/src/TeamBoard.Api/Properties/launchSettings.json
++++ b/src/TeamBoard.Api/Properties/launchSettings.json
+@@ -0,0 +1,12 @@
++{
++  "profiles": {
++    "Lab": {
++      "commandName": "Project",
++      "applicationUrl": "http://localhost:5080",
++      "environmentVariables": {
++        "ASPNETCORE_ENVIRONMENT": "Development",
++        "Database__Provider": "Memory"
++      }
++    }
++  }
++}--- a/src/TeamBoard.Api/TeamBoard.Api.csproj
++++ b/src/TeamBoard.Api/TeamBoard.Api.csproj
+@@ -0,0 +1 @@
++<Project Sdk="Microsoft.NET.Sdk.Web"><PropertyGroup><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable><UserSecretsId>t3lm-teamboard-local-lab</UserSecretsId></PropertyGroup><ItemGroup><ProjectReference Include="../TeamBoard.Application/TeamBoard.Application.csproj"/><ProjectReference Include="../TeamBoard.Domain/TeamBoard.Domain.csproj"/><ProjectReference Include="../TeamBoard.Infrastructure/TeamBoard.Infrastructure.csproj"/><PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.12"/><PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.12"><PrivateAssets>all</PrivateAssets></PackageReference></ItemGroup></Project>
+--- a/src/TeamBoard.Api/appsettings.Development.json
++++ b/src/TeamBoard.Api/appsettings.Development.json
+@@ -0,0 +1,17 @@
++{
++  "Logging": {
++    "LogLevel": {
++      "Microsoft.EntityFrameworkCore.Database.Command": "Information"
++    }
++  },
++  "Authentication": {
++    "Schemes": {
++      "Bearer": {
++        "ValidAudiences": [
++          "http://localhost:5080"
++        ],
++        "ValidIssuer": "dotnet-user-jwts"
++      }
++    }
++  }
++}--- a/src/TeamBoard.Api/appsettings.json
++++ b/src/TeamBoard.Api/appsettings.json
+@@ -0,0 +1,14 @@
++{
++  "Database": {
++    "Provider": "Memory"
++  },
++  "Notifications": {
++    "Mode": "Log"
++  },
++  "Logging": {
++    "LogLevel": {
++      "Default": "Information",
++      "Microsoft.AspNetCore": "Warning"
++    }
++  }
++}--- a/src/TeamBoard.Application/TeamBoard.Application.csproj
++++ b/src/TeamBoard.Application/TeamBoard.Application.csproj
+@@ -0,0 +1 @@
++<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable></PropertyGroup><ItemGroup><ProjectReference Include="../TeamBoard.Domain/TeamBoard.Domain.csproj"/></ItemGroup></Project>
+--- a/src/TeamBoard.Domain/Model.cs
++++ b/src/TeamBoard.Domain/Model.cs
+@@ -0,0 +1,51 @@
++namespace TeamBoard.Domain;
++
++public sealed class User
++{
++    public int Id { get; set; }
++    public required string Name { get; set; }
++}
++public sealed class Project
++{
++    public int Id { get; set; }
++    public required string Name { get; set; }
++    public List<WorkItem> WorkItems { get; set; } = [];
++}
++public sealed class ProjectMember
++{
++    public int ProjectId { get; set; }
++    public Project Project { get; set; } = null!;
++    public int UserId { get; set; }
++    public User User { get; set; } = null!;
++}
++public sealed class WorkItem
++{
++    public int Id { get; set; }
++    public required string Title { get; set; }
++    public bool Done { get; set; }
++    public int ProjectId { get; set; }
++    public Project Project { get; set; } = null!;
++    public int? AssigneeId { get; set; }
++    public ProjectMember? AssigneeMembership { get; set; }
++    public List<Comment> Comments { get; set; } = [];
++}
++public sealed class Comment
++{
++    public int Id { get; set; }
++    public int WorkItemId { get; set; }
++    public WorkItem WorkItem { get; set; } = null!;
++    public int AuthorId { get; set; }
++    public User Author { get; set; } = null!;
++    public required string Text { get; set; }
++}
++public record UserDto(int Id, string Name);
++public record TaskDto(int Id, string Title, bool Done, int ProjectId, int? AssigneeId);
++public record CommentDto(int Id, int AuthorId, string Text);
++public record ProjectDto(int Id, string Name, int TaskCount);
++public enum ChangeResult { Success, NotFound, Forbidden, InvalidAssignee, InvalidInput, Conflict }
++public record Operation<T>(ChangeResult Result, T? Value = default);
++public static class TitleRules
++{
++    public static bool IsValid(string? title) =>
++        !string.IsNullOrWhiteSpace(title) && title.Trim().Length <= 120;
++}
+--- a/src/TeamBoard.Domain/TeamBoard.Domain.csproj
++++ b/src/TeamBoard.Domain/TeamBoard.Domain.csproj
+@@ -0,0 +1 @@
++<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable></PropertyGroup></Project>
+--- a/src/TeamBoard.Infrastructure/TeamBoard.Infrastructure.csproj
++++ b/src/TeamBoard.Infrastructure/TeamBoard.Infrastructure.csproj
+@@ -0,0 +1 @@
++<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable></PropertyGroup><ItemGroup><ProjectReference Include="../TeamBoard.Application/TeamBoard.Application.csproj"/><ProjectReference Include="../TeamBoard.Domain/TeamBoard.Domain.csproj"/><PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3"/><PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.12"/><PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.5"/></ItemGroup></Project>
+--- a/tests/TeamBoard.Tests/StarterTests.cs
++++ b/tests/TeamBoard.Tests/StarterTests.cs
+@@ -0,0 +1,14 @@
++using Microsoft.AspNetCore.Mvc.Testing;
++using System.Net;
++namespace TeamBoard.Tests;
++public class StarterTests
++{
++    [Fact]
++    public async Task Application_starts_and_answers_health()
++    {
++        using var app = new WebApplicationFactory<Program>();
++        using var client = app.CreateClient();
++        using var response = await client.GetAsync("/health");
++        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
++    }
++}
+--- a/tests/TeamBoard.Tests/TeamBoard.Tests.csproj
++++ b/tests/TeamBoard.Tests/TeamBoard.Tests.csproj
+@@ -0,0 +1 @@
++<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable><IsPackable>false</IsPackable><IsTestProject>true</IsTestProject></PropertyGroup><ItemGroup><PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1"/><PackageReference Include="xunit" Version="2.9.3"/><PackageReference Include="xunit.runner.visualstudio" Version="3.1.1"><PrivateAssets>all</PrivateAssets></PackageReference><PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.12"/><ProjectReference Include="../../src/TeamBoard.Api/TeamBoard.Api.csproj"/></ItemGroup><ItemGroup><Using Include="Xunit"/></ItemGroup></Project>
+--- a/tools/notification-receiver.py
++++ b/tools/notification-receiver.py
+@@ -0,0 +1,22 @@
++"""Ready-made loopback receiver for the HTTP adapter lab. No dependencies."""
++from http.server import BaseHTTPRequestHandler, HTTPServer
++import json
++class Receiver(BaseHTTPRequestHandler):
++    def do_POST(self):
++        if self.path != '/notifications':
++            self.send_error(404)
++            return
++        length = int(self.headers.get('Content-Length', '0'))
++        if length > 10000:
++            self.send_error(413)
++            return
++        try:
++            notice = json.loads(self.rfile.read(length))
++        except (ValueError, UnicodeError):
++            self.send_error(400)
++            return
++        print('Assignment:', notice, flush=True)
++        self.send_response(204)
++        self.end_headers()
++print('Lab notification receiver: http://127.0.0.1:5090/notifications', flush=True)
++HTTPServer(('127.0.0.1', 5090), Receiver).serve_forever()

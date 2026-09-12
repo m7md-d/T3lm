@@ -1,0 +1,1587 @@
+{
+  "modules": [
+    {
+      "id": "map",
+      "number": "00",
+      "title": "الصورة الكاملة",
+      "subtitle": "طلب واحد يربط كل شيء",
+      "time": "١–٢ ساعة",
+      "node": 0,
+      "build": "تشغيل الهيكل الجاهز",
+      "outcome": "تشغّل TeamBoard وتغيّر أول JSON.",
+      "stage": "00-start"
+    },
+    {
+      "id": "csharp",
+      "number": "01",
+      "title": "جسر C# الحديثة",
+      "subtitle": "اقرأ الكود من دون انقطاع",
+      "time": "٤–٦ ساعات",
+      "node": 2,
+      "build": "عقود المهام وقواعدها",
+      "outcome": "تكمل TitleRules وتقرأ مهام TeamBoard بـLINQ.",
+      "stage": "01-domain"
+    },
+    {
+      "id": "anatomy",
+      "number": "02",
+      "title": "الهيكل السداسي",
+      "subtitle": "المنافذ واتجاه الاعتماد",
+      "time": "٣ ساعات",
+      "node": 1,
+      "build": "رسم الحدود والمنافذ",
+      "outcome": "تقرأ UML وتكمل عقد التخزين والإشعار.",
+      "stage": "02-ports"
+    },
+    {
+      "id": "request",
+      "number": "03",
+      "title": "رحلة الطلب",
+      "subtitle": "من Kestrel إلى JSON",
+      "time": "٥–٦ ساعات",
+      "node": 1,
+      "build": "مدخل HTTP",
+      "outcome": "تضيف controller وتراقب دخول الطلب وخروجه.",
+      "stage": "03-http"
+    },
+    {
+      "id": "di",
+      "number": "04",
+      "title": "من أنشأ هذا الكائن؟",
+      "subtitle": "DI وأعمار الخدمات",
+      "time": "٣ ساعات",
+      "node": 3,
+      "build": "وصل القلب بالأطراف",
+      "outcome": "تسجل المنافذ مع adapters وتختبر عمرها.",
+      "stage": "04-wiring"
+    },
+    {
+      "id": "config",
+      "number": "05",
+      "title": "الإعدادات والسجلات",
+      "subtitle": "افهم البيئة وما يحدث فيها",
+      "time": "ساعتان",
+      "node": 1,
+      "build": "سلوك قابل للضبط",
+      "outcome": "تنقل الإعدادات وتضيف سجلات لها معنى.",
+      "stage": "05-config"
+    },
+    {
+      "id": "ef",
+      "number": "06",
+      "title": "من LINQ إلى SQL",
+      "subtitle": "EF Core وقاعدة البيانات",
+      "time": "٦–٨ ساعات",
+      "node": 4,
+      "build": "التخزين الدائم",
+      "outcome": "تكتب EF adapter وتراجع migration وSQL.",
+      "stage": "06-persistence"
+    },
+    {
+      "id": "api",
+      "number": "07",
+      "title": "عقد API واضح",
+      "subtitle": "DTOs والتحقق والأخطاء",
+      "time": "٣–٤ ساعات",
+      "node": 2,
+      "build": "عقود الطلب والاستجابة",
+      "outcome": "تكمل إنشاء المهام والتعليقات وحالات الخطأ.",
+      "stage": "07-contracts"
+    },
+    {
+      "id": "auth",
+      "number": "08",
+      "title": "الهوية والصلاحية",
+      "subtitle": "من المستخدم؟ وماذا يُسمح له؟",
+      "time": "٣–٤ ساعات",
+      "node": 1,
+      "build": "الفاعل والعضوية",
+      "outcome": "تربط JWT وتمنع الوصول خارج المشروع.",
+      "stage": "08-identity"
+    },
+    {
+      "id": "http",
+      "number": "09",
+      "title": "خدمة خارج التطبيق",
+      "subtitle": "HttpClient والإلغاء والمهلة",
+      "time": "ساعتان",
+      "node": 3,
+      "build": "إشعار بعد التعيين",
+      "outcome": "تبدل منفذ الإشعار إلى HTTP adapter.",
+      "stage": "09-notification"
+    },
+    {
+      "id": "tests",
+      "number": "10",
+      "title": "اختبر المسار",
+      "subtitle": "من قاعدة العمل إلى HTTP",
+      "time": "٣–٤ ساعات",
+      "node": 5,
+      "build": "برهان فصل الاعتمادات",
+      "outcome": "تستدعي نفس use case من اختبار بلا HTTP أو EF.",
+      "stage": "10-tests"
+    },
+    {
+      "id": "project",
+      "number": "11",
+      "title": "تغييرك الأول في الفريق",
+      "subtitle": "TeamBoard واختبار التخرّج",
+      "time": "ضمن تطبيقات المنهج",
+      "node": 5,
+      "build": "ميزة باستقلالية",
+      "outcome": "تلغي التعيين وتضيف اختباراتك ثم تراجع التغيير.",
+      "stage": "11-feature"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "one-request",
+      "module": "map",
+      "title": "طلب واحد. تطبيق كامل.",
+      "summary": "تعرّف على المسار الذي سنعود إليه طوال الرحلة.",
+      "gain": "أستطيع تتبّع الطلب من HTTP إلى JSON.",
+      "minutes": 8,
+      "steps": [
+        {
+          "title": "لنبدأ من طلب تعرفه",
+          "body": "أنت تعرف البرمجة، وعندك تجربة مع C# في Unity. هنا نبني الجسر إلى تطبيقات الفريق: نأخذ طلبًا صغيرًا ونمشي معه إلى آخره.\n\nتخيّل أن زميلك طلب منك تعديل الاستجابة التي ترجع بيانات المستخدم 42. أول سؤال مفيد هو: **أين يمرّ هذا الطلب؟**",
+          "code": "GET /users/42 HTTP/1.1\nHost: localhost:5080\nAccept: application/json",
+          "lang": "HTTP",
+          "aside": "كل اسم في المسار له دور محدد. اضغط على محطة لتشوف ما يدخل إليها وما يخرج منها.",
+          "lab": "trace"
+        },
+        {
+          "title": "الأسماء تصبح أدوارًا",
+          "body": "**ASP.NET Core** يستقبل الطلب ويختار الـ endpoint. هذا يستدعي خدمة تجمع قاعدة العمل. الخدمة تستخدم **EF Core** عند الحاجة إلى البيانات. ثم تتحول النتيجة إلى JSON.\n\nفي تطبيق صغير يمكن أن تكتب العمل كله داخل endpoint. سنفصل المسؤوليات عندما تصبح القاعدة مشتركة أو تحتاج اختبارًا مستقلًا، فتفهم سبب الفصل وقت حدوثه.",
+          "code": "HTTP → Middleware → Endpoint\n                         ↓\n                      Service\n                         ↓\n                    EF Core → SQL\n                         ↓\n                    JSON response",
+          "lang": "TRACE",
+          "lab": "trace"
+        },
+        {
+          "title": "ضع إصبعك على موضع التغيير",
+          "body": "لو أردت إخفاء البريد من الاستجابة، ابدأ بعقد الاستجابة والـ mapping. لو أردت السماح لعضو المشروع وحده بقراءة البيانات، ابحث عن قرار الصلاحية. ولو تغير مصدر البيانات، تتبع الخدمة إلى DbContext.\n\nهذا هو هدف الرحلة: أن تعرف أين تنظر، ثم تقرأ وتعدّل وتختبر وأنت فاهم العلاقات.",
+          "question": {
+            "text": "الطلب وصل بنجاح، لكن JSON يحمل حقلًا لا نريد عرضه. أين تبدأ الفحص؟",
+            "options": [
+              "عقد الاستجابة والـ mapping",
+              "خوارزمية GC",
+              "منفذ Kestrel"
+            ],
+            "correct": 0,
+            "explanation": "عقد الاستجابة يقرر الحقول العامة. افحص الـ DTO أو الإسقاط الذي يُحوّل بيانات التطبيق إلى النتيجة."
+          }
+        }
+      ],
+      "sources": [
+        [
+          "ASP.NET Core fundamentals",
+          "https://learn.microsoft.com/en-us/aspnet/core/fundamentals/?view=aspnetcore-10.0"
+        ]
+      ],
+      "stage": "00-start",
+      "build": "تشغيل الهيكل الجاهز"
+    },
+    {
+      "id": "runtime-map",
+      "module": "map",
+      "title": "من يترجم؟ ومن يشغّل؟",
+      "summary": "ضع C# وSDK وRuntime في أماكنها.",
+      "gain": "أميّز اللغة وأدوات البناء وبيئة التشغيل.",
+      "minutes": 10,
+      "sources": [
+        [
+          "Introduction to .NET",
+          "https://learn.microsoft.com/en-us/dotnet/core/introduction"
+        ],
+        [
+          ".NET support policy",
+          "https://dotnet.microsoft.com/en-us/platform/support/policy"
+        ]
+      ],
+      "steps": [
+        {
+          "title": "نفس C#، مضيف مختلف",
+          "body": "في Unity يحدد المحرّك دورة الحياة ويستدعي كودك. في تطبيق ويب، يبني Program.cs المضيف الذي ينتظر طلبات HTTP. اللغة مشتركة؛ المكتبات والمضيف وطريقة تشغيل العمل تختلف.\n\n**C#** هي اللغة. **SDK** حزمة أدوات بناء تضم compiler وCLI وقوالب المشاريع. **Runtime** البيئة التي تحتاجها البرامج المبنية لكي تعمل. عندما تثبّت SDK، تأتي معه بيئات التشغيل المناسبة للتطوير.",
+          "code": "Source (.cs)\n    ↓ C# compiler\nAssembly (.dll): IL + metadata\n    ↓ .NET runtime\nMachine code → execution",
+          "lang": "MODEL"
+        },
+        {
+          "title": "الحد الذي نحتاجه من Runtime",
+          "body": "في المسار المعتاد يترجم compiler إلى **IL** داخل assembly. يترجم JIT أجزاء التنفيذ إلى تعليمات الآلة عند الحاجة، ويتولى GC إدارة ذاكرة الكائنات المُدارة. مكتبات .NET الأساسية توفر collections وI/O وHTTP وغيرها.\n\nهذا النموذج يكفي لفهم لماذا تحتاج بيئة تشغيل ولماذا لا تنسخ ملفات المصدر إلى الخادم. توجد مسارات مثل NativeAOT خارج نطاق هذا المنهج؛ لا نفترض أن كل تطبيق .NET يستخدم JIT.\n\nسنستهدف **.NET 10 LTS وC# 14**. لو الفريق يثبّت SDK آخر، اتبع global.json وTargetFramework عند تشغيل مستودعه.",
+          "question": {
+            "text": "عندك جهاز تطوير يحتاج إنشاء المشاريع وبناءها. ماذا تثبّت؟",
+            "options": [
+              "SDK المناسب للمشروع",
+              "Runtime فقط",
+              "EF Core فقط"
+            ],
+            "correct": 0,
+            "explanation": "SDK يوفر أدوات الإنشاء والبناء. Runtime وحده مخصص لتشغيل البرامج المتوافقة، ولا يوفر كامل أدوات تطويرها."
+          }
+        },
+        {
+          "title": "رتّب الأسماء التاريخية مرة واحدة",
+          "body": "**.NET Framework** هو الخط القديم المرتبط بـWindows. **.NET Core** اسم الإصدارات متعددة المنصات قبل توحيد الاسم إلى **.NET** من الإصدار 5. الاسم ASP.NET Core استمر لإطار الويب، وEF Core استمر لأداة الوصول إلى البيانات.\n\n**NuGet** مدير حزم .NET. تضيف PackageReference في المشروع، ثم restore يجلب الحزم ويحسب شجرة الاعتماد. **CLR** اسم شائع لبيئة التشغيل المُدارة؛ لا يصف إطار الويب.",
+          "task": "على جهازك افتح صفحة تنزيل .NET الرسمية، وثبّت SDK 10 الموافق لمعمارية جهازك. ثم شغّل `dotnet --info` و`dotnet --list-sdks` و`dotnet --list-runtimes`. صنّف الأسطر إلى SDK أو Runtime.",
+          "hint": "على Mac اختر Arm64 لمعالجات Apple Silicon، وx64 لمعالجات Intel. إذا كان الأمر غير موجود بعد التثبيت، افتح terminal جديدًا.",
+          "result": "ترى SDK يبدأ بـ10، وMicrosoft.NETCore.App وMicrosoft.AspNetCore.App ضمن runtimes. تستطيع شرح دور كل واحد."
+        }
+      ],
+      "stage": "00-start",
+      "build": "تشغيل الهيكل الجاهز"
+    },
+    {
+      "id": "first-run",
+      "module": "map",
+      "title": "شغّل أول استجابة",
+      "summary": "مختبر البداية: طلب حقيقي يعود بـJSON.",
+      "gain": "أشغّل تطبيقًا وأحدد الملفات التي أنشأها البناء.",
+      "minutes": 12,
+      "sources": [
+        [
+          "dotnet new",
+          "https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-new"
+        ],
+        [
+          "Minimal APIs",
+          "https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis/overview?view=aspnetcore-10.0"
+        ]
+      ],
+      "steps": [
+        {
+          "title": "البداية جاهزة جزئيًا",
+          "body": "المشروع الوحيد في الرحلة هو **TeamBoard**: فريق ينظم مشاريعه ومهامه. نزّل حزمة البداية، وفكها مرة واحدة. الشجرة وملفات المشاريع والرسم وأول استجابة جاهزة؛ ستكمل قواعد وسلوكًا محددًا داخلها.\n\n[تنزيل بداية TeamBoard](./teamboard-starter.zip). الحزمة تضم `JOURNEY.md` ودليل الملفات. كل محطة لاحقة تعطيك ملفاتها للمقارنة أو النسخ في **المجلد نفسه**؛ لا نبدأ تطبيقًا جديدًا لكل مفهوم.",
+          "code": "dotnet restore TeamBoard.slnx\ndotnet run --project src/TeamBoard.Api --urls http://localhost:5080\n\n# Another terminal:\ncurl -i http://localhost:5080/users/42",
+          "lang": "TERMINAL",
+          "task": "افتح Program.cs في TeamBoard.Api. ابحث عن Nora وغيّر الاسم ثم أعد التشغيل. لا تحتاج database في هذه البداية.",
+          "result": "يرجع GET /users/42 استجابة 200 وJSON بالاسم الذي كتبته."
+        },
+        {
+          "title": "أول جزء ستعدّله أنت",
+          "body": "CreateBuilder يجهز المضيف، وBuild يبني التطبيق، وMapGet يربط الطلب بدالة. Run يبدأ استقبال الطلبات. الصياغة صغيرة لكن المسار HTTP كامل.\n\nالجزء المطلوب: اجعل المستخدم 42 معروفًا، وبقية الأرقام ترجع 404. الاختبار في محطة البداية يشير إلى السلوك المطلوب. لا تعدّل الملف الناتج في bin؛ عدّل المصدر.",
+          "code": "app.MapGet(\"/users/{id:int}\", (int id) =>\n{\n    if (id != 42) return Results.NotFound();\n    return Results.Ok(new { id, name = \"Nora\" });\n});",
+          "lang": "src/TeamBoard.Api/Program.cs",
+          "task": "أرسل 42 ثم 7 ثم كلمة بدل الرقم. فسّر الفرق بين 404 الناتج من شرطك و404 الناتج من قيد route.",
+          "lab": "trace",
+          "result": "المستخدم 42 يرجع JSON، والرقم 7 لا يوجد، والنص لا يطابق المسار ذي القيد int."
+        },
+        {
+          "title": "البناء يترك أثرًا في bin وobj",
+          "body": "csproj يصف المشروع. MSBuild ينسق بناءه، وcompiler ينتج assembly. bin يحمل المخرجات، وobj يحمل الملفات الوسيطة وبيانات restore.\n\nفي حزمة البداية خمسة مشاريع صغيرة؛ معظمها هيكل جاهز يستقبل العمل لاحقًا. لا تحفظ أسماء المجلدات الآن. عند محطة السداسي نقرأ سبب كل reference.",
+          "code": "dotnet build TeamBoard.slnx\ndotnet test TeamBoard.slnx\n# Inspect src/TeamBoard.Api/bin and obj",
+          "lang": "TERMINAL",
+          "task": "افتح csproj في Api وحدد TargetFramework. ثم افتح obj/project.assets.json لتتعرف على أثر NuGet restore.",
+          "result": "تحدد ما كتبته أنت وما أنشأته أدوات البناء، وتعرف أن الحزمة مشروع واحد مقسم إلى وحدات بناء."
+        }
+      ],
+      "stage": "00-start",
+      "build": "تشغيل الهيكل الجاهز"
+    },
+    {
+      "id": "records-null",
+      "module": "csharp",
+      "title": "عقد البيانات والقيمة الغائبة",
+      "summary": "properties وrecords وnullable كما تظهر في عقود API.",
+      "gain": "أقرأ record وأتعامل مع null قبل أن يتحول إلى خطأ.",
+      "minutes": 12,
+      "sources": [
+        [
+          "Records",
+          "https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/record"
+        ],
+        [
+          "Nullable reference types",
+          "https://learn.microsoft.com/en-us/dotnet/csharp/nullable-references"
+        ]
+      ],
+      "steps": [
+        {
+          "title": "افصل القراءة عن التغيير",
+          "body": "الـ property تعطي واجهة للوصول إلى البيانات. `get; set;` تسمح بالتغيير بعد الإنشاء، و`init` تسمح بالإسناد خلال التهيئة. `required` يطلب تهيئة العضو عند إنشاء الكائن عبر الطرق المعتادة التي يفحصها compiler.\n\nنستخدم record لعقد بيانات صغير. المساواة فيه تعتمد على القيم وفق أعضاء السجل؛ والنسخة بـwith تغيّر الخاصية المطلوبة. هذا **نسخ سطحي**: القوائم والكائنات المشار إليها لا تُنسخ عميقًا.",
+          "code": "public record TaskDto(int Id, string Title, bool Done);\n\nvar task = new TaskDto(1, \"Read Program.cs\", false);\nvar completed = task with { Done = true };\nConsole.WriteLine(task.Done);      // False\nConsole.WriteLine(completed.Done); // True",
+          "task": "داخل TeamBoard.Domain اقرأ TaskDto ثم جرّب with في اختبار صغير داخل TeamBoard.Tests. غيّر Done في النسخة وتأكد أن الأصل لم يتغير. لا تنشئ console منفصلًا.",
+          "result": "الخاصية positional في record class لها init افتراضيًا. الأصل يبقى دون تغيير بعد with."
+        },
+        {
+          "title": "علامة الاستفهام تصف احتمال الغياب",
+          "body": "`User?` يخبر compiler أن المرجع قد يكون null. التحليل يتتبع فروع الكود: بعد فحص null يستطيع تضييق الاحتمال. هذه **تحذيرات وتحليل ساكن**؛ تفعيل Nullable لا يضيف فحص runtime لكل مرجع.\n\nعامل `!` يُسكت التحذير ولا يمنع null. عامل `?.` يوقف الوصول إذا كانت القيمة غائبة، و`??` يعطي بديلًا. اختر حسب معنى الغياب: مستخدم غير موجود غالبًا يحتاج 404، لا اسمًا وهميًا.",
+          "code": "static string DisplayName(User? user)\n{\n    if (user is null) return \"Unknown\";\n    return user.Name;\n}\n\npublic record User(int Id, string Name);",
+          "question": {
+            "text": "كتبت user!.Name وكانت user تساوي null أثناء التشغيل. ماذا يحدث؟",
+            "options": [
+              "NullReferenceException",
+              "يُنشئ compiler مستخدمًا فارغًا",
+              "يعيد سلسلة فارغة"
+            ],
+            "correct": 0,
+            "explanation": "علامة ! تؤثر في تحليل compiler فقط. الوصول إلى عضو في مرجع null يظل خطأ وقت التشغيل."
+          }
+        },
+        {
+          "title": "اختر الشكل بناءً على عقدك",
+          "body": "Entity تمثل حالة تحفظها قاعدة البيانات، وقد تحتوي مراجع وحقولًا داخلية. DTO يمثل بيانات حدّ التطبيق. استعمال record مناسب لكثير من DTOs؛ ولا يحوّل كل كائن إلى بيانات غير قابلة للتغيير بالكامل.\n\nPattern matching يساعد في قراءة الحالات بوضوح، خصوصًا عندما يجمع فحص الغياب مع شرط على خاصية.",
+          "code": "static string Label(TaskDto? task) => task switch\n{\n    null => \"missing\",\n    { Done: true } => \"completed\",\n    { Title.Length: 0 } => \"untitled\",\n    _ => \"open\"\n};",
+          "task": "أضف إلى TaskDto خاصية `string? AssigneeName`، واكتب عرضًا يبيّن «unassigned» عند غيابها. اختبر null ونصًا فعليًا.",
+          "hint": "استخدم `task.AssigneeName ?? \"unassigned\"`. وجود الخاصية اختياري، أما كائن task نفسه فله قرار غياب منفصل.",
+          "result": "تفرّق بين غياب المهمة وغياب الشخص المعيّن لها."
+        }
+      ],
+      "stage": "01-domain",
+      "build": "عقود المهام وقواعدها"
+    },
+    {
+      "id": "linq",
+      "module": "csharp",
+      "title": "LINQ: وصف العمل ووقت تنفيذه",
+      "summary": "تتبّع مهام TeamBoard عبر الفلترة والإسقاط.",
+      "gain": "أحدد متى ينفّذ LINQ وما الذي يبقى مؤجّلًا.",
+      "minutes": 14,
+      "sources": [
+        [
+          "LINQ",
+          "https://learn.microsoft.com/en-us/dotnet/csharp/linq/"
+        ],
+        [
+          "Deferred execution",
+          "https://learn.microsoft.com/en-us/dotnet/standard/linq/deferred-execution-lazy-evaluation"
+        ]
+      ],
+      "steps": [
+        {
+          "title": "الدالة التي تمرّرها هي الشرط",
+          "body": "Lambda مثل `t => !t.Done` دالة تأخذ مهمة وترجع bool. في LINQ-to-Objects تستقبل Where delegate مثل Func<T, bool>. الـ generics تسمح بنفس العملية لأنواع مختلفة دون فقد معلومات النوع.\n\n`IEnumerable<T>` يقدّم تسلسلًا تستطيع تعداده؛ لا يعد بأن البيانات مخزنة كلها في List. وDictionary<TKey,TValue> يصل بالقيمة عبر المفتاح بدل البحث اليدوي في كل عنصر.",
+          "code": "var tasks = new List<TaskDto>\n{\n    new(1, \"Read\", false),\n    new(2, \"Build\", true),\n    new(3, \"Test\", false)\n};\nvar names = tasks.Where(t => !t.Done)\n                 .OrderBy(t => t.Id)\n                 .Select(t => t.Title);",
+          "task": "في مشروع TeamBoard.Tests جهّز قائمة TaskDto كما في المثال، واكتب assert على أسماء النتائج. هذا اختبار قراءة لنفس عقود مشروعنا."
+        },
+        {
+          "title": "الاستعلام ينتظر من يعدّه",
+          "body": "Where وSelect عادةً تؤجلان التنفيذ حتى التعداد. `ToList()` تعدّ الآن وتخزن النتائج. إذا تغيّر المصدر قبل تعداد الاستعلام المؤجل فقد ترى التغيير؛ القائمة التي صنعتها ToList تبقى snapshot لعناصرها، مع بقاء مراجع العناصر نفسها إن كانت كائنات قابلة للتغيير.\n\nبعض operators مثل OrderBy تحتاج تجميع بيانات قبل إخراج أول عنصر؛ كلمة «مؤجّل» لا تعني دائمًا «عنصرًا عنصرًا بلا تخزين».",
+          "code": "var open = tasks.Where(t => !t.Done);\nvar snapshot = open.ToList();\ntasks.Add(new TaskDto(4, \"Ship\", false));\n\nConsole.WriteLine(open.Count());     // 3\nConsole.WriteLine(snapshot.Count);   // 2",
+          "lab": "linq",
+          "question": {
+            "text": "تعدّد نفس الاستعلام المؤجل مرتين بعد تغيير المصدر. هل تضمن نفس النتائج؟",
+            "options": [
+              "لا، قد يُقرأ المصدر من جديد",
+              "نعم، LINQ يخزّن كل النتائج تلقائيًا",
+              "نعم، IEnumerable يعني قائمة ثابتة"
+            ],
+            "correct": 0,
+            "explanation": "الوصف لا يساوي نتيجة مخزنة. التعداد الجديد قد ينفّذ العمل مجددًا ويلاحظ حالة المصدر الجديدة."
+          }
+        },
+        {
+          "title": "Extension method تخفي شكل النداء فقط",
+          "body": "الـ extension التقليدية دالة static أول معامل فيها مسبوق بـthis. تستطيع نداءها كأنها عضو في النوع. لا تضيف حالة إلى الكائن ولا تتجاوز قواعد الوصول. ستراها في AddControllers وUseAuthentication وكثير من LINQ.\n\nالمثال يستخدم الصيغة التقليدية التي ستجدها بكثرة في مستودعات الفريق، حتى مع أن C# 14 تدعم extension blocks أيضًا.",
+          "code": "public static class TaskQueries\n{\n    public static IEnumerable<TaskDto> Open(\n        this IEnumerable<TaskDto> source) =>\n        source.Where(t => !t.Done);\n}\n// tasks.Open() == TaskQueries.Open(tasks)",
+          "task": "ابنِ تقريرًا يعيد أسماء المهام المفتوحة مرتبة. أنشئ Dictionary<int, TaskDto> بـToDictionary للوصول إلى مهمة برقمها، واستخدم TryGetValue للرقم غير الموجود.",
+          "hint": "لا تستخدم indexer إن كان عدم وجود المفتاح حالة متوقعة. جرّب مفاتيح متكررة مع ToDictionary لتفهم لماذا يحتاج المفتاح أن يكون فريدًا.",
+          "solution": "`var byId = tasks.ToDictionary(t => t.Id);` ثم `if (byId.TryGetValue(42, out var task)) { Console.WriteLine(task.Title); }`. المفتاح المكرر يسبب استثناء أثناء بناء القاموس.",
+          "result": "تستطيع تفسير فرق Where وSelect وToList وToDictionary من أثرها على البيانات، لا من أسمائها فقط."
+        }
+      ],
+      "stage": "01-domain",
+      "build": "عقود المهام وقواعدها"
+    },
+    {
+      "id": "async",
+      "module": "csharp",
+      "title": "await: أين ينتظر الطلب؟",
+      "summary": "Task وasync والإلغاء من منظور طلب ويب.",
+      "gain": "أمرّر الانتظار والإلغاء دون حجز thread بلا حاجة.",
+      "minutes": 15,
+      "sources": [
+        [
+          "Asynchronous programming",
+          "https://learn.microsoft.com/en-us/dotnet/csharp/asynchronous-programming/"
+        ],
+        [
+          "Cancellation in managed threads",
+          "https://learn.microsoft.com/en-us/dotnet/standard/threading/cancellation-in-managed-threads"
+        ]
+      ],
+      "steps": [
+        {
+          "title": "Task وعد بإنجاز عملية",
+          "body": "`Task<T>` يمثل اكتمال عملية ونتيجة من النوع T. عند الوصول إلى await: إذا اكتملت العملية يتابع الكود مباشرة؛ وإذا لم تكتمل، يستطيع async method إعادة التحكم إلى مستدعيه، وتُستكمل بقية الدالة لاحقًا.\n\nالكلمة async وحدها لا تنشئ thread ولا تجعل العمل CPU-heavy غير حاجز. في I/O غير المتزامن لا تحتاج عادةً حجز thread طوال انتظار الشبكة. لذلك نستخدم async على طول المسار.",
+          "code": "static async Task<string> LoadTitleAsync(\n    HttpClient http, CancellationToken ct)\n{\n    var text = await http.GetStringAsync(\n        \"https://example.com\", ct);\n    return text.Trim();\n}",
+          "lab": "async"
+        },
+        {
+          "title": "انتظر النتيجة دون Result",
+          "body": "`task.Result` و`task.Wait()` يحجزان thread المستدعي حتى الاكتمال. في ASP.NET Core هذا يهدر threads وقد يقود إلى thread-pool starvation تحت الضغط. لا تفترض نفس سياق المزامنة الخاص بتطبيقات الواجهات أو ASP.NET القديم.\n\nاستثناء العملية غير المتزامنة يُلاحظ عند await. تجنب async void إلا في event handlers التي تتطلبه؛ مستدعي async void لا يستطيع انتظارها كـTask.",
+          "code": "// Sequential when the second operation needs the first:\nvar user = await LoadUserAsync(id, ct);\nvar tasks = await LoadTasksAsync(user.Id, ct);\n\n// Only for independent operations with safe dependencies:\nvar a = FetchWeatherAsync(ct);\nvar b = FetchTimeAsync(ct);\nawait Task.WhenAll(a, b);",
+          "question": {
+            "text": "استدعيت عمليتين متوازيتين على نفس DbContext. هل كون النداء async يجعله آمنًا؟",
+            "options": [
+              "لا؛ DbContext لا يدعم العمل المتزامن عليه",
+              "نعم؛ Task.WhenAll يمنع التعارض",
+              "نعم؛ await ينشئ سياقًا جديدًا"
+            ],
+            "correct": 0,
+            "explanation": "التوازي يحتاج dependencies تسمح به. انتظر كل عملية EF على السياق نفسه، أو استخدم سياقات مستقلة عند وجود حاجة حقيقية."
+          }
+        },
+        {
+          "title": "الإلغاء يمر من أعلى المسار إلى أسفله",
+          "body": "CancellationToken إشارة تعاون، لا يقتل thread بالقوة. مرّر token من endpoint إلى service ثم EF أو HttpClient. العمليات التي تدعمه تلاحظ الطلب وتوقف ما تستطيع. لا تعتبر الإلغاء فشلًا يستحق 500 تلقائيًا.\n\nإذا كنت تعمل على ملف أو اتصال يملك IDisposable، يحدد using نهاية عمر المورد حتى عند وقوع استثناء. وawait using يخدم IAsyncDisposable عند الحاجة إلى تنظيف غير متزامن.",
+          "code": "using var cts = new CancellationTokenSource();\ncts.CancelAfter(TimeSpan.FromMilliseconds(100));\ntry\n{\n    await Task.Delay(1000, cts.Token);\n}\ncatch (OperationCanceledException)\n{\n    Console.WriteLine(\"Cancelled cooperatively\");\n}",
+          "task": "نفّذ المثال. غيّر Delay إلى 20ms، ثم أزل تمرير token من Delay. قارن النتائج؛ الطلب بالإلغاء وحده لا يغيّر عملية لا تراقبه.",
+          "result": "ترى الإلغاء عندما يُمرر token وتسبق مهلة الإلغاء اكتمال العمل؛ وترى الاكتمال عندما ينتهي العمل قبلها."
+        },
+        {
+          "title": "نقرأ مهام المشروع نفسه",
+          "body": "نطبّق القراءة غير المتزامنة على بيانات TeamBoard. أضف ملف tasks.json داخل Api وفيه array بمفاتيح Id وTitle وDone وProjectId وAssigneeId، موافقة لـTaskDto.\n\nهذا endpoint مؤقت للتعلم في نسخة البداية، قبل المصادقة. يستخدم مسارًا مشتقًا من content root بدل افتراض مجلد التشغيل. في محطة EF سنبدل قراءة الملف بتخزين دائم عبر port.",
+          "code": "app.MapGet(\"/lab/tasks\", async (IWebHostEnvironment env, CancellationToken ct) =>\n{\n    var path = Path.Combine(env.ContentRootPath, \"tasks.json\");\n    await using var stream = File.OpenRead(path);\n    var tasks = await System.Text.Json.JsonSerializer\n        .DeserializeAsync<List<TeamBoard.Domain.TaskDto>>(stream,\n            cancellationToken: ct) ?? [];\n    return tasks.Where(t => !t.Done).Select(t => t.Title);\n});",
+          "lang": "src/TeamBoard.Api/Program.cs",
+          "task": "جرّب قائمة صحيحة، ثم JSON بقيمة null، ثم JSON غير صالح. سجل الفرق بين قائمة فارغة وخطأ قراءة. أزل endpoint التجريبي عند الانتقال إلى controllers.",
+          "hint": "الـDTO في الهيكل يملك ProjectId وAssigneeId أيضًا. ضع القيم الموافقة. الملف الفارغ ليس JSON صالحًا.",
+          "solution": "null يتحول إلى قائمة فارغة بسبب ?? []. JSON malformed يسبب JsonException، والملف المفقود FileNotFoundException. لا تحول الفشلين إلى قائمة فارغة صامتة.",
+          "result": "تربط LINQ وrecord وnullable وawait وusing بجزء من TeamBoard نفسه."
+        }
+      ],
+      "stage": "01-domain",
+      "build": "عقود المهام وقواعدها"
+    },
+    {
+      "id": "solution",
+      "module": "anatomy",
+      "title": "الشجرة الجاهزة لها سبب",
+      "summary": "اقرأ بنية الفريق وابنِ TeamBoard الخاص بك.",
+      "gain": "أرسم اتجاه الاعتماد في هيكل TeamBoard السداسي.",
+      "minutes": 12,
+      "sources": [
+        [
+          "dotnet sln",
+          "https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-sln"
+        ],
+        [
+          "MSBuild project files",
+          "https://learn.microsoft.com/en-us/dotnet/core/project-sdk/overview"
+        ],
+        [
+          "Hexagonal architecture — Alistair Cockburn",
+          "https://alistair.cockburn.us/hexagonal-architecture/"
+        ]
+      ],
+      "steps": [
+        {
+          "title": "القلب يصف عمل الفريق",
+          "body": "الهيكل السداسي **Hexagonal Architecture / Ports and Adapters** يفصل منطق التطبيق عن طرق تشغيله والعالم الخارجي. كلمة سداسي لا تعني ستة مجلدات أو ست طبقات؛ الرسم يميز الداخل والأطراف.\n\nفي TeamBoard: Domain للبيانات وقواعد مثل العنوان. Application لحالات الاستخدام والمنافذ التي تحتاجها. Infrastructure تنفذ منافذ التخزين والإشعار. Api مدخل HTTP ومكان تركيب الاعتمادات. Tests مدخل آخر للقلب.",
+          "code": "src/\n  TeamBoard.Domain/\n  TeamBoard.Application/\n  TeamBoard.Infrastructure/\n  TeamBoard.Api/\ntests/\n  TeamBoard.Tests/",
+          "lang": "الشجرة الجاهزة",
+          "lab": "hex",
+          "task": "افتح الرسم المرفق ARCHITECTURE.md. عيّن موضع القرار «المرشح عضو في مشروع المهمة» قبل قراءة الكود."
+        },
+        {
+          "title": "اتجاه النداء يختلف عن اتجاه المرجع",
+          "body": "عند التشغيل تنادي Application منفذ التخزين الذي تنفذه Infrastructure. لكن ProjectReference يتجه من Infrastructure إلى Application لأن العقد مملوك للداخل. هذا تطبيق dependency inversion.\n\nApplication لا تستورد EF أو ASP.NET. Api يعرف Application، ويعرف Infrastructure فقط لتركيب التطبيق في Program.cs. controller نفسه يعتمد حالة الاستخدام، لا DbContext.",
+          "code": "Domain            → no project dependencies\nApplication       → Domain\nInfrastructure    → Application + Domain\nApi               → Application + Infrastructure\nTests             → the boundary being tested",
+          "lang": "PROJECT REFERENCES",
+          "task": "اقرأ ProjectReference في المشاريع الخمسة. حاول إضافة using Microsoft.EntityFrameworkCore داخل Application دون حزمة EF؛ لماذا لا نضيف الحزمة لحل التصميم؟",
+          "solution": "Application لا تحتاج EF لتقرير من يحق له التعيين. نغيّر العقد أو adapter إذا احتجنا قدرة تخزين جديدة، ونبقي أنواع provider خارج القلب."
+        },
+        {
+          "title": "Solution ليست Architecture",
+          "body": "Solution تجمع مشاريع البناء. Assembly مخرج بناء. Namespace تنظيم أسماء. الملف .slnx يجمع وحداتنا لكنه لا يفرض بقاء dependencies في اتجاهها؛ المراجع والأنواع التي تمر عبر العقود هي الدليل.\n\n.NET 10 ينشئ slnx افتراضيًا. حزمة البداية توفره لك. الأوامر التالية للفحص؛ لا تحتاج إعادة إنشاء الهيكل من الصفر.",
+          "code": "dotnet sln TeamBoard.slnx list\ndotnet list src/TeamBoard.Application reference\ndotnet list src/TeamBoard.Infrastructure reference\ndotnet build TeamBoard.slnx",
+          "lang": "TERMINAL",
+          "task": "في UML، أكمل سهمين ناقصين: adapter التخزين implements أي port؟ والاختبار يستدعي أي use case؟",
+          "result": "ترسم الحدود وتشرحها، وتعرف لماذا لا يعني ترتيب المجلدات وحده أن المشروع سداسي."
+        }
+      ],
+      "stage": "02-ports",
+      "build": "رسم الحدود والمنافذ"
+    },
+    {
+      "id": "ports-adapters",
+      "module": "anatomy",
+      "title": "Port نملكه، وAdapter نستبدله",
+      "summary": "قلب التعيين يعمل من اختبار وHTTP بالطريقة نفسها.",
+      "gain": "أثبت فائدة السداسي بتبديل الطرف دون تعديل قاعدة العمل.",
+      "minutes": 14,
+      "sources": [
+        [
+          "Hexagonal architecture",
+          "https://alistair.cockburn.us/hexagonal-architecture/"
+        ]
+      ],
+      "steps": [
+        {
+          "title": "اكتب الحاجة قبل اسم التقنية",
+          "body": "حالة AssignAsync تحتاج معرفة المهمة والعضوية وحفظ التغيير وإرسال إشعار. تصوغ Application احتياجاتها في IBoardStore وIAssignmentNotifier. الأسماء تصف العمل، لا Postgres أو HttpClient.\n\nInbound port هنا IWorkItemService. يستدعيه controller أو اختبار. Outbound ports يحتاجها القلب ليصل إلى التخزين والإشعارات. تستطيع بعض المشاريع الاكتفاء بنوع use case ملموس للمدخل؛ interface ليست طقسًا إلزاميًا.",
+          "code": "public interface IAssignmentNotifier\n{\n    Task<bool> NotifyAsync(AssignmentNotice notice, CancellationToken ct);\n}\npublic record AssignmentNotice(int TaskId, int ProjectId, int AssigneeId);",
+          "lang": "Application/Ports.cs",
+          "task": "افتح ملف Ports.cs الجاهز في حزمة المحطة. أكمل اسم method ومعامل CancellationToken في منفذ الإشعار. قارنه بالمثال."
+        },
+        {
+          "title": "قاعدة التعيين لا ترى SQL",
+          "body": "WorkItemService تأخذ المنافذ عبر constructor. تتحقق من الفاعل والمرشح باستخدام ProjectId من المهمة المخزنة، ثم تغيّر التعيين وتحفظه. لا تعرف header أو HttpContext أو DbSet.\n\nفي المرحلة الأولى نعطيها InMemoryBoardStore للتجربة. عند EF نسجل EfBoardStore بدلًا منه. نفس use case تبقى كما هي؛ هذه تجربة عملية لمعنى الاستبدال.",
+          "code": "public sealed class WorkItemService(\n    IBoardStore store, IAssignmentNotifier notifier) : IWorkItemService\n{\n    // 1. Load task\n    // 2. Check actor membership\n    // 3. Check assignee membership\n    // 4. Change + commit\n    // 5. Notify\n}",
+          "lang": "Application/WorkItemService.cs",
+          "lab": "hex",
+          "task": "حدد ترتيب الفحص الذي يمنع إرسال إشعار لتعيين مرفوض. أكمل شرطًا واحدًا في النسخة المجهزة للمحطة.",
+          "result": "المرشح من مشروع آخر يُرفض قبل commit وقبل الإشعار. تغيير adapter لا ينقل هذه القاعدة إلى الطرف."
+        },
+        {
+          "title": "حدود نختارها بحجم المشروع",
+          "body": "لا نضيف repository لكل entity، ولا event bus ولا CQRS. IBoardStore منفذ واحد صغير خاص بهذا التطبيق. عندما يكبر يمكن تقسيمه بحسب حالات الاستخدام، لكن الفصل الآن يكفي ليمنع EF من التسرب للداخل.\n\nإرسال إشعار بعد الحفظ في نسختنا **best effort**: لو فشل الإشعار يبقى التعيين محفوظًا ويظهر الفشل في السجل. ضمان التسليم الدائم يحتاج outbox أو آلية أخرى؛ نؤجله كي لا تتضخم الرحلة.",
+          "task": "لو استبدلنا HTTP notifier بسجل محلي، اكتب الملفات التي تتغير والتي لا تحتاج تغييرًا. ثم جرّب التسجيل في DI عند محطة الوصل.",
+          "solution": "تضيف أو تختار implementation لـIAssignmentNotifier وتغير التسجيل في Program.cs. WorkItemService وشرط العضوية وعقد الطلب لا يحتاجون معرفة الطريقة الجديدة."
+        }
+      ],
+      "stage": "02-ports",
+      "build": "رسم الحدود والمنافذ"
+    },
+    {
+      "id": "read-repo",
+      "module": "anatomy",
+      "title": "أول عشر دقائق في مستودع",
+      "summary": "ترتيب فحص يعالج ما يمنع التشغيل أولًا.",
+      "gain": "أشخّص فشل restore والبناء والتشغيل في طبقتها الصحيحة.",
+      "minutes": 10,
+      "sources": [
+        [
+          "global.json",
+          "https://learn.microsoft.com/en-us/dotnet/core/tools/global-json"
+        ],
+        [
+          "NuGet package restore",
+          "https://learn.microsoft.com/en-us/nuget/consume-packages/package-restore"
+        ]
+      ],
+      "steps": [
+        {
+          "title": "ابدأ بالعقد الذي يحدد البيئة",
+          "body": "افتح README ثم global.json إن وجد: الأخير يختار SDK وسياسة roll-forward. اقرأ TargetFramework في csproj؛ قد تستطيع بناء target أقدم بـSDK أحدث لكن الحزم والمستودع قد يقيدانك.\n\nابحث عن NuGet.config للمصادر الخاصة، وDirectory.Build.props للإعدادات المشتركة، وDirectory.Packages.props إذا كانت الإصدارات مركزية. لا تفترض أن كل إصدار موجود داخل csproj نفسه.",
+          "code": "dotnet --info\ndotnet restore TeamBoard.slnx\ndotnet build TeamBoard.slnx --no-restore\ndotnet test TeamBoard.slnx --no-build",
+          "lang": "TERMINAL",
+          "task": "شغّل الأوامر بالترتيب. دوّن أول خطوة تفشل وسببها. قبل إصلاح كود لا يبنى، تحقق من SDK ومصدر الحزم."
+        },
+        {
+          "title": "كل فشل له طبقة",
+          "body": "فشل restore قد يعني مصدر NuGet خاصًا أو اسم حزمة أو إصدارًا غير متاح. خطأ compiler يشير إلى نوع أو syntax أو reference. فشل startup قد يعني إعدادًا مفقودًا أو منفذًا مستخدمًا أو DI غير صالح. استجابة 500 تعني أن التطبيق بدأ ثم فشل أثناء الطلب.\n\nاقرأ أول سبب محدد، لا آخر سطر «Build failed». فتح IDE لا يحل اختلاف SDK أو اعتمادًا غير موجود.",
+          "question": {
+            "text": "البناء ناجح، لكن التطبيق يرمي Unable to resolve service عند طلب endpoint. أين تبدأ؟",
+            "options": [
+              "تسجيلات DI والـconstructor",
+              "مسح جميع ملفات المصدر",
+              "إعادة كتابة LINQ"
+            ],
+            "correct": 0,
+            "explanation": "الحاوية تحاول تركيب كائن لم تجد اعتمادًا مسجلًا له. تتبّع النوع المذكور في الرسالة إلى constructor ثم builder.Services."
+          }
+        },
+        {
+          "title": "اترك خريطة تشغيل قصيرة",
+          "body": "في مشروعك اكتب ملاحظة تشغيل من أربعة أسطر: SDK، أمر التشغيل، الإعداد المحلي المطلوب، وأمر الاختبارات. هذه أول وثيقة تحتاجها عندما تنضم لفريق.\n\n**Checkpoint المشروع:** صار عندك مضيف API وبنية dependencies واختبارات قالب تعمل. في المرحلة التالية سنضع أول controller وخدمة، ثم نثبت وصول الطلب إليهما.",
+          "task": "افتح المشروع بمحررك، ضع breakpoint عند endpoint الأول وشغّل وضع debug باستخدام دعم C# المناسب للمحرر. أرسل الطلب ثم افحص id وcall stack. يمكن تنفيذ بقية المختبرات من CLI حتى لو لم تجهّز debugger الآن.",
+          "result": "تحدد الملف والسطر الذي استقبل الطلب، وتشرح كيف وصل إليه بدل البحث في جميع الملفات."
+        }
+      ],
+      "stage": "02-ports",
+      "build": "رسم الحدود والمنافذ"
+    },
+    {
+      "id": "pipeline",
+      "module": "request",
+      "title": "الطلب يدخل، والاستجابة ترجع",
+      "summary": "فكّ middleware إلى نداءات متداخلة.",
+      "gain": "أرسم ترتيب الدخول والخروج في middleware.",
+      "minutes": 13,
+      "sources": [
+        [
+          "Middleware",
+          "https://learn.microsoft.com/en-us/aspnet/core/fundamentals/middleware?view=aspnetcore-10.0"
+        ]
+      ],
+      "steps": [
+        {
+          "title": "الخادم يسلّمك HttpContext",
+          "body": "Kestrel هو خادم الويب الافتراضي في ASP.NET Core. يستقبل HTTP، وقد يكون خلف reverse proxy. في مستوى التطبيق تحصل على **HttpContext** يضم Request وResponse وUser ومعلومات الطلب.\n\nلا تحتاج إعادة بناء TCP كي تعدّل endpoint. الحد الذي يهمنا يبدأ من middleware pipeline: delegates تستقبل context وتقرر ما تفعله به.",
+          "code": "var builder = WebApplication.CreateBuilder(args);\nbuilder.Services.AddControllers();\nvar app = builder.Build();\napp.UseRouting();\napp.MapControllers();\napp.Run();",
+          "task": "قارن هذا بمشروعك. التسجيلات قبل Build تصف dependencies. بعد Build تصف كيف يعالج التطبيق الطلبات. MapControllers يضيف endpoints التي يكتشفها الإطار.",
+          "lab": "trace"
+        },
+        {
+          "title": "قبل next وبعده",
+          "body": "Use يسجل middleware يستطيع استدعاء التالي. ما قبل await next يجري أثناء الدخول، وما بعده يجري عند رجوع التحكم. ترتيب الخروج معكوس لأن النداءات متداخلة.\n\nضع المثال قبل endpoint في نسخة البداية من TeamBoard، لا تنشئ تطبيقًا ثانيًا. Console هنا للتتبع المؤقت؛ سنستخدم ILogger في المختبر القادم.",
+          "code": "app.Use(async (context, next) =>\n{\n    Console.WriteLine(\"A in\");\n    await next(context);\n    Console.WriteLine(\"A out\");\n});\napp.Use(async (context, next) =>\n{\n    Console.WriteLine(\"B in\");\n    await next(context);\n    Console.WriteLine(\"B out\");\n});",
+          "lab": "middleware",
+          "question": {
+            "text": "وصل الطلب إلى endpoint ورجع طبيعيًا. ما ترتيب السجل؟",
+            "options": [
+              "A in → B in → B out → A out",
+              "A in → A out → B in → B out",
+              "B in → A in → A out → B out"
+            ],
+            "correct": 0,
+            "explanation": "A ينتظر B، وB ينتظر ما بعده. لذلك يكتمل B قبل رجوع التحكم إلى ما بعد next داخل A."
+          }
+        },
+        {
+          "title": "إن لم تستدعِ التالي ينتهي الفرع",
+          "body": "Middleware يستطيع إنهاء الطلب مبكرًا: مثل ملف ساكن أو رفض وصول. نطلق على ذلك short-circuit. إذا كتبت Response فلا تفترض أنك تستطيع تغيير headers بعد أن بدأت الاستجابة.\n\nضع معالج الأخطاء مبكرًا ليحيط بما بعده. حدّد routing قبل السلوك الذي يحتاج metadata الخاصة بالـendpoint، ثم authentication قبل authorization. الترتيب جزء من معنى التطبيق.",
+          "code": "app.Use(async (context, next) =>\n{\n    if (context.Request.Path == \"/maintenance\")\n    {\n        context.Response.StatusCode = 503;\n        await context.Response.WriteAsync(\"Temporarily unavailable\");\n        return;\n    }\n    await next(context);\n});",
+          "task": "أرسل طلبًا إلى /maintenance ثم /users/42. ضع سطر تتبّع في middleware التي بعدها. جرّب نقل middleware إلى موضع أبكر.",
+          "result": "طلب maintenance يتوقف عند 503، فلا يصل إلى الكود اللاحق. الطلب الآخر يكمل. تستطيع رسم سبب اختلاف المسارين."
+        }
+      ],
+      "stage": "03-http",
+      "build": "مدخل HTTP"
+    },
+    {
+      "id": "controller",
+      "module": "request",
+      "title": "المسار يختار method",
+      "summary": "Routing وmodel binding وattributes داخل controller.",
+      "gain": "أتتبع قيمة من URL إلى معامل في controller.",
+      "minutes": 13,
+      "sources": [
+        [
+          "Controllers in web APIs",
+          "https://learn.microsoft.com/en-us/aspnet/core/web-api?view=aspnetcore-10.0"
+        ],
+        [
+          "Model binding",
+          "https://learn.microsoft.com/en-us/aspnet/core/mvc/models/model-binding?view=aspnetcore-10.0"
+        ]
+      ],
+      "steps": [
+        {
+          "title": "attributes يقرأها إطار العمل",
+          "body": "ضع الملف التالي في Api/Controllers. Attribute مثل HttpGet يحمل metadata يقرأها الإطار ليبني endpoint. ليست الدالة نفسها طلب HTTP؛ الإطار يستخدم معلومات النوع والـattributes ويربط method بالمسار.\n\nهذا استخدام عملي لما تتيحه reflection من فحص الأنواع والـmetadata. لا نحتاج كتابة نظام reflection خاص بنا.",
+          "code": "using Microsoft.AspNetCore.Mvc;\n\n[ApiController]\n[Route(\"users\")]\npublic class UsersController : ControllerBase\n{\n    [HttpGet(\"{id:int}\")]\n    public ActionResult<UserDto> Get(int id)\n    {\n        if (id != 42) return NotFound();\n        return Ok(new UserDto(id, \"Nora\"));\n    }\n}\npublic record UserDto(int Id, string Name);",
+          "task": "تأكد من AddControllers وMapControllers في Program.cs. شغّل Api وجرّب /users/42 و/users/7 و/users/nope.",
+          "result": "42 يرجع 200؛ 7 يرجع 404 من كودك؛ nope يرجع 404 من عدم مطابقة قيد المسار. نفس status قد يأتي من طبقتين مختلفتين."
+        },
+        {
+          "title": "Model binding يصنع معاملاتك",
+          "body": "القيمة قد تأتي من route أو query أو body. استخدم FromRoute وFromQuery وFromBody لتصريح المصدر حين يفيد. بعض الحالات يستنتجها ApiController؛ معرفة الاستنتاج مفيدة عند قراءة كود الفريق.\n\nFromServices يطلب dependency من DI. CancellationToken في action يمكن ربطه بإلغاء الطلب. الخطأ في تحويل قيمة يختلف عن كون القيمة صحيحة نوعيًا لكنها تخالف قاعدة العمل.",
+          "code": "[HttpGet]\npublic IActionResult List([FromQuery] int take = 20)\n{\n    if (take is < 1 or > 100)\n        return BadRequest(new { error = \"take must be 1..100\" });\n    return Ok(new { take });\n}",
+          "task": "جرّب `?take=5` ثم `?take=bad` ثم `?take=101`. ضع breakpoint في الدالة ولاحظ متى لا يصل الطلب إليها.",
+          "solution": "القيمة bad لا تتحول إلى int؛ مع ApiController ينتج framework استجابة 400 للـmodel state غير الصالح. أما 101 فتصل إلى الدالة وتفشل شرطك. سنوحّد صيغة الأخطاء بـProblemDetails."
+        },
+        {
+          "title": "العودة تمر عبر serialization",
+          "body": "الـ action لا يكتب كل byte بنفسه. Ok يصف نتيجة نجاح، ثم الإطار ينفذ النتيجة ويستخدم serializer لكتابة JSON. يمكن أن يختلف إعداد تسمية الخصائص، لكن الإعداد الافتراضي للويب يستخدم camelCase.\n\nتجنب إرجاع Entity مباشرة: الـnavigation properties قد توسّع الاستجابة أو تشكل دورات، والحقول الداخلية قد تخرج دون قصد. نرسم عقدًا واضحًا في DTO.",
+          "question": {
+            "text": "كل requests تصل controller، لكن الاستجابة تحتوي بيانات داخلية. أي طبقة تختار للحد من الحقول؟",
+            "options": [
+              "DTO وmapping عند حد API",
+              "route constraint على id",
+              "تغيير منفذ الاستماع"
+            ],
+            "correct": 0,
+            "explanation": "العقد المعاد يحدد ما يسمح API بعرضه. تكوين المسار لا يحذف خصائص الكائن."
+          }
+        }
+      ],
+      "stage": "03-http",
+      "build": "مدخل HTTP"
+    },
+    {
+      "id": "request-logger",
+      "module": "request",
+      "title": "شاهد الطلب في السجل",
+      "summary": "ابنِ middleware تسجل الطريقة والمسار والحالة والوقت.",
+      "gain": "أربط سجل الطلب بترتيب middleware ومصدر الخطأ.",
+      "minutes": 12,
+      "sources": [
+        [
+          "Write middleware",
+          "https://learn.microsoft.com/en-us/aspnet/core/fundamentals/middleware/write?view=aspnetcore-10.0"
+        ],
+        [
+          "Logging",
+          "https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging?view=aspnetcore-10.0"
+        ]
+      ],
+      "steps": [
+        {
+          "title": "سجّل حقولًا يمكن البحث فيها",
+          "body": "ضع هذه middleware بعد بناء app وقبل المعالجة التي تريد قياسها. Stopwatch يقيس الزمن المنقضي. قالب ILogger يحتفظ بحقول Method وPath وStatus وElapsedMs بدل دمجها في نص غامض.\n\nهذا الزمن يشمل العمل الذي يحدث خلال next، وليس ضمانًا أنه يقيس زمن وصول آخر byte إلى جهاز العميل.",
+          "code": "app.Use(async (context, next) =>\n{\n    var clock = System.Diagnostics.Stopwatch.StartNew();\n    await next(context);\n    app.Logger.LogInformation(\n        \"{Method} {Path} -> {Status} in {ElapsedMs}ms\",\n        context.Request.Method, context.Request.Path,\n        context.Response.StatusCode, clock.Elapsed.TotalMilliseconds);\n});",
+          "task": "نفّذ 200 و404. أضف تأخيرًا تجريبيًا بـTask.Delay داخل endpoint، ثم أزله بعد ملاحظة أثره على الزمن."
+        },
+        {
+          "title": "الاستثناء يغيّر طريق العودة",
+          "body": "إذا رمى next استثناءً فلن يصل التنفيذ للسطر الذي بعده. try/finally يضمن تنفيذ التنظيف أو القياس، لكن StatusCode قد لا يعكس الحالة النهائية إذا كان error handler الخارجي لم يعالج الاستثناء بعد.\n\nإن أردت سجل status بعد تحويل الاستثناء إلى response، ضع logger خارجيًا وerror handler داخله قبل endpoints. اجعل الـexception handler مسؤولًا عن الاستجابة، والـlogger مسؤولًا عن الملاحظة.",
+          "code": "// Registration order for this experiment:\n// 1. Request logger\n// 2. Exception handler\n// 3. Routing / authentication / authorization\n// 4. Endpoints",
+          "lang": "PIPELINE",
+          "task": "أنشئ endpoint تجريبيًا يرمي InvalidOperationException. لاحقًا عند إضافة UseExceptionHandler قارن ترتيب التسجيل. تجنّب تسجيل body الطلب أو Authorization header.",
+          "hint": "إذا كان logger داخل error handler، فالاستثناء يغادره قبل أن يكتب handler الـ500. لا تفترض أن finally يغيّر هذه الحقيقة.",
+          "result": "تشرح لماذا قد يُفقد سطر السجل أو يسجل status غير نهائي، وتصلح ترتيب التجربة."
+        },
+        {
+          "title": "Checkpoint: من URL إلى سطر كود",
+          "body": "**التغيير في TeamBoard:** أضف GET /users/42 ثم Logger. تأكد من أن تغيير الرقم يغيّر النتيجة وأن كل طلب يظهر في السجل.\n\nقبل ترك المحطة ارسم المسار: Kestrel → logger → routing → controller → serializer، ثم العودة خلال logger. احتفظ بالرسم في دفتر التعلم؛ عندما نضيف DI وقاعدة البيانات سنوسع نفس الرسم.",
+          "task": "أعد نفس النتيجة بـMinimal API في نسخة البداية من TeamBoard. حدد ما بقي نفسه: HttpContext وrouting ونتيجة HTTP. وحدد ما اختصرته: class وattributes وآلية اكتشاف controller.",
+          "solution": "`app.MapGet(\"/users/{id:int}\", (int id) => id == 42 ? Results.Ok(new { id, name = \"Nora\" }) : Results.NotFound());`. اختر controllers أو Minimal APIs بحسب codebase. كلاهما endpoint فوق خط ASP.NET Core."
+        }
+      ],
+      "stage": "03-http",
+      "build": "مدخل HTTP"
+    },
+    {
+      "id": "container",
+      "module": "di",
+      "title": "constructor يطلب ولا ينشئ",
+      "summary": "اتبع منافذ TeamBoard من التسجيل إلى لحظة الطلب.",
+      "gain": "أعرف كيف تحل الحاوية dependency وتبني سلسلة الكائنات.",
+      "minutes": 12,
+      "sources": [
+        [
+          "Dependency injection",
+          "https://learn.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-10.0"
+        ]
+      ],
+      "steps": [
+        {
+          "title": "constructor يعلن احتياجات حالة الاستخدام",
+          "body": "WorkItemService تستقبل IBoardStore وIAssignmentNotifier. الحاوية تحل هذين المنفذين من التسجيلات عندما تحتاج إنشاء الخدمة. موقعهما في Application يجعل احتياجات القلب واضحة قبل اختيار تقنية التخزين أو الإرسال.\n\nIServiceCollection تحمل أوصاف التسجيل قبل البناء. ServiceProvider يحلها ضمن العمر المطلوب. لكل اعتماد ناقص سلسلة تستطيع تتبعها من constructor إلى Program.cs.",
+          "code": "public sealed class WorkItemService(\n    IBoardStore store, IAssignmentNotifier notifier) : IWorkItemService\n{\n    // Use-case logic depends on the ports above.\n}",
+          "lang": "Application/WorkItemService.cs",
+          "task": "اقرأ constructor في مشروعك، وحدد النوع المسجل لكل معامل. في حزمة محطة الوصل تسجيل IBoardStore ناقص عمدًا؛ أكمله في Program.cs."
+        },
+        {
+          "title": "Program.cs يختار الطرف المناسب",
+          "body": "في مرحلة الذاكرة نسجل state واحدة للمختبر، لكن adapter نفسه Scoped لأنه يمثل عمل الطلب. يسجل القلب dependency على port، ولا ينشئ EF أو HttpClient بنفسه.\n\nعند محطة PostgreSQL يتغير اختيار IBoardStore إلى EfBoardStore، وتبقى WorkItemService كما هي. اختيار عمر غير مناسب قد يحتفظ بحالة طلب في طلب آخر؛ لذلك نقرأ العمر مع العقد.",
+          "code": "builder.Services.AddSingleton<InMemoryBoardState>();\nbuilder.Services.AddScoped<IBoardStore, InMemoryBoardStore>();\nbuilder.Services.AddScoped<IAssignmentNotifier, LogAssignmentNotifier>();\nbuilder.Services.AddScoped<IWorkItemService, WorkItemService>();",
+          "lang": "Api/Program.cs",
+          "task": "اترك تسجيل IBoardStore ناقصًا مرة واحدة وجرّب GET /tasks/1. اقرأ Unable to resolve service. أعد التسجيل وتحقق من وصول الطلب للخدمة.",
+          "result": "تحدد النوع الناقص من رسالة الحاوية. لا تحتاج new داخل controller لحل المشكلة."
+        },
+        {
+          "title": "المدخل يستخدم العقد",
+          "body": "controller يسأل IWorkItemService عن المهمة، ثم يحول النتيجة إلى HTTP. قبل محطة المصادقة ActorId تساوي1 في نسخة المختبر فقط؛ بعد JWT تؤخذ من sub. لا تمرر الهوية من body.\n\nIServiceProvider داخل كل method يخفي dependencies. constructor أوضح. Middleware تقليدية لا تستقبل Scoped في constructor طويل العمر؛ يمكن حقنها في InvokeAsync لكل طلب أو تفعيل IMiddleware عبر DI.",
+          "code": "[Route(\"tasks\")]\npublic sealed class WorkItemsController(IWorkItemService service) : ApiController\n{\n    [HttpGet(\"{id:int}\")]\n    public async Task<ActionResult<TaskDto>> GetById(int id, CancellationToken ct)\n    {\n        if (ActorId is not int actor) return Unauthorized();\n        var result = await service.FindAsync(id, actor, ct);\n        return result.Result == ChangeResult.Success\n            ? Ok(result.Value) : Failure(result.Result);\n    }\n}",
+          "lang": "Api/Controllers/WorkItemsController.cs",
+          "question": {
+            "text": "استبدلنا EfBoardStore ببديل ذاكرة ينفذ نفس العقد. أين يتغير تركيب التطبيق؟",
+            "options": [
+              "تسجيل IBoardStore في Program.cs",
+              "قاعدة العضوية في WorkItemService",
+              "JSON الذي يرسله العميل"
+            ],
+            "correct": 0,
+            "explanation": "المستهلك يعتمد port، وcomposition root يختار implementation. تغيير الطرف لا يستلزم تغيير قاعدة العمل ما دام العقد وسلوكه محفوظين."
+          }
+        }
+      ],
+      "stage": "04-wiring",
+      "build": "وصل القلب بالأطراف"
+    },
+    {
+      "id": "lifetimes",
+      "module": "di",
+      "title": "نفس الطلب، نفس الكائن؟",
+      "summary": "Transient وScoped وSingleton بأرقام كائنات مرئية.",
+      "gain": "أختار العمر وأكتشف Singleton يحتفظ بخدمة Scoped.",
+      "minutes": 14,
+      "sources": [
+        [
+          "Service lifetimes",
+          "https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection#service-lifetimes"
+        ]
+      ],
+      "steps": [
+        {
+          "title": "العمر يقرر إعادة الاستخدام",
+          "body": "**Transient:** نسخة لكل عملية resolve. **Scoped:** نسخة لكل scope؛ في HTTP يوجد scope لكل طلب افتراضيًا. **Singleton:** نسخة واحدة للحاوية، تعاد مشاركتها بين الطلبات.\n\nScoped لا يعني نسخة لكل مستخدم أو thread. وقد ينفّذ طلبك على threads مختلفة عبر await ويظل scope نفسه.",
+          "lab": "di",
+          "code": "builder.Services.AddTransient<TransientStamp>();\nbuilder.Services.AddScoped<ScopedStamp>();\nbuilder.Services.AddSingleton<SingletonStamp>();",
+          "task": "في المحاكاة، حلّ الخدمة مرتين ثم ابدأ طلبًا جديدًا. فسّر متى يثبت رقم الكائن ومتى يتغير."
+        },
+        {
+          "title": "ارسم طلبين متزامنين",
+          "body": "افترض أن الطلب A والطلب B يصلان معًا. الخدمة Scoped في A مشتركة داخل A فقط. B يحصل على نسخة أخرى. أما Singleton فقد يستخدمها الطلبان معًا؛ الحالة القابلة للتغيير داخلها تحتاج تصميمًا آمنًا للتزامن.\n\nDbContext عادةً Scoped؛ يحمل تتبع تغييرات لوحدة عمل، وهو غير آمن للاستخدام المتوازي. الاحتفاظ به في Singleton يمدّ عمره خارج نطاقه ويخلط وحدات العمل.",
+          "question": {
+            "text": "Singleton يأخذ UserService مسجلة Scoped في constructor. ما المشكلة؟",
+            "options": [
+              "يحتفظ باعتماد أقصر عمرًا من عمره",
+              "Scoped تصبح تلقائيًا Singleton آمنة",
+              "لا مشكلة ما دام constructor صغيرًا"
+            ],
+            "correct": 0,
+            "explanation": "هذه captive dependency. قد يرفضها scope validation، وإلا فقد تعيش بيانات الطلب خارج حدودها. لا تصلحها بتعطيل التحقق."
+          }
+        },
+        {
+          "title": "اختبر العمر بدل التخمين",
+          "body": "أنشئ كائنًا يحمل Guid عند إنشائه واطبعه من موضعين في نفس الطلب. كرر التجربة بتسجيل Scoped ثم Transient ثم Singleton.\n\nفي background worker الذي يحتاج Scoped يمكنك إنشاء scope صريح لكل وحدة عمل باستخدام IServiceScopeFactory والتخلص منه بعد انتهاء العمل. هذا خارج مسار HTTP لكنه يفسر لماذا scope ليس مرادفًا لطلب دائمًا.",
+          "code": "public sealed class Stamp\n{\n    public Guid Id { get; } = Guid.NewGuid();\n}\n// Register one lifetime at a time:\nbuilder.Services.AddScoped<Stamp>();\n// Endpoint parameters are resolved from DI:\napp.MapGet(\"/scope\", (Stamp a, Stamp b) => new { a = a.Id, b = b.Id });",
+          "task": "جرّب طلبين لكل lifetime. لا تغيّر أكثر من التسجيل في كل تجربة. سجّل النمط بدل أرقام GUID نفسها.",
+          "solution": "Scoped: a وb متساويان داخل الطلب، ويختلفان بين الطلبين. Transient: a وb مختلفان عند حلّهما منفصلين. Singleton: نفس الرقم في جميع عمليات الحل ضمن عمر التطبيق.",
+          "result": "تستطيع رسم عمر UserService وDbContext في طلبين، وتشرح لماذا يشتركان في scope دون أن يكونا نفس الكائن."
+        }
+      ],
+      "stage": "04-wiring",
+      "build": "وصل القلب بالأطراف"
+    },
+    {
+      "id": "configuration",
+      "module": "config",
+      "title": "من JSON إلى خدمة",
+      "summary": "رتّب مصادر الإعداد ومرّر Options بعقد واضح.",
+      "gain": "أتعقب قيمة إعداد إلى المصدر الذي تجاوزها.",
+      "minutes": 12,
+      "sources": [
+        [
+          "Configuration",
+          "https://learn.microsoft.com/en-us/aspnet/core/fundamentals/configuration?view=aspnetcore-10.0"
+        ],
+        [
+          "Options pattern",
+          "https://learn.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-10.0"
+        ],
+        [
+          "Safe storage in development",
+          "https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-10.0"
+        ]
+      ],
+      "steps": [
+        {
+          "title": "المصدر الأخير يتغلب عند تكرار المفتاح",
+          "body": "مع CreateBuilder والإعدادات الافتراضية للتطبيق: تُحمّل appsettings.json، ثم ملف البيئة، ثم user secrets في Development عند تهيئتها، ثم environment variables، ثم command-line arguments. عند تكرار مفتاح في هذه السلسلة تتغلب القيمة اللاحقة.\n\nهذه قائمة مصادر إعداد التطبيق المعتادة؛ إعدادات المضيف وبعض القيم المبكرة لها تفاصيل إضافية. تغيير ترتيب providers في مشروعك يغيّر النتيجة.",
+          "code": "// appsettings.json\n{ \"Board\": { \"MaxTitleLength\": 120 } }\n\n// appsettings.Development.json\n{ \"Board\": { \"MaxTitleLength\": 80 } }\n\n// environment variable overrides the nested key:\n// Board__MaxTitleLength=60",
+          "lang": "CONFIG",
+          "lab": "config",
+          "task": "جرّب ترتيب المصادر في المحاكاة، ثم طبق الفكرة على Notifications:Mode في مشروعك. Board:MaxTitleLength في المثال مفتاح توضيحي؛ قاعدة عنوان TeamBoard الحالية ثابتة120 في Domain."
+        },
+        {
+          "title": "اقرأ عقدًا، لا مفاتيح مبعثرة",
+          "body": "IConfiguration تعرض المفاتيح. Options تربط مجموعة قيم بكائن مكتوب النوع، ثم تستطيع التحقق منها عند التشغيل.\n\nIOptions<T> مناسب لقيمة مستقرة. IOptionsSnapshot<T> Scoped ويُعاد حسابه لكل scope. IOptionsMonitor<T> يسمح بقراءة القيمة الحالية والإشعارات حين يدعم provider إعادة التحميل. لا تفترض أن كل مصدر يعيد التحميل تلقائيًا.\n\nفي TeamBoard نستعمل نفس النمط لـNotificationOptions: Mode وBaseUrl. القاعدة تتحقق أن Mode هي Log أوHttp، وأن العنوان صالح عندما نختارHttp. المثال التالي يشرح شكل النمط؛ ملفات محطة الإعداد تعطيك النسخة الموصولة بمشروعك.",
+          "code": "public sealed class NotificationOptions\n{\n    public string Mode { get; set; } = \"Log\";\n    public string? BaseUrl { get; set; }\n}\n// In Program.cs:\nbuilder.Services.AddOptions<NotificationOptions>()\n    .BindConfiguration(\"Notifications\")\n    .Validate(o => o.Mode is \"Log\" or \"Http\", \"Unknown notification mode\")\n    .ValidateOnStart();",
+          "task": "في NotificationOptions اقرأ Mode. اجعلها قيمة غير معروفة وأعد التشغيل. جرّب Http مع عنوان مفقود ثم صحح Notifications:BaseUrl في الإعداد.",
+          "result": "القيمة المخالفة تفشل عند startup وتسمّي قاعدة التحقق. تعرف موقع إصلاح الإعداد."
+        },
+        {
+          "title": "الأسرار تبقى خارج ملفات المشروع",
+          "body": "Connection string قد تحمل كلمة مرور. أثناء التطوير استخدم user secrets، وفي التشغيل استخدم نظام الأسرار أو الإعداد المحمي للفريق. user secrets وسيلة إبعاد عن المستودع، وليست خزنة مشفرة.\n\nالمتغير المتداخل يستخدم __ بدل : في shell. عند تشخيص قيمة مفقودة سجّل اسم المفتاح ومصدر البيئة، ولا تطبع قيم الأسرار.",
+          "code": "dotnet user-secrets init --project src/TeamBoard.Api\ndotnet user-secrets set \"ConnectionStrings:Board\" \"Host=localhost;Database=teamboard;Username=teamboard;Password=YOUR_LOCAL_PASSWORD\" --project src/TeamBoard.Api",
+          "lang": "TERMINAL",
+          "task": "ضع قيمة تجريبية غير حساسة مثل Board:MaxTitleLength في secrets ثم تجاوزها بمتغير بيئة. أزل التجربة بعد فهم ترتيب المصادر.",
+          "solution": "على macOS/Linux يمكن تشغيل `Board__MaxTitleLength=60 dotnet run --project src/TeamBoard.Api`. إن كنت في Development ومع user secrets مفعلة، تتغلب البيئة على secrets وفق الترتيب الافتراضي."
+        }
+      ],
+      "stage": "05-config",
+      "build": "سلوك قابل للضبط"
+    },
+    {
+      "id": "logging",
+      "module": "config",
+      "title": "سجل يفسّر حادثة",
+      "summary": "ILogger وlog levels وربط الأخطاء بالطلبات.",
+      "gain": "أكتب سجلًا منظمًا يسمح بتشخيص تغيير صغير.",
+      "minutes": 10,
+      "sources": [
+        [
+          "Logging",
+          "https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging?view=aspnetcore-10.0"
+        ]
+      ],
+      "steps": [
+        {
+          "title": "القالب يحمل الحقول",
+          "body": "ILogger<T> يعطي category مرتبطة بالنوع. LogInformation للحدث المعتاد المفيد، Warning للحالة غير المرغوبة التي يتعامل معها التطبيق، Error لفشل العملية. Debug للتفصيل الذي تحتاجه أثناء التشخيص.\n\nاستخدم قالبًا ثابتًا ومرّر القيم منفصلة. تمرير Exception كمعامل يحتفظ بتفاصيله، ولا تحتاج تحويله إلى string.",
+          "code": "logger.LogInformation(\n    \"Task {TaskId} assigned to {UserId}\", taskId, userId);\n\n// In an actual failure path:\nlogger.LogError(exception,\n    \"Could not load project {ProjectId}\", projectId);",
+          "task": "قارن log من template مع string interpolation في خرج structured logger إن كان متاحًا. حتى عندما يعرض console نصًا، القالب يترك للـprovider حقولًا منظمة."
+        },
+        {
+          "title": "فعّل ما تحتاجه من category",
+          "body": "يمكن خفض الضوضاء العامة مع رفع category محددة. حين نصل EF سنفعّل Database.Command لنرى SQL. لا ترفع كل شيء إلى Trace طوال الوقت فتغرق في التفاصيل.\n\nScope للسجل يجمع سياقًا مثل RequestId أو ProjectId داخل عملية. ASP.NET والتتبع الموزع يوفران أيضًا معرفات يمكن ربطها. تجنب أجسام الطلبات والرموز وكلمات المرور في السجل.",
+          "code": "{\n  \"Logging\": {\n    \"LogLevel\": {\n      \"Default\": \"Information\",\n      \"Microsoft.AspNetCore\": \"Warning\",\n      \"Microsoft.EntityFrameworkCore.Database.Command\": \"Information\"\n    }\n  }\n}",
+          "lang": "appsettings.Development.json",
+          "task": "شغّل مسارًا ناجحًا وآخر يفشل. تتبّع request عبر logger وservice. اكتب ملاحظة: ما الحقول اللازمة لتفسير الحادثة دون كشف معلومات خاصة؟",
+          "result": "يمكن ربط الخطأ بالمهمة والمشروع ومعرف الطلب وسبب الاستثناء، دون نسخ بيانات الاعتماد."
+        }
+      ],
+      "stage": "05-config",
+      "build": "سلوك قابل للضبط"
+    },
+    {
+      "id": "dbcontext",
+      "module": "ef",
+      "title": "DbContext هو وحدة العمل",
+      "summary": "اربط TeamBoard بقاعدة PostgreSQL وعرّف أول علاقة.",
+      "gain": "أربط Entity وDbSet وDbContext وعمر الطلب.",
+      "minutes": 14,
+      "sources": [
+        [
+          "DbContext lifetime",
+          "https://learn.microsoft.com/en-us/ef/core/dbcontext-configuration/"
+        ],
+        [
+          "Npgsql EF provider",
+          "https://www.npgsql.org/efcore/"
+        ]
+      ],
+      "steps": [
+        {
+          "title": "الكائنات تصف النموذج الذي سيُحفظ",
+          "body": "Entity كائن له هوية وحالة نريد تخزينها. DbSet<T> مدخل للاستعلام عن نوع من entities وإضافة عناصره. DbContext يجمع النموذج والاتصال ومتعقب التغييرات لوحدة عمل.\n\nنسمي مهمة TeamBoard **WorkItem** حتى لا تختلط مع System.Threading.Tasks.Task. العلاقة Project → WorkItems علاقة واحد إلى متعدد. المفتاح الخارجي ProjectId يحدد المشروع الذي تنتمي إليه المهمة.\n\nEntities في حزمة البداية جاهزة جزئيًا للرسم. في هذه المحطة تقرأ نفس Model.cs وتكمل mapping في Infrastructure، ولا تنشئ نموذجًا منافسًا بالاسم نفسه.",
+          "code": "public class Project\n{\n    public int Id { get; set; }\n    public required string Name { get; set; }\n    public List<WorkItem> WorkItems { get; set; } = [];\n}\npublic class WorkItem\n{\n    public int Id { get; set; }\n    public required string Title { get; set; }\n    public int ProjectId { get; set; }\n    public Project Project { get; set; } = null!;\n}",
+          "task": "افتح Domain/Model.cs الموجود وقارن العلاقات بالمثال. أضف mapping داخل BoardDbContext؛ لا تنسخ تعريف Project أوWorkItem مرة ثانية."
+        },
+        {
+          "title": "سجّل السياق في نطاق الطلب",
+          "body": "أضف provider PostgreSQL إلى Infrastructure. EF يملك عمليات مشتركة، وprovider يترجمها إلى لهجة قاعدة البيانات ويوصلها بالسائق. حافظ على توافق major version 10 بين EF وprovider وdotnet-ef.\n\nللتجربة المحلية جهّز PostgreSQL مستقلًا للمختبر. لا تنفّذ migrations على قاعدة يستخدمها الفريق لتجربة الدرس.",
+          "code": "docker compose up -d\ndotnet tool restore\ndotnet user-secrets set \"ConnectionStrings:Board\" \"Host=localhost;Port=5438;Database=teamboard;Username=teamboard;Password=local-lab-only\" --project src/TeamBoard.Api",
+          "lang": "TERMINAL",
+          "task": "حزمة المحطة جهزت حزم NuGet والمزوّد في csproj. استخدم compose المرفق للمنفذ5438. لا تنشئ حاوية ثانية من مثال مختلف إذا كانت هذه تعمل."
+        },
+        {
+          "title": "Context يربط النموذج بالمزوّد",
+          "body": "ضع BoardDbContext في Infrastructure وأضف using للـentities. constructor يتلقى خياراته من DI. AddDbContext يسجله Scoped افتراضيًا.\n\nلا تنشئ context جديدًا لكل سطر ولا تخزّنه في Singleton. اجعل عملية الطلب المتماسكة تستخدم وحدة عمل مفهومة، وتخلّص منها بنهاية scope.",
+          "code": "using Microsoft.EntityFrameworkCore;\n\npublic sealed class BoardDbContext(\n    DbContextOptions<BoardDbContext> options) : DbContext(options)\n{\n    public DbSet<Project> Projects => Set<Project>();\n    public DbSet<WorkItem> WorkItems => Set<WorkItem>();\n}\n// In Api Program.cs, before Build:\nbuilder.Services.AddDbContext<BoardDbContext>(options =>\n    options.UseNpgsql(builder.Configuration.GetConnectionString(\"Board\")\n        ?? throw new InvalidOperationException(\"Missing Board connection\")));",
+          "task": "اقرأ التسجيل الموجود في Program.cs وقارن UseNpgsql بالمثال. اختر Postgres بعد تطبيق migration. لا تنسَ تسجيل IBoardStore مع EfBoardStore؛ AddDbContext وحده لا يختار port implementation.",
+          "result": "البناء ينجح وتعرف من يوفّر DbContextOptions ومن ينشئ BoardDbContext، ثم لماذا لم تُنشأ الجداول بمجرد كتابة DbSet."
+        }
+      ],
+      "stage": "06-persistence",
+      "build": "التخزين الدائم"
+    },
+    {
+      "id": "migrations",
+      "module": "ef",
+      "title": "غيّر النموذج دون نسيان قاعدة البيانات",
+      "summary": "Migration فرق مقصود بين نسختين من schema.",
+      "gain": "أنشئ migration وأراجع SQL وأطبقها على قاعدة المختبر.",
+      "minutes": 13,
+      "sources": [
+        [
+          "Migrations",
+          "https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/"
+        ],
+        [
+          "EF CLI",
+          "https://learn.microsoft.com/en-us/ef/core/cli/dotnet"
+        ]
+      ],
+      "steps": [
+        {
+          "title": "ملف C# لا يغير الجدول وحده",
+          "body": "عندما تضيف property إلى entity يتغير نموذج التطبيق. قاعدة البيانات ما زالت تحمل schema السابقة. migration تصف الانتقال بينهما؛ وmodel snapshot يساعد EF في مقارنة النموذج القادم بآخر نموذج مسجل.\n\nراجع Up وDown وSQL قبل التطبيق. rename قد يُستنتج إسقاط عمود وإضافة آخر؛ أنت مسؤول عن تعديل migration عندما لا يعكس الاستنتاج نيتك في حفظ البيانات.",
+          "code": "dotnet tool restore\n# First inspect the InitialBoard migration supplied in the stage.\ndotnet ef migrations script --project src/TeamBoard.Infrastructure --startup-project src/TeamBoard.Api\n# When YOUR model changes, create a new named migration.",
+          "lang": "TERMINAL",
+          "task": "اقرأ InitialBoard الجاهزة في الحزمة؛ لا تنشئ InitialBoard ثانية. إذا بنيت مشروعك يدويًا دون migration، استعمل migrations add InitialBoard. قارن Up وDown وSQL."
+        },
+        {
+          "title": "طبّق على قاعدة المختبر",
+          "body": "database update يطبق migrations غير المطبقة ويسجلها في جدول history. تطبيق migration لا يعني أن كل بياناتك صحيحة منطقيًا؛ القيد الخاص بعنوان فارغ مثلًا يحتاج عقدًا واضحًا في التطبيق أو database.\n\nEnsureCreated مسار آخر يتجاوز نظام migrations. لا تبدأ به ثم تتوقع أن history تتوافق تلقائيًا؛ في مشروعنا نستخدم migrations من البداية.",
+          "code": "dotnet ef database update --project src/TeamBoard.Infrastructure --startup-project src/TeamBoard.Api\n\n# Later, after adding a nullable Description property:\ndotnet ef migrations add AddDescription --project src/TeamBoard.Infrastructure --startup-project src/TeamBoard.Api\ndotnet ef migrations script --idempotent --project src/TeamBoard.Infrastructure --startup-project src/TeamBoard.Api",
+          "lang": "TERMINAL",
+          "task": "بعد تطبيق InitialBoard، أضف string? Description إلى WorkItem، ثم أضف migration باسمAddDescription وراجعها. إذا اخترت الرجوع لحزم المراحل الجاهزة، احتفظ بتجربتك منفصلة عن قاعدة المختبر الأساسية حتى لا تختلط histories.",
+          "result": "العمود موجود بعد التطبيق، وmigration مسجلة. لو شغّلت update مجددًا لا تُطبّق migration نفسها مرتين."
+        },
+        {
+          "title": "قيّد العلاقة حيث تحفظ سلامتها",
+          "body": "علاقة واحد إلى متعدد تحتاج مفتاحًا خارجيًا. علاقة User ↔ Project متعددة الأطراف تحتاج جدول عضوية مستقلًا؛ سنستخدم ProjectMember بمفتاح مركب ProjectId وUserId.\n\nحدد سلوك الحذف بدل افتراضه: حذف مشروع قد يحذف مهامه التابعة بحسب إعداد العلاقة. في بيانات العمل هذا قرار منتج يحتاج موافقة قواعد التطبيق، وليس مجرد تفصيل ORM.",
+          "code": "protected override void OnModelCreating(ModelBuilder model)\n{\n    model.Entity<WorkItem>()\n        .Property(x => x.Title).HasMaxLength(120);\n    model.Entity<WorkItem>()\n        .HasOne(x => x.Project)\n        .WithMany(x => x.WorkItems)\n        .HasForeignKey(x => x.ProjectId);\n}",
+          "task": "قيد طول العنوان موجود في المرجع؛ غيّره كتجربة على قاعدة مختبرك وشاهد migration الناتجة. في مخططنا AssigneeMembership تربط Task بعضويةProjectMember؛ ارجع للرسم لتفسير FK المركب.",
+          "solution": "العلاقة تصف foreign key. HasMaxLength يساعد provider في اختيار نوع العمود وقيده؛ تحقق من SQL المنتج. قيد API يساعد في رسالة مفهومة، وقيد database يحمي البيانات من بقية مصادر الكتابة."
+        }
+      ],
+      "stage": "06-persistence",
+      "build": "التخزين الدائم"
+    },
+    {
+      "id": "query-provider",
+      "module": "ef",
+      "title": "الاستعلام لم يخرج بعد",
+      "summary": "IQueryable وexpression trees ولحظة إرسال SQL.",
+      "gain": "أحدد الجزء المنفذ في database والجزء المنفذ في الذاكرة.",
+      "minutes": 15,
+      "sources": [
+        [
+          "How queries work",
+          "https://learn.microsoft.com/en-us/ef/core/querying/how-query-works"
+        ],
+        [
+          "Client vs server evaluation",
+          "https://learn.microsoft.com/en-us/ef/core/querying/client-eval"
+        ],
+        [
+          "Efficient querying",
+          "https://learn.microsoft.com/en-us/ef/core/performance/efficient-querying"
+        ]
+      ],
+      "steps": [
+        {
+          "title": "الصياغة نفسها قد تبني تعبيرًا",
+          "body": "في LINQ-to-Objects تستعمل الدالة لتنفيذ عمل على كائنات. أما IQueryable الخاص بـEF فيبني expression tree يمكن للـquery provider فحصها وترجمتها. لذلك Where هنا تصف query أكثر من كونها حلقة تنفذ الآن.\n\nعند ToListAsync أو FirstOrDefaultAsync أو CountAsync وغير ذلك من نقاط التنفيذ، يترجم EF الاستعلام ويرسله إلى database، ثم يحوّل الصفوف إلى نتائج؛ تسمى الخطوة الأخيرة materialization.",
+          "code": "var query = db.WorkItems\n    .Where(t => t.ProjectId == projectId)\n    .OrderBy(t => t.Id)\n    .Select(t => new { t.Id, t.Title })\n    .Take(20);\n\nConsole.WriteLine(query.ToQueryString());\nvar result = await query.ToListAsync(ct);",
+          "lab": "sql",
+          "task": "فعّل SQL logging. نفّذ بناء query وحده ثم أضف ToListAsync. راقب متى يظهر database command فعلًا. ToQueryString للتشخيص وليس إثبات تنفيذ."
+        },
+        {
+          "title": "حدّ الذاكرة يغير من ينفذ Where",
+          "body": "إذا نفذت ToListAsync قبل Where فقد جلبت البيانات ثم فلترتها داخل العملية. هذا قد يضاعف البيانات المنقولة بلا حاجة. ضع الفلترة والإسقاط والحد قبل materialization ما دامت قابلة للترجمة.\n\nبعض تعبيرات C# لا يمكن ترجمتها. EF Core الحديث يرمي استثناءً للجزء غير القابل للترجمة خارج top-level projection عادةً؛ لا يعتمد على سحب الجدول كله تلقائيًا لإكمال أي شرط.",
+          "code": "// Server filtering:\nvar a = await db.WorkItems\n    .Where(t => t.ProjectId == 7)\n    .Select(t => t.Title).ToListAsync(ct);\n\n// Fetch all, then filter locally:\nvar all = await db.WorkItems.ToListAsync(ct);\nvar b = all.Where(t => t.ProjectId == 7);",
+          "question": {
+            "text": "أين تضع Take(20) لتقلل عدد الصفوف المنقولة من قاعدة البيانات؟",
+            "options": [
+              "قبل ToListAsync على IQueryable",
+              "بعد ToListAsync على القائمة",
+              "بعد JSON serialization"
+            ],
+            "correct": 0,
+            "explanation": "وضعه على query يسمح للـprovider بإضافة حد إلى SQL. تطبيقه بعد الجلب يقلص القائمة المعروضة فقط."
+          }
+        },
+        {
+          "title": "SQL هو الدليل الذي تقارنه",
+          "body": "لا تحفظ SQL الذي رأيته وكأنه مضمون حرفيًا بين providers والإصدارات. اقرأ المعنى: columns وWHERE وORDER BY والحدود وJOINs. قارن عدد الأوامر والصفوف والوقت مع حجم بيانات معقول.\n\nفهرس ProjectId يساعد بعض الاستعلامات؛ لكنه ليس وعدًا بأن كل query تستخدمه. خطة التنفيذ والإحصاءات وشكل الشرط هي الأدلة عندما تصبح السرعة مشكلة.",
+          "task": "اكتب query لمهام المشروع 7، يعيد id وtitle فقط، مرتبًا حسب id، مع حد 20. أضف صفحة ثانية باستخدام Skip(20) وTake(20). افحص SQL وعدد الأعمدة. دوّن لماذا OrderBy مهم لثبات الصفحات.",
+          "solution": "`db.WorkItems.Where(t => t.ProjectId == 7).OrderBy(t => t.Id).Skip(20).Take(20).Select(t => new { t.Id, t.Title })`. للصفحات الكبيرة توجد keyset pagination، لكن المطلوب هنا رؤية الحد والترتيب قبل الجلب.",
+          "result": "تحدد provider والترجمة والتعداد والمادية والـserialization بوصفها خطوات مختلفة في نفس الطلب."
+        }
+      ],
+      "stage": "06-persistence",
+      "build": "التخزين الدائم"
+    },
+    {
+      "id": "tracking",
+      "module": "ef",
+      "title": "لماذا لم تُحفظ التعديلات؟",
+      "summary": "Change tracking وSaveChangesAsync ووحدة العمل.",
+      "gain": "أشرح ما الذي يتتبعه السياق ومتى يصل التعديل إلى database.",
+      "minutes": 12,
+      "sources": [
+        [
+          "Tracking queries",
+          "https://learn.microsoft.com/en-us/ef/core/querying/tracking"
+        ],
+        [
+          "Saving data",
+          "https://learn.microsoft.com/en-us/ef/core/saving/"
+        ],
+        [
+          "Transactions",
+          "https://learn.microsoft.com/en-us/ef/core/saving/transactions"
+        ]
+      ],
+      "steps": [
+        {
+          "title": "التعديل يحدث في الذاكرة أولًا",
+          "body": "عند استعلام entities متتبع، يحتفظ DbContext بمعلومات تمكنه من اكتشاف التغييرات. تغيير Title يغير الكائن في الذاكرة. SaveChangesAsync يكتشف التعديلات ويصدر أوامر الكتابة اللازمة.\n\nالإضافة عبر Add تسجل حالة Added؛ والحذف عبر Remove يسجل Deleted. هذا لا يعني أن SQL نُفذ في اللحظة نفسها.",
+          "code": "var task = await db.WorkItems\n    .SingleOrDefaultAsync(t => t.Id == id, ct);\nif (task is null) return;\n\ntask.Title = \"Review the API\";\nawait db.SaveChangesAsync(ct);",
+          "task": "نفّذ تعديلًا ثم اقرأ القيمة باستخدام context جديد قبل SaveChanges وبعده. لا تعاود القراءة بالسياق نفسه وتظن أنك أثبتّ الحفظ في database.",
+          "result": "القراءة الجديدة قبل الحفظ ترى القيمة القديمة. بعدها ترى القيمة الجديدة."
+        },
+        {
+          "title": "القراءة التي لا تعدّل لا تحتاج تتبعًا",
+          "body": "AsNoTracking مناسب لقراءات entities التي لن تعدلها خلال وحدة العمل. لا يتابع context تغييراتها. إذا عدلت كائنًا غير متتبع ثم ناديت SaveChanges فقط، فلن يعرف السياق بهذا التعديل تلقائيًا.\n\nالإسقاط إلى DTO لا يحتوي entities لا ينشئ entities ليتتبعها أصلًا. ليست AsNoTracking زر سرعة عامًا؛ بعض القراءات تستفيد من identity resolution في tracking.",
+          "code": "var task = await db.WorkItems.AsNoTracking()\n    .SingleAsync(t => t.Id == id, ct);\ntask.Title = \"Will this persist?\";\nawait db.SaveChangesAsync(ct); // No tracked change here",
+          "lab": "tracking",
+          "question": {
+            "text": "عدلت entity جلبتها بـAsNoTracking ثم استدعيت SaveChanges. ما المتوقع في هذا المثال؟",
+            "options": [
+              "لا تُحفظ الخاصية تلقائيًا",
+              "يتحول الكائن إلى tracked تلقائيًا",
+              "تُحذف entity"
+            ],
+            "correct": 0,
+            "explanation": "السياق لا يتابع الكائن. في تحديث عادي اجلب entity متتبعة ثم عدّل الحقول المسموحة واحفظها."
+          }
+        },
+        {
+          "title": "عملية حفظ واحدة لقرار واحد",
+          "body": "SaveChanges يستخدم transaction واحدة افتراضيًا عند دعم provider: تنجح التغييرات المشمولة أو تُلغى. إذا قسمت العملية على SaveChanges مرتين فالأولى قد تنجح والثانية تفشل. اجمع التغييرات أو استخدم transaction صريحة عند الحاجة.\n\nلا تجعل HTTP call بطيئًا داخل transaction بلا سبب، ولا تتوقع أن transaction قاعدة البيانات تتراجع عن رسالة أرسلتها لخدمة خارجية.",
+          "code": "await using var tx = await db.Database.BeginTransactionAsync(ct);\n// Apply related changes and save as needed.\nawait db.SaveChangesAsync(ct);\nawait tx.CommitAsync(ct);",
+          "task": "في مختبرك أضف مشروعًا ومهمة مرتبطة به ضمن عملية حفظ واحدة. اجعل المهمة تخالف قيدًا وشاهد أثر فشل العملية على المشروع أيضًا.",
+          "hint": "للمختبر قارن بعد الفشل بـcontext جديد. معاملات صريحة ليست لازمة لمجرد أن هناك أكثر من entity إذا كانت جميع التغييرات في SaveChanges واحدة."
+        }
+      ],
+      "stage": "06-persistence",
+      "build": "التخزين الدائم"
+    },
+    {
+      "id": "relationships",
+      "module": "ef",
+      "title": "البيانات التي لم تطلبها",
+      "summary": "Include وN+1 وكيف تقرأ تكلفة الاستعلام.",
+      "gain": "أكتشف زيادة الأوامر أو الصفوف من شكل تحميل العلاقات.",
+      "minutes": 13,
+      "sources": [
+        [
+          "Related data",
+          "https://learn.microsoft.com/en-us/ef/core/querying/related-data/"
+        ],
+        [
+          "Single vs split queries",
+          "https://learn.microsoft.com/en-us/ef/core/querying/single-split-queries"
+        ]
+      ],
+      "steps": [
+        {
+          "title": "Navigation لا تعني أن العلاقة محمّلة",
+          "body": "خاصية Project.WorkItems تصف علاقة في النموذج. لا تفترض أن قراءتها تجلب البيانات تلقائيًا؛ lazy loading يحتاج تهيئة خاصة مثل proxies أو loader.\n\nInclude يطلب eager loading لعلاقة. Select إلى DTO مناسب عندما تريد حقولًا أو count محددًا. لا تُحمّل graph كاملًا لتعيد رقمًا واحدًا.",
+          "code": "var summaries = await db.Projects\n    .Select(p => new\n    {\n        p.Id, p.Name,\n        TaskCount = p.WorkItems.Count\n    })\n    .ToListAsync(ct);",
+          "task": "قارن هذا مع Include(p => p.WorkItems) ثم العد في الذاكرة. افحص الأعمدة والصفوف المنقولة.",
+          "result": "ترى كيف يجعل الإسقاط المطلوب صريحًا ويقلل تحميل entities غير اللازمة."
+        },
+        {
+          "title": "N+1 علاقة بين عدد العناصر والأوامر",
+          "body": "query واحدة تجلب المشاريع، ثم query لكل مشروع تجلب مهامه: العدد يصبح 1 + N. قد يأتي هذا من lazy loading أو حلقة تكتبها بنفسك؛ ليس خاصية حتمية في EF.\n\nوفي الاتجاه الآخر، Include عدة collections قد يضرب عدد صفوف JOIN ببعضه. AsSplitQuery يفصل بعض العمل إلى عدة queries لكنه يضيف رحلات وله مفاضلات اتساق. اختر بعد رؤية شكل البيانات.",
+          "code": "var projects = await db.Projects.ToListAsync(ct);\nforeach (var project in projects)\n{\n    // N extra queries:\n    var count = await db.WorkItems\n        .CountAsync(t => t.ProjectId == project.Id, ct);\n}",
+          "task": "سجّل عدد database commands مع 1 ثم 5 مشاريع. أعد كتابة الاستعلام بإسقاط count كما في اللقطة السابقة، وقارن.",
+          "solution": "الحل ليس استبدال كل شيء بـInclude. عدّ المهام عبر projection يترك العد في database ويعيد قيمة فقط؛ راجع SQL الناتج.",
+          "result": "تفسّر الفرق بين كثرة الأوامر وكثرة الصفوف في أمر واحد."
+        },
+        {
+          "title": "Checkpoint: اقرأ ثم عدّل",
+          "body": "**التغيير في TeamBoard:** GET مهام مشروع محدد يعيد DTOs محدودة، وPATCH عنوان مهمة يجلب كائنًا متتبعًا ويعدّل حقلًا ثم يحفظ.\n\nاحتفظ بـSQL logging في Development. راجع foreign keys وطول العنوان ومهمة غير موجودة. لا تُرجع navigation graph كاملًا إلى العميل.",
+          "task": "اكتب service methods للقراءة والتعديل. مرّر CancellationToken. للقراءة استخدم projection وللتعديل اجلب entity متتبعة. اكتب توقع 404 للمهمة المفقودة قبل تصميم الاستجابة.",
+          "result": "تربط مسار HTTP بوحدة العمل والـquery والحفظ، ثم تعيد نتيجة تعبر عن نجاح التغيير أو سبب عدمه."
+        }
+      ],
+      "stage": "06-persistence",
+      "build": "التخزين الدائم"
+    },
+    {
+      "id": "contracts",
+      "module": "api",
+      "title": "Entity ليست عقد العميل",
+      "summary": "تعرّف على حدود الطلب والاستجابة والتحقق.",
+      "gain": "أمنع التعديل غير المقصود بفصل request model عن entity.",
+      "minutes": 12,
+      "sources": [
+        [
+          "Web API",
+          "https://learn.microsoft.com/en-us/aspnet/core/web-api?view=aspnetcore-10.0"
+        ],
+        [
+          "Model validation",
+          "https://learn.microsoft.com/en-us/aspnet/core/mvc/models/validation?view=aspnetcore-10.0"
+        ]
+      ],
+      "steps": [
+        {
+          "title": "حدّد ما يستطيع العميل قوله",
+          "body": "لو قبل endpoint كائن WorkItem كاملًا فقد يرسل العميل ProjectId أو AssigneeId أو خصائص داخلية لم تقصد تعديلها. Request model يحدد المدخل المسموح، وresponse DTO يحدد المخرج العام. Entity تمثل التخزين.\n\nMapping صريح جيد هنا: سطران واضحان أفضل من إدخال مكتبة جديدة لمجرد تحويل بسيط. افصل DTO وrequest عندما تختلف عقودهما حتى لو تشابهت بعض الخصائص.",
+          "code": "using System.ComponentModel.DataAnnotations;\n\npublic sealed record CreateTaskRequest(\n    [Required, StringLength(120, MinimumLength = 1)] string Title);\npublic sealed record TaskResponse(int Id, string Title);\n\n// At creation:\nvar entity = new WorkItem\n{\n    ProjectId = projectId,\n    Title = request.Title.Trim()\n};",
+          "task": "صمم request لتعديل العنوان فقط. حاول أن ترسل حقلًا إضافيًا لا يوجد في العقد. لاحظ أن تجاهل unknown fields يختلف عن السماح بتعديل entity."
+        },
+        {
+          "title": "التحقق يمر بحدود مختلفة",
+          "body": "DataAnnotations تفحص شكل المدخل مثل required والطول. مع ApiController تتحول model-state errors إلى 400 تلقائيًا. الفراغات فقط تحتاج فحصًا مثل IsNullOrWhiteSpace؛ طول النص وحده لا يشرح قاعدة المنتج.\n\nوجود المشروع وعضوية المستخدم قواعد تحتاج بيانات وسياق هوية. ضعها حيث تستطيع اختبارها، ولا تفترض أن validation attribute سينفذ query عضوية بالنيابة عنك.",
+          "code": "if (string.IsNullOrWhiteSpace(request.Title))\n    return ValidationProblem(new Dictionary<string, string[]>\n    {\n        [\"title\"] = [\"A non-blank title is required.\"]\n    });",
+          "question": {
+            "text": "عنوان صالح، لكن المشروع الذي تشير له غير موجود. أي فحص يغطي هذا؟",
+            "options": [
+              "قاعدة تعتمد على بيانات المشروع",
+              "StringLength وحده",
+              "nullable annotations وحدها"
+            ],
+            "correct": 0,
+            "explanation": "التحقق من الشكل يسبق تحقق الحالة في قاعدة البيانات. وجود ProjectId عددًا صحيحًا لا يثبت وجود المشروع."
+          }
+        },
+        {
+          "title": "201 تعطي عنوان المورد الجديد",
+          "body": "بعد إنشاء المهمة، 201 Created تشرح أن موردًا أُنشئ. Location يدل العميل على عنوانه، وbody يمكن أن يحتوي representation. 204 يناسب نجاحًا بلا body؛ لا تُرفق JSON ثم تعلن NoContent.\n\nCreatedAtAction يبني Location بالرجوع إلى action قابلة للتوجيه؛ راجع أسماء route values وأن GetById موجودة ومطابقة.",
+          "code": "[HttpGet(\"{id:int}\")]\npublic async Task<ActionResult<TaskResponse>> GetById(int id, CancellationToken ct)\n{\n    var item = await service.FindAsync(id, ct);\n    return item is null ? NotFound() : Ok(item);\n}\n// After successful creation in POST:\nreturn CreatedAtAction(nameof(GetById), new { id = created.Id }, created);",
+          "task": "نفّذ POST ثم اتبع Location بطلب GET. احرص أن DTO الجديد لا يكشف خصائص entity الداخلية.",
+          "result": "POST يرجع 201 وLocation صالحًا؛ GET عليه يعيد المهمة نفسها بعقد الاستجابة."
+        }
+      ],
+      "stage": "07-contracts",
+      "build": "عقود الطلب والاستجابة"
+    },
+    {
+      "id": "errors",
+      "module": "api",
+      "title": "كل نتيجة تقول ما حدث",
+      "summary": "اختيار HTTP status وتوحيد الخطأ بـProblemDetails.",
+      "gain": "أميّز أخطاء المدخل والهوية والصلاحية والتعارض والفشل.",
+      "minutes": 12,
+      "sources": [
+        [
+          "Handle errors",
+          "https://learn.microsoft.com/en-us/aspnet/core/web-api/handle-errors?view=aspnetcore-10.0"
+        ],
+        [
+          "ProblemDetails",
+          "https://learn.microsoft.com/en-us/aspnet/core/fundamentals/error-handling?view=aspnetcore-10.0"
+        ]
+      ],
+      "steps": [
+        {
+          "title": "الحالة جزء من العقد",
+          "body": "200 لنجاح يحمل نتيجة، 201 لإنشاء، 204 لنجاح بلا body. 400 لمدخل غير صالح. 401 لطلب يحتاج هوية صالحة؛ 403 لهوية معروفة لا تملك الإذن. 404 لمورد غير موجود أو غير مكشوف بحسب سياسة API. 409 لتعارض مع حالة المورد. 500 لفشل غير متوقع.\n\nلا تحول كل عدم وجود إلى exception، ولا تعيد 200 تحمل كلمة error؛ العميل يعتمد على status لتحديد سلوكه.",
+          "lab": "status",
+          "task": "اختر status لحالات: عنوان فارغ، مهمة مفقودة، جلسة بلا token، عضو لا يملك الإذن، تحديث بإصدار قديم، وانقطاع database."
+        },
+        {
+          "title": "صيغة خطأ يستطيع العميل فهمها",
+          "body": "ProblemDetails صيغة موحدة تحمل type وtitle وstatus وdetail وinstance مع extensions عند الحاجة. اكتب وصفًا يفيد العميل من دون stack trace أو SQL أو أسرار.\n\nAddProblemDetails يسجل الخدمات المساعدة؛ UseExceptionHandler يحيط بمسار الطلب للتعامل مع الاستثناءات. Developer exception page للاختبار المحلي، لا لعرض التفاصيل الداخلية في الإنتاج.",
+          "code": "// Before Build:\nbuilder.Services.AddProblemDetails();\n// Early in the pipeline:\napp.UseExceptionHandler();\n// An expected conflict in a controller:\nreturn Problem(\n    statusCode: StatusCodes.Status409Conflict,\n    title: \"Task was changed\",\n    detail: \"Reload the task and retry the update.\");",
+          "task": "أضف handler للمشروع، وجرّب فشلًا غير متوقع ثم تحقق من status 500 وصيغة JSON. قارن ذلك مع 404 متوقع يرجع دون رمي استثناء.",
+          "result": "يفهم العميل الخطأ من status والعقد، بينما يحتفظ السجل الداخلي بالتفاصيل اللازمة للتشخيص."
+        },
+        {
+          "title": "قاعدة العمل لا تحتاج معرفة HTTP",
+          "body": "يمكن أن تعيد service نتيجة مثل NotFound أو Forbidden أو Conflict أو Success، ثم يحولها controller إلى HTTP. اختيار enum أو result type قرار بسيط بحسب الحاجة؛ لا تحتاج إطار CQRS لتوضيح أربع حالات.\n\n**Checkpoint:** POST مهمة والتحقق من title، وGET بعقد استجابة، ومعالجة عامة للأخطاء. اختبر الحالة الصحيحة أولًا ثم الحالات الحدودية التي تغير السلوك.",
+          "task": "اصنع جدول حالات لثلاث endpoints عندك: المدخل، النتيجة، status. تأكد من أن 204 لا يحمل body وأن أخطاء validation تسمي الحقل.",
+          "solution": "GET missing → 404. POST blank title → 400. POST valid → 201 مع Location. Update valid بلا representation → 204. Failure unexpected → 500 ProblemDetails بلا تفاصيل داخلية."
+        }
+      ],
+      "stage": "07-contracts",
+      "build": "عقود الطلب والاستجابة"
+    },
+    {
+      "id": "authentication",
+      "module": "auth",
+      "title": "من وضع المستخدم في HttpContext؟",
+      "summary": "من bearer token إلى ClaimsPrincipal.",
+      "gain": "أتتبع التحقق من token قبل أن يصبح مصدرًا للهوية.",
+      "minutes": 14,
+      "sources": [
+        [
+          "Authentication",
+          "https://learn.microsoft.com/en-us/aspnet/core/security/authentication/?view=aspnetcore-10.0"
+        ],
+        [
+          "JWT bearer",
+          "https://learn.microsoft.com/en-us/aspnet/core/security/authentication/configure-jwt-bearer-authentication?view=aspnetcore-10.0"
+        ]
+      ],
+      "steps": [
+        {
+          "title": "Authentication يحوّل الدليل إلى هوية",
+          "body": "يرسل العميل Authorization: Bearer مع access token. handler الخاص بالـscheme يفحصه. إذا كان صالحًا يبني ClaimsPrincipal وتظهر الهوية في HttpContext.User. Authorization يفحص هذه الهوية لقرار الوصول.\n\nJWT صيغة للـtoken؛ قراءة محتواه المشفر بـBase64Url لا تثبت صحته، وهو ليس مشفرًا لمجرد وجود توقيع. لا تضع بيانات سرية فيه.",
+          "code": "Authorization: Bearer <access_token>\n\nValidate signature / issuer / audience / lifetime\n                    ↓\n              ClaimsPrincipal\n                    ↓\n              Authorization policy",
+          "lang": "IDENTITY",
+          "lab": "auth"
+        },
+        {
+          "title": "الـscheme يحدد طريقة التحقق",
+          "body": "في تطبيق فريق فعلي اقرأ issuer وaudience وmetadata من نظام الهوية المعتمد. AddJwtBearer يهيئ handler للتحقق، ولا يصدر tokens للمستخدمين بنفسه. استخدم موفر OIDC/OAuth المعتمد؛ لا تبنِ login منزليًا لهذا المنهج.\n\nثبت حزمة Microsoft.AspNetCore.Authentication.JwtBearer المتوافقة مع .NET 10. الإعداد التالي يفترض وجود Authority حقيقي يعلن مفاتيح التوقيع عبر metadata.",
+          "code": "builder.Services.AddAuthentication(\"Bearer\")\n    .AddJwtBearer(\"Bearer\", options =>\n    {\n        options.Authority = builder.Configuration[\"Auth:Authority\"];\n        options.Audience = builder.Configuration[\"Auth:Audience\"];\n        options.MapInboundClaims = false;\n    });\nbuilder.Services.AddAuthorization();\n\napp.UseAuthentication();\napp.UseAuthorization();",
+          "task": "في حزمة محطة الهوية شغّل dotnet user-jwts create --project src/TeamBoard.Api --name 1 --audience http://localhost:5080. أعد تشغيل API. هذا token تطوير لا يُرفع ولا يُنشر. اقرأ README لربط Authority حقيقي خارجDevelopment.",
+          "result": "تعرف مصدر المفاتيح ومعنى audience، وتحدد سبب 401 بدل أن تستنتج أن JWT صالح من شكله."
+        },
+        {
+          "title": "Claims ليست تصريحًا لكل مورد",
+          "body": "Claim مثل sub يحدد subject داخل issuer. Role ادعاء لدور يفسره التطبيق بحسب role claim type. وجود user id في token لا يعني أن هذا المستخدم عضو في كل مشروع.\n\nعند قراءة sub تحقق من وجوده وصيغته المتوقعة. لا تقبل user id من body باعتباره هوية منفّذ العملية. جهة موثوقة قد تصدر claim؛ صلاحية استخدامه على مورد معين ما زالت قرارًا في تطبيقك.",
+          "question": {
+            "text": "الـtoken صالح لكنه يخص مستخدمًا ليس عضوًا بالمشروع. ما الذي اكتمل وما الذي بقي؟",
+            "options": [
+              "اكتملت الهوية وبقي فحص الإذن على المشروع",
+              "اكتمل كل شيء لأن JWT صالح",
+              "يجب قبول userId من body بدل token"
+            ],
+            "correct": 0,
+            "explanation": "صحة الهوية لا تثبت علاقة المستخدم بالمورد. افحص العضوية من مصدر موثوق قبل إجراء التغيير."
+          }
+        }
+      ],
+      "stage": "08-identity",
+      "build": "الفاعل والعضوية"
+    },
+    {
+      "id": "authorization",
+      "module": "auth",
+      "title": "هل يحق لك تعديل هذه المهمة؟",
+      "summary": "Roles وpolicies وقرار العضوية على المورد.",
+      "gain": "أفصل صلاحية عامة عن فحص عضوية مشروع محدد.",
+      "minutes": 13,
+      "sources": [
+        [
+          "Policy authorization",
+          "https://learn.microsoft.com/en-us/aspnet/core/security/authorization/policies?view=aspnetcore-10.0"
+        ],
+        [
+          "Resource authorization",
+          "https://learn.microsoft.com/en-us/aspnet/core/security/authorization/resourcebased?view=aspnetcore-10.0"
+        ]
+      ],
+      "steps": [
+        {
+          "title": "Policy تسمّي القرار المشترك",
+          "body": "[Authorize] يطلب الوصول وفق السياسة الافتراضية. [Authorize(Roles = \"Admin\")] يعتمد على role claims المعترف بها. Policy تجمع requirement مسماة مثل claim أو role أو شرط مخصص.\n\nإذا سمّى موفر الهوية claim الأدوار roles فاضبط RoleClaimType عند الحاجة؛ لا تفترض أن النص Admin في أي حقل يكفي.",
+          "code": "builder.Services.AddAuthorization(options =>\n{\n    options.AddPolicy(\"CanManageProjects\", policy =>\n        policy.RequireAuthenticatedUser().RequireRole(\"Admin\"));\n});\n\n[Authorize(Policy = \"CanManageProjects\")]\n[HttpPost(\"projects\")]\npublic IActionResult CreateProject() => Ok();",
+          "task": "جرّب token بلا الدور ثم معه في بيئة التطوير. تحقق من 401 بلا هوية و403 لهوية لا تحقق السياسة.",
+          "lab": "auth"
+        },
+        {
+          "title": "العضوية تحتاج المورد نفسه",
+          "body": "لتعيين مهمة: اقرأ المهمة وحدد ProjectId من البيانات المخزنة. ثم تحقق من عضوية **الفاعل** في هذا المشروع، ومن عضوية **المستخدم المراد تعيينه** فيه أيضًا. لا تعتمد على ProjectId أو ActorId يرسله العميل مع body.\n\nيمكن وضع القرار في service أو authorization handler مبني على resource. المهم أن تكون القاعدة واحدة قابلة للاختبار، وتنفذ قبل التغيير.",
+          "code": "var task = await db.WorkItems.FindAsync([taskId], ct);\nif (task is null) return AssignResult.NotFound;\n\nvar actorIsMember = await db.ProjectMembers.AnyAsync(\n    m => m.ProjectId == task.ProjectId && m.UserId == actorId, ct);\nif (!actorIsMember) return AssignResult.Forbidden;\n\nvar targetIsMember = await db.ProjectMembers.AnyAsync(\n    m => m.ProjectId == task.ProjectId && m.UserId == assigneeId, ct);\nif (!targetIsMember) return AssignResult.InvalidAssignee;",
+          "task": "ارسم جدولًا فيه الفاعل عضو/غير عضو والمرشح عضو/غير عضو. حدد النتيجة قبل فتح الحل. لاحظ أن امتلاك دور عام لا يغني عن سياسة المورد إلا إن اخترت هذا صراحة.",
+          "solution": "الفاعل غير عضو → رفض إذن. الفاعل عضو والمرشح غير عضو → مدخل تعيين غير مقبول. كلاهما عضو → اسمح بعد فحص بقية شروط المهمة. المهمة غير موجودة → NotFound وفق سياسة الكشف التي اخترتها."
+        },
+        {
+          "title": "الفحص والحفظ يتعاملان مع حالة تتغير",
+          "body": "بين التحقق والحفظ قد تتغير العضوية. في المشروع المرجعي سنستخدم foreign key مركبًا من (ProjectId, AssigneeId) إلى ProjectMember: قاعدة البيانات تمنع حفظ تعيين لعضوية غير موجودة، حتى لو سبقتنا عملية أخرى.\n\nفحص service يعطي رسالة مفهومة، وقيد database يحمي سلامة البيانات. أما سباق سحب صلاحية الفاعل مع الطلب الجاري فيحتاج سياسة اتساق واضحة للفريق؛ هذا المنهج لا يدّعي حل كل حالات التفويض المتزامنة.",
+          "task": "اكتب اختبارًا لمحاولة تعيين مستخدم من مشروع آخر. واختبارًا لفاعل غير عضو. تحقق من عدم تغيير assignee المخزن في الحالتين.",
+          "result": "قرار الوصول يعتمد على هوية موثوقة ومورد حقيقي، والرفض يترك البيانات دون تغيير."
+        }
+      ],
+      "stage": "08-identity",
+      "build": "الفاعل والعضوية"
+    },
+    {
+      "id": "httpclient",
+      "module": "http",
+      "title": "الإشعار: ثاني Adapter خارجي",
+      "summary": "نفس منفذ الإشعار، وتنفيذ جديد بـHttpClient.",
+      "gain": "أعزل HTTP الخارجي وأمرّر timeout وCancellationToken.",
+      "minutes": 13,
+      "sources": [
+        [
+          "IHttpClientFactory",
+          "https://learn.microsoft.com/en-us/dotnet/core/extensions/httpclient-factory"
+        ],
+        [
+          "HttpClient guidelines",
+          "https://learn.microsoft.com/en-us/dotnet/fundamentals/networking/http/httpclient-guidelines"
+        ]
+      ],
+      "steps": [
+        {
+          "title": "نبدل طريقة الإشعار فقط",
+          "body": "حتى هذه المحطة كان LogAssignmentNotifier يسجل أن المهمة عُيّنت. الآن نضيف HttpAssignmentNotifier يرسل إشعارًا إلى URL محدد. كلاهما ينفذ IAssignmentNotifier الذي تملكه Application.\n\nHttpClientFactory يدير handlers وإعادة استخدامها. لا تنشئ HttpClient مع handler جديد لكل تعيين. typed client يضع التفاصيل في adapter واحد.",
+          "code": "builder.Services.AddHttpClient<IAssignmentNotifier, HttpAssignmentNotifier>(http =>\n{\n    http.BaseAddress = new Uri(builder.Configuration[\"Notifications:BaseUrl\"]!);\n    http.Timeout = TimeSpan.FromSeconds(3);\n});",
+          "lang": "Api/Program.cs",
+          "task": "انسخ ملفات محطة الإشعار فوق مشروعك. اقرأ التسجيل واختر Mode=Http في الإعداد. لا تغيّر constructor في WorkItemService.",
+          "result": "القلب ما زال يرى IAssignmentNotifier، بينما الطرف يستخدم HTTP."
+        },
+        {
+          "title": "JSON عند الحد الخارجي",
+          "body": "PostAsJsonAsync يسلسل AssignmentNotice ويرسلها. response لها عمر ننهيه باستخدام using. EnsureSuccessStatusCode يجعل status غير الناجح فشلًا واضحًا.\n\nتمرّر CancellationToken من الطلب الأصلي. timeout يحد الانتظار، لكن إلغاء العميل بعد commit لا يرجع التغيير المحفوظ تلقائيًا.",
+          "code": "using var response = await http.PostAsJsonAsync(\"notifications\", notice, ct);\nresponse.EnsureSuccessStatusCode();\nreturn true;",
+          "lang": "Infrastructure/AssignmentNotifiers.cs",
+          "task": "استعمل مستقبل HTTP المحلي المرفق في حزمة الرحلة كأداة مختبر، وليس مشروعًا تعليميًا ثانيًا. عيّن مهمة صحيحة ثم تحقق من taskId وassigneeId في السجل.",
+          "hint": "BaseUrl تنتهي بشرطة /. الأداة تستمع على loopback فقط. requests المرفوضة يجب ألا ترسل إشعارًا أصلًا."
+        },
+        {
+          "title": "ماذا لو نجح الحفظ وفشل الإشعار؟",
+          "body": "الحفظ سبق الاتصال الخارجي. لا توجد transaction واحدة تشمل PostgreSQL وHTTP. adapter يسجل HttpRequestException أو timeout ويعيد false؛ يبقى endpoint ناجحًا لأن التعيين تم. راجع هذا العقد مع الفريق قبل استعماله لرسائل ضرورية.\n\nلا retry تلقائي على POST في المثال. لو احتاج المنتج ضمان تسليم، نضيف outbox لاحقًا كميزة مستقلة، لا نخفيها ضمن أساسيات HttpClient.",
+          "task": "أوقف مستقبل المختبر ثم عيّن المهمة. اقرأ database والسجل. شغّل اختبار NotificationTests الذي يبدل HttpMessageHandler ويعيد 204 ثم 500 دون شبكة.",
+          "solution": "قاعدة التعيين بقيت سليمة وحُفظت. فشل التسليم يظهر في log. الاختبار على handler يثبت سلوك adapter، واختبار use case يثبت أن الرفض لا يستدعي notifier.",
+          "result": "تشرح فرق نجاح قرار العمل ونجاح الأثر الخارجي، وتحدد أين تحتاج ضمانًا أقوى."
+        }
+      ],
+      "stage": "09-notification",
+      "build": "إشعار بعد التعيين"
+    },
+    {
+      "id": "unit-tests",
+      "module": "tests",
+      "title": "اختبار يقول لماذا رُفض التغيير",
+      "summary": "xUnit وFact وTheory حول قاعدة عمل صغيرة.",
+      "gain": "أكتب اختبارًا يثبت سلوكًا بدل تفاصيل التنفيذ.",
+      "minutes": 12,
+      "sources": [
+        [
+          "xUnit getting started",
+          "https://xunit.net/docs/getting-started/v2/netcore/cmdline"
+        ],
+        [
+          "Unit testing best practices",
+          "https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-best-practices"
+        ]
+      ],
+      "steps": [
+        {
+          "title": "اختبر قاعدة لها نتيجة واضحة",
+          "body": "Unit test يعزل وحدة صغيرة مثل قاعدة تطبيع العنوان. الاختبار يجهز الحالة ثم يفعل شيئًا ثم يفحص النتيجة. لا تختبر getter تلقائيًا؛ اختبر ما قد ينكسر ويهم مستخدم API.\n\nFact حالة واحدة. Theory تعيد نفس الاختبار بمدخلات مختلفة. xUnit يمسك exceptions الناتجة من Task المعادة، لذلك اجعل الاختبار async Task عند انتظار عملية.\n\nفي TeamBoard القاعدة موجودة في Domain والاختبار يستوردها؛ المثال يجمعهما لتوضيح العلاقة فقط.",
+          "code": "using Xunit;\n\npublic class TitleRulesTests\n{\n    [Theory]\n    [InlineData(\"\", false)]\n    [InlineData(\"   \", false)]\n    [InlineData(\"Review API\", true)]\n    public void Validity_matches_the_rule(string value, bool expected)\n    {\n        Assert.Equal(expected, TitleRules.IsValid(value));\n    }\n}\npublic static class TitleRules\n{\n    public static bool IsValid(string value) =>\n        !string.IsNullOrWhiteSpace(value) && value.Trim().Length <= 120;\n}",
+          "task": "TitleRulesTests موجودة منذ محطة العقود. غيّر حد120 إلى119 مؤقتًا لتشاهد فشل حالة الحد، ثم أعده. لا تضف TitleRules ثانية داخل ملف الاختبار؛ استعمل TeamBoard.Domain.TitleRules.",
+          "result": "تغيير القاعدة خطأً من <=120 إلى <120 يفشل حالة الحد، حتى لو ظلت المدخلات المعتادة تمر."
+        },
+        {
+          "title": "Fake يبدل حدًا خارج الوحدة",
+          "body": "إذا service تعتمد IClock أو عميل شبكة، استخدم fake بسيطًا يعيد قيمة محددة. Mock مفيد حين يهم التحقق من تفاعل مثل إرسال رسالة مرة واحدة، لكنه لا يجعل الاختبار أقوى بمجرد كثرة Verify.\n\nلا تقلّد DbSet وIQueryable بسلاسل mocks ثم تستنتج أن SQL صحيح. هذا يختبر السلسلة المزيفة؛ اختبار EF يحتاج provider مناسبًا.",
+          "task": "افتح HexagonTests: InMemoryBoardStore وRecordingNotifier يحققان نفس منافذ القلب. أضف assert بأن notifier لم يُستدعَ عندرفض التعيين. ثم افحص NotificationTests الذي يبدل HttpMessageHandler.",
+          "hint": "الساعة الثابتة تجعل الاختبار ينجح عند تشغيله غدًا أيضًا. الاعتماد على DateTime.UtcNow داخل الاختبار يجعل الحدود تتغير.",
+          "question": {
+            "text": "اختبار يمر مع List.AsQueryable بدل PostgreSQL. ماذا أثبت؟",
+            "options": [
+              "سلوك LINQ في هذا البديل، لا ترجمة SQL الحقيقية",
+              "كل تفاصيل database وقيودها",
+              "توافق كل providers"
+            ],
+            "correct": 0,
+            "explanation": "اختلاف provider يغيّر الترجمة والقيود والسلوك. جرّب قاعدة البيانات الفعلية حين يكون ذلك محور الاختبار."
+          }
+        },
+        {
+          "title": "اسم الاختبار يحكي عقدًا",
+          "body": "اسم مثل NonMemberCannotAssignTask يوضح السيناريو والنتيجة. اجعل البيانات قليلة ومقصودة. الاختبار يجب أن يفشل لسبب مرتبط بالعقد، لا لأن ترتيب private method تغير.\n\nمع أول خطأ تصلحه، اكتب حالة فاشلة تعيد إنتاجه ثم أصلحه. الهدف شبكة أمان للتغييرات التي سيطلبها الفريق، لا رقم تغطية جميل.",
+          "task": "اكتب حالات عضوية التعيين على ورقة أولًا: المهمة مفقودة، الفاعل ليس عضوًا، المرشح ليس عضوًا، والجميع صالح. ستنفذها عبر API في الاختبار التالي.",
+          "result": "تعرف الحالة التي تريد إثباتها قبل اختيار mocking أو integration."
+        }
+      ],
+      "stage": "10-tests",
+      "build": "برهان فصل الاعتمادات"
+    },
+    {
+      "id": "integration",
+      "module": "tests",
+      "title": "HTTP إلى database ثم assert",
+      "summary": "WebApplicationFactory تختبر أسلاك التطبيق معًا.",
+      "gain": "أكتب integration test يمر عبر routing وDI وserialization.",
+      "minutes": 15,
+      "sources": [
+        [
+          "Integration tests",
+          "https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-10.0"
+        ],
+        [
+          "Choosing a database testing strategy",
+          "https://learn.microsoft.com/en-us/ef/core/testing/choosing-a-testing-strategy"
+        ]
+      ],
+      "steps": [
+        {
+          "title": "شغّل التطبيق داخل الاختبار",
+          "body": "Microsoft.AspNetCore.Mvc.Testing توفر WebApplicationFactory التي تبني test host وتعيد HttpClient يتعامل مع التطبيق عبر TestServer افتراضيًا. يمر الطلب عبر middleware وrouting وDI وعقد JSON دون فتح منفذ TCP حقيقي عادةً.\n\nفي Program.cs ذات top-level statements أضف `public partial class Program { }` في النهاية لتجعل نقطة الدخول متاحة للاختبارات.",
+          "code": "dotnet add tests/TeamBoard.Tests package Microsoft.AspNetCore.Mvc.Testing --version 10.0.12\n\n# At the end of Api/Program.cs:\n# public partial class Program { }",
+          "lang": "TERMINAL",
+          "task": "الحزمة جهزت health وpublic partial Program والحزمة المطلوبة. افحصها ثم شغّل Health_is_public وحده، وبعده كل ApiTests."
+        },
+        {
+          "title": "الاختبار يبدأ من عنوان HTTP",
+          "body": "هذا اختبار هيكلي صغير. Fixture يعيد استعمال factory، وclient تُدار موارده بـusing. في سيناريو mutation انتبه إلى عزل البيانات بين الاختبارات؛ نجاح حالة لا يجب أن يعتمد على تشغيل حالة قبلها.\n\nالمشروع المرجعي يوفر factory بقاعدة SQLite مؤقتة لكل سيناريو وبيانات seed معروفة. هذا يختبر الربط، لكنه لا يثبت سلوك PostgreSQL الخاص.",
+          "code": "using System.Net;\nusing Microsoft.AspNetCore.Mvc.Testing;\nusing Xunit;\n\npublic class HealthTests : IClassFixture<WebApplicationFactory<Program>>\n{\n    private readonly WebApplicationFactory<Program> factory;\n    public HealthTests(WebApplicationFactory<Program> factory) => this.factory = factory;\n\n    [Fact]\n    public async Task Health_is_available()\n    {\n        using var client = factory.CreateClient();\n        using var response = await client.GetAsync(\"/health\");\n        Assert.Equal(HttpStatusCode.OK, response.StatusCode);\n    }\n}",
+          "task": "اجعل الاختبار يفشل عمدًا بتغيير status في endpoint. أعده ثم أضف GET لمهمة معروفة وassert على id وtitle في DTO."
+        },
+        {
+          "title": "بدّل حدودًا محددة واذكر ما لم تختبره",
+          "body": "factory تستطيع استبدال خدمات عبر ConfigureTestServices. للاختبارات الخاصة بالتفويض يمكنك إدخال test authentication handler لهوية محددة؛ هذا يختبر قرار الإذن ولا يثبت التحقق من توقيع JWT.\n\nاختبارات JWT منفصلة تحتاج tokens ومفاتيح اختبار. واختبارات PostgreSQL يجب أن تعمل على قاعدة مؤقتة من نفس النوع لفحص migrations وSQL والقيود الخاصة. EF InMemory لا ينفذ كل سلوك relational database.\n\nفي BoardFactory يبدأ الاختبار بقاعدةSQLite جديدة وseed مستقلة. هذا منفصل عن compose المستخدم لتجربة PostgreSQL.",
+          "task": "شغّل حالة بلا هوية →401، وفاعل غير عضو →403، وتعيين صالح →204. بعد الرفض اقرأ المهمة بـcontext جديد وأثبت أنها لم تتغير.",
+          "result": "الاختبار يثبت الاستجابة والحالة المحفوظة، لا status وحده. وصفه يوضح استعمال test auth وprovider الاختبار."
+        },
+        {
+          "title": "Breakpoint داخل الاختبار طريق للفهم",
+          "body": "إذا فشلت حالة integration ضع breakpoint في controller والخدمة. أعد تشغيل حالة واحدة. اتبع القيمة عبر request model والهوية والـquery ثم response.\n\n**Checkpoint:** جهّز unit test لعنوان المهمة وintegration tests للقراءة والتعيين. راجع لو فشل الاتصال بالخدمة الخارجية كيف تظهر النتيجة للعميل، دون أن تعتمد على إنترنت في كل تشغيل.",
+          "task": "افتح المشروع المرجعي القابل للتنزيل في محطة المشروع. شغّل اختبارًا واحدًا ثم المجموعة كلها. اكتب سبب كل failure قبل تعديل الاختبار؛ قد يكون الاختبار قد كشف خطأً فعليًا.",
+          "solution": "افحص إعداد factory وseed والهوية أولًا. ثم قارِن عقد endpoint بنتيجة service. لا تغيّر المتوقع إلى الرقم الذي ظهر فقط كي يصبح الاختبار أخضر."
+        }
+      ],
+      "stage": "10-tests",
+      "build": "برهان فصل الاعتمادات"
+    },
+    {
+      "id": "teamboard",
+      "module": "project",
+      "title": "مختبر TeamBoard المتكامل",
+      "summary": "نزّل مشروعًا مرجعيًا واربط الشرح بملفات قابلة للتشغيل.",
+      "gain": "أشغّل نموذجًا متكاملًا وأتتبع العلاقات في ملفاته.",
+      "minutes": 12,
+      "sources": [
+        [
+          "ASP.NET Core fundamentals",
+          "https://learn.microsoft.com/en-us/aspnet/core/fundamentals/?view=aspnetcore-10.0"
+        ]
+      ],
+      "steps": [
+        {
+          "title": "المشروع هو نقطة لقاء المفاهيم",
+          "body": "TeamBoard مشروعنا الوحيد: Users وProjects وProjectMembers وWorkItems وComments. تتغير طريقة دخوله وتخزينه وإشعاره عبر الرحلة، بينما تظل قاعدة العضوية في Application.\n\n[بداية جاهزة جزئيًا](./teamboard-starter.zip) · [حزمة الرحلة وملفات كل محطة](./teamboard-journey.zip) · [الحل المرجعي الكامل](./teamboard.zip). استخدم نفس مجلد العمل طول الرحلة. ملفات المحطات نسخة مقارنة وتعافٍ، وليست تكليفًا ببناء مشاريع منفصلة.",
+          "code": "src/TeamBoard.Domain          # model + rules\nsrc/TeamBoard.Application     # use cases + ports\nsrc/TeamBoard.Infrastructure  # EF / HTTP adapters\nsrc/TeamBoard.Api             # inbound HTTP + DI\ntests/TeamBoard.Tests         # another inbound adapter",
+          "lang": "PROJECT",
+          "task": "ابدأ بحزمة البداية إذا تريد بناء المسار. إذا فقدت خيط العمل، افتح حزمة المحطة الحالية وقارن الملفات بدل إعادة كل شيء.",
+          "result": "تستطيع تحديد مكان endpoint وتسجيل service والسياق وعقد الاستجابة والاختبار."
+        },
+        {
+          "title": "تجربة البداية قصيرة",
+          "body": "الشجرة واحدة طوال الرحلة. PostgreSQL يدخل عند محطة التخزين؛ قبلها يعمل adapter في الذاكرة. SQLite داخل integration tests بديل relational سريع، لا قاعدة المشروع الرئيسية.\n\nالنسخة النهائية تحتاج PostgreSQL وتهيئة JWT المحلية كما في README. أما حزمة البداية فتشغّل أول endpoint دون هذه المتطلبات.",
+          "code": "dotnet restore TeamBoard.slnx\ndotnet test TeamBoard.slnx\n# Full version: follow README for PostgreSQL + migrations\ndotnet run --project src/TeamBoard.Api --launch-profile Postgres",
+          "lang": "TERMINAL",
+          "task": "اتبع README لنفس النسخة التي تعمل عليها. بيانات المختبر: المستخدمان 1 و2 عضوان في المشروع1، والمستخدم3 عضو بالمشروع2. استخدمها لإثبات شرط التعيين.",
+          "result": "health يعيد 200. الطلب المحمي بلا bearer token يعيد 401. ترى مسار التعيين بعد إضافة هوية التطوير."
+        },
+        {
+          "title": "الأشياء التي تتوسع عند الحاجة",
+          "body": "في هذا المنهج نفهم request وDI وEF وauth وtesting حتى تضيف feature داخل فريق. CLR/JIT/GC المتقدم وunsafe وSpan وSource Generators وNativeAOT وDDD/CQRS/MediatR وmicroservices ليست متطلبات لهذا الهدف.\n\nإذا ظهر أحدها في مستودع الفريق، افتح منه ما تحتاجه لقراءة المسار الذي تعمل عليه. احتفظ بسؤال الفضول في دفترك ثم ارجع للمهمة الحالية.",
+          "task": "اختر endpoint واحدًا واكتب مساره بأسماء الملفات الفعلية في المشروع المرجعي. حدّد أي dependency تستبدل لو نقلت مصدر البيانات إلى خدمة خارجية.",
+          "solution": "ابدأ controller → interface/service → BoardDbContext → LINQ/SQL → DTO/response. في Program.cs ترى تسجيل concrete implementation. لا يلزم controller أن يعرف connection string."
+        }
+      ],
+      "stage": "11-feature",
+      "build": "ميزة باستقلالية"
+    },
+    {
+      "id": "graduation",
+      "module": "project",
+      "title": "تحدّي: عيّن المهمة للشخص المناسب",
+      "summary": "ميزة صغيرة تجمع قاعدة البيانات والعقد والصلاحية والاختبار.",
+      "gain": "أنفّذ تغييرًا يعبر طبقات .NET وأبرهن صحته.",
+      "minutes": 15,
+      "sources": [
+        [
+          "Resource authorization",
+          "https://learn.microsoft.com/en-us/aspnet/core/security/authorization/resourcebased?view=aspnetcore-10.0"
+        ],
+        [
+          "Relationships",
+          "https://learn.microsoft.com/en-us/ef/core/modeling/relationships/"
+        ]
+      ],
+      "steps": [
+        {
+          "title": "التذكرة التي قد تصلك في الفريق",
+          "body": "وصلت النسخة الموجهة إلى تعيين مهمة لعضو المشروع مع إشعار. الآن خذ تذكرة جديدة بنفسك: **إلغاء التعيين** عبر DELETE /tasks/{id}/assignee. الفاعل يجب أن يكون عضوًا في مشروع المهمة. المهمة غير الموجودة تعيد404، والرفض يعيد403، والنجاح يعيد204.\n\nلا يقبل الطلب actorId من العميل. تختار بنفسك هل إلغاء مهمة غير معيّنة عملية ناجحة idempotent؛ في هذا التمرين اعتبرها نجاحًا بلا تغيير.",
+          "code": "DELETE /tasks/1/assignee\nAuthorization: Bearer <token>",
+          "lang": "HTTP",
+          "task": "اكتب اختبارًا أولًا. أضف method إلى inbound port ثم use case ثم endpoint. لا تعدّل EF adapter إذا كان العقد الحالي يكفي للحفظ.",
+          "hint": "ابدأ من الاختبار ثم ارجع للخدمة والعقد. استخرج ProjectId من المهمة المخزنة، لا من المستخدم."
+        },
+        {
+          "title": "ملفات قليلة، علاقات كثيرة",
+          "body": "راجع ما يحتاجه التغيير فعلًا: AssigneeId اختيارية موجودة، فلا migration لازمة لمجرد جعلها null. حالة الاستخدام الجديدة تتحقق من الفاعل ثم تزيل القيمة وتحفظ. endpoint يحول القرار إلى HTTP.\n\nإذا احتجت سجل تاريخ إلغاء أو إشعارًا جديدًا، اكتب ذلك كتذكرة منفصلة؛ المطلوب هنا أن تختار أقل تغيير يحقق القاعدة.",
+          "task": "اختبر مهمة مفقودة، وفاعلًا غير عضو، ومهمة معيّنة، ومهمة غير معيّنة. اقرأ الحالة بعد الرفض بـcontext جديد.",
+          "solution": "FindTaskAsync → فحص null → IsMemberAsync باستخدام ProjectId من المهمة → AssigneeId = null → CommitAsync. controller يعيد204 عند النجاح. لا يحتاج IBoardStore method خاصة إن كانت FindTask وCommit تفيان بالغرض. قارن هذا مع الحل الموجّه للتعيين، ثم احتفظ بحلك الجديد."
+        },
+        {
+          "title": "راجع كما لو أن زميلًا سيقرأ التغيير",
+          "body": "افحص migration وهل تحافظ على البيانات، وDTO وهل يتيح حقولًا غير لازمة، وquery وهل ترسل بيانات أكثر من المطلوب، ومسار cancellation، وسلوك الرفض.\n\nفي وصف التغيير اذكر المشكلة والسلوك الجديد واختباراتك وحدودها. لا تكتب «كل شيء يعمل» إذا لم تجرب PostgreSQL أو توقيع JWT فعليًا.",
+          "task": "اكتب وصف PR محليًا: ما المشكلة؟ ما السلوك الجديد؟ ما الحالات التي اختبرتها؟ ما الذي يحتاج بيئة الفريق؟ افتح diff واقرأه من غير الرجوع للمحادثة.",
+          "result": "شخص آخر يستطيع فهم التغيير واختباره من وصفك والاختبارات. المشروع لا يرسل PR تلقائيًا؛ أنت تكتب الوصف كجزء من التدريب."
+        }
+      ],
+      "stage": "11-feature",
+      "build": "ميزة باستقلالية"
+    },
+    {
+      "id": "unfamiliar-repo",
+      "module": "project",
+      "title": "ادخل مستودعًا لم تره من قبل",
+      "summary": "اختبار التخرج: الفهم ثم تعديل قابل للمراجعة.",
+      "gain": "أدخل مستودع .NET وأجد موضع العمل بثقة عملية.",
+      "minutes": 10,
+      "sources": [
+        [
+          ".NET CLI",
+          "https://learn.microsoft.com/en-us/dotnet/core/tools/"
+        ]
+      ],
+      "steps": [
+        {
+          "title": "استكشف حسب السؤال الذي أمامك",
+          "body": "اختر مستودع .NET يسمح لك بالوصول إليه. اقرأ تشغيله ثم حدد entry point وSDK. ارسم pipeline والتسجيلات. اختر endpoint واحدًا وتتبع controller إلى الخدمة إلى database أو العميل الخارجي.\n\nلا تحتاج فهم كل الملفات كي تبدأ؛ تحتاج صورة عامة صحيحة وحدودًا واضحة لما تعرفه وما تحتاج أن تسأل عنه.",
+          "task": "بدون فتح حل: شغّل المشروع والاختبارات، وضع breakpoint، وحدد query أو call الخارجية التي ينفذها endpoint. اكتب ثلاثة أسئلة دقيقة لو كان الفريق أمامك الآن.",
+          "result": "أسئلتك تسمي ملفًا أو قاعدة أو عقدًا؛ مثل «هل 404 هنا تخفي موردًا غير مصرح؟» بدل «كيف يعمل المشروع كله؟»"
+        },
+        {
+          "title": "استعمل ما تعلمته في تغيير جديد",
+          "body": "أصلح bug صغيرًا يمكن إعادة إنتاجه أو أضف feature محدودة. اكتب اختبارًا للحالة التي دفعتك للتغيير. راجع أثرها على API وdatabase والصلاحيات والإعدادات.\n\nالانتهاء يعني قدرتك على تبرير الموضع الذي غيرته والنتائج التي اختبرتها. عدد الدروس المفتوحة أو سهولة القراءة ليس دليل إتقان بمفرده.",
+          "task": "اشرح بصوتك: من يستقبل الطلب؟ من ينشئ service؟ متى ينفذ SQL؟ من يقرر الصلاحية؟ كيف تثبت أن الرفض لم يكتب شيئًا؟ قارِن إجاباتك مع المسار الحقيقي.",
+          "solution": "Kestrel يسلم HttpContext للمسار. DI يحل service بعمرها. materialization/terminal operator ينفذ query، وSaveChanges يكتب التغييرات. policy أو قاعدة resource تقرر الإذن. integration test يقرأ الحالة بعد الرفض عبر سياق جديد."
+        },
+        {
+          "title": "أنت جاهز حين تعرف أين تبحث",
+          "body": "إذا استطعت تشغيل مستودع جديد، وتتبع endpoint، وفهم query، وتصحيح bug، وإضافة ميزة واختبارها، فقد حققت الهدف العملي للمنهج.\n\nاحتفظ بدفترك كمرجع لما صار واضحًا. عد للمحطة التي يفتحها احتياج العمل: query بطيئة تعيدك إلى EF، خطأ resolve يعيدك إلى DI، و403 يعيدك إلى policy والعضوية. كل المحطات تظل مفتوحة.",
+          "task": "اكتب فقرة واحدة تصف مسار طلب في مشروع الفريق بأسماء أنواعه الحقيقية. هذه ملاحظة الرجوع المفيدة في أول أسبوع.",
+          "result": "تبدأ مع الفريق وأنت قادر على الفهم والسؤال والتعديل، وتعرف المواضع التي تحتاج مزيدًا من التدريب."
+        }
+      ],
+      "stage": "11-feature",
+      "build": "ميزة باستقلالية"
+    }
+  ]
+}

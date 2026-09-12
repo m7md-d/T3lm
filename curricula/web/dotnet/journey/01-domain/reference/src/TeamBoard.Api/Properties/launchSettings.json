@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Lab": {
+      "commandName": "Project",
+      "applicationUrl": "http://localhost:5080",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "Database__Provider": "Memory"
+      }
+    }
+  }
+}

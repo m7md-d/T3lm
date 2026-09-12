@@ -1,0 +1,208 @@
+[
+  {
+    "id": "00-start",
+    "title": "تشغيل الهيكل الجاهز",
+    "task": "افتح Program.cs، غيّر الاسم، ثم أعد 404 لأي رقم غير42. الشجرة وملفات المشاريع وUML جاهزة.",
+    "check": "GET /users/42 →200، وGET /users/7 →404 بعد تعديله.",
+    "files": [
+      "src/TeamBoard.Api/Program.cs"
+    ],
+    "changedFiles": [
+      "ARCHITECTURE.md",
+      "README.md",
+      ".gitignore",
+      "compose.yaml",
+      "TeamBoard.slnx",
+      ".config/dotnet-tools.json",
+      "tools/notification-receiver.py",
+      "src/TeamBoard.Application/TeamBoard.Application.csproj",
+      "src/TeamBoard.Infrastructure/TeamBoard.Infrastructure.csproj",
+      "src/TeamBoard.Api/appsettings.json",
+      "src/TeamBoard.Api/appsettings.Development.json",
+      "src/TeamBoard.Api/TeamBoard.Api.csproj",
+      "src/TeamBoard.Domain/TeamBoard.Domain.csproj",
+      "src/TeamBoard.Api/Properties/launchSettings.json",
+      "tests/TeamBoard.Tests/TeamBoard.Tests.csproj",
+      "src/TeamBoard.Domain/Model.cs",
+      "src/TeamBoard.Api/Program.cs",
+      "tests/TeamBoard.Tests/StarterTests.cs"
+    ],
+    "removedFiles": []
+  },
+  {
+    "id": "01-domain",
+    "title": "عقود المهام وقاعدة العنوان",
+    "task": "أكمل TitleRules.IsValid: ارفض null والفراغ، واقبل حتى120 حرفًا بعد Trim. راجع record TaskDto وجرب with وLINQ داخل اختبار.",
+    "check": "dotnet test؛ تمر الحالات الفارغة وحدا120 و121.",
+    "files": [
+      "src/TeamBoard.Domain/Model.cs",
+      "tests/TeamBoard.Tests/TitleRulesTests.cs"
+    ],
+    "changedFiles": [
+      "tests/TeamBoard.Tests/TitleRulesTests.cs"
+    ],
+    "removedFiles": []
+  },
+  {
+    "id": "02-ports",
+    "title": "المنافذ واتجاه الاعتماد",
+    "task": "أكمل CancellationToken في منفذ الإشعار. ارسم implements من adapter إلى العقد. تأكد أن Application لا تستورد EF أو ASP.NET.",
+    "check": "dotnet build ينجح، وتشرح الفرق بين اتجاه النداء واتجاه ProjectReference.",
+    "files": [
+      "src/TeamBoard.Application/Ports.cs",
+      "src/TeamBoard.Application/WorkItemService.cs"
+    ],
+    "changedFiles": [
+      "src/TeamBoard.Application/Ports.cs",
+      "src/TeamBoard.Application/BoardService.cs",
+      "src/TeamBoard.Application/WorkItemService.cs"
+    ],
+    "removedFiles": []
+  },
+  {
+    "id": "03-http",
+    "title": "مدخل HTTP وسجل الطلب",
+    "task": "أكمل شرط المستخدم المفقود في LabUsersController. ضع logger حول pipeline وتوقع ترتيب الدخول والخروج.",
+    "check": "GET /users/42 →200 و/users/7 →404؛ ترى method/path/status/time.",
+    "files": [
+      "src/TeamBoard.Api/Program.cs",
+      "src/TeamBoard.Api/Controllers/LabUsersController.cs"
+    ],
+    "changedFiles": [
+      "src/TeamBoard.Api/Program.cs",
+      "src/TeamBoard.Api/Controllers/LabUsersController.cs"
+    ],
+    "removedFiles": []
+  },
+  {
+    "id": "04-wiring",
+    "title": "وصل القلب بمنافذه",
+    "task": "أكمل تسجيل IBoardStore مع InMemoryBoardStore. مرّر نفس use case من controller، ولا تنشئ الخدمة يدويًا داخله.",
+    "check": "GET /tasks/1 →200؛ PATCH /tasks/1/assignee مع userId2 →204، وuserId3 →400.",
+    "files": [
+      "src/TeamBoard.Api/Program.cs",
+      "src/TeamBoard.Infrastructure/InMemoryBoardStore.cs"
+    ],
+    "changedFiles": [
+      "src/TeamBoard.Api/Program.cs",
+      "src/TeamBoard.Infrastructure/AssignmentNotifiers.cs",
+      "src/TeamBoard.Infrastructure/InMemoryBoardStore.cs",
+      "src/TeamBoard.Api/Controllers/ApiController.cs",
+      "src/TeamBoard.Api/Controllers/UsersController.cs",
+      "src/TeamBoard.Api/Controllers/WorkItemsController.cs"
+    ],
+    "removedFiles": [
+      "src/TeamBoard.Api/Controllers/LabUsersController.cs"
+    ]
+  },
+  {
+    "id": "05-config",
+    "title": "الإعدادات والسجل المنظم",
+    "task": "فعّل Information في ملف Development. بدّل قيمة إعداد من environment ولا تطبع الأسرار.",
+    "check": "ترى سجل taskId وassigneeId عند نجاح التعيين؛ تخفض الضوضاء بإعداد category.",
+    "files": [
+      "src/TeamBoard.Api/appsettings.Development.json"
+    ],
+    "changedFiles": [
+      "src/TeamBoard.Api/Program.cs"
+    ],
+    "removedFiles": []
+  },
+  {
+    "id": "06-persistence",
+    "title": "EF adapter وPostgreSQL",
+    "task": "أكمل Where في ListTasksAsync بحيث يقيد النتائج بالمشروع المطلوب. راجع migration ثم طبّقها على حاوية المختبر. سجّل SQL.",
+    "check": "بعد إعادة تشغيل API تبقى البيانات. /projects/1/tasks لا يعرض مهام مشروع آخر.",
+    "files": [
+      "src/TeamBoard.Infrastructure/EfBoardStore.cs",
+      "src/TeamBoard.Infrastructure/BoardDbContext.cs"
+    ],
+    "changedFiles": [
+      "src/TeamBoard.Api/appsettings.json",
+      "src/TeamBoard.Api/Properties/launchSettings.json",
+      "src/TeamBoard.Api/Program.cs",
+      "src/TeamBoard.Infrastructure/EfBoardStore.cs",
+      "src/TeamBoard.Infrastructure/Seed.cs",
+      "src/TeamBoard.Infrastructure/BoardDbContext.cs",
+      "src/TeamBoard.Infrastructure/Migrations/20260911164427_InitialBoard.Designer.cs",
+      "src/TeamBoard.Infrastructure/Migrations/20260911164427_InitialBoard.cs",
+      "src/TeamBoard.Infrastructure/Migrations/BoardDbContextModelSnapshot.cs"
+    ],
+    "removedFiles": []
+  },
+  {
+    "id": "07-contracts",
+    "title": "عقود API والتعليقات",
+    "task": "اجعل POST مهمة يرجع CreatedAtAction بدل200. أكمل الفرق بين request DTO وentity؛ جرّب blank title وتعليق من مستخدم غير عضو.",
+    "check": "POST →201 مع Location صالح؛ التحديث204 بلا body؛ التحقق400.",
+    "files": [
+      "src/TeamBoard.Api/Controllers/WorkItemsController.cs"
+    ],
+    "changedFiles": [
+      "src/TeamBoard.Api/Controllers/CommentsController.cs",
+      "src/TeamBoard.Api/Controllers/ProjectsController.cs"
+    ],
+    "removedFiles": []
+  },
+  {
+    "id": "08-identity",
+    "title": "هوية الفاعل وعضوية المرشح",
+    "task": "أكمل فحص عضوية المرشح في WorkItemService. الهوية الآن من JWT، وليس المعرّف التجريبي الثابت. أعد تشغيل API بعد إنشاء token التطوير.",
+    "check": "بلا token →401، فاعل3 →403، فاعل1 ومرشح3 →400 دون حفظ أو إشعار.",
+    "files": [
+      "src/TeamBoard.Application/WorkItemService.cs",
+      "src/TeamBoard.Api/Controllers/ApiController.cs"
+    ],
+    "changedFiles": [
+      "src/TeamBoard.Api/Program.cs",
+      "src/TeamBoard.Api/Controllers/ApiController.cs"
+    ],
+    "removedFiles": []
+  },
+  {
+    "id": "09-notification",
+    "title": "الإشعار عبر HTTP adapter",
+    "task": "أكمل EnsureSuccessStatusCode. شغّل notification-receiver.py ثم بدّل Notifications:Mode إلىHttp. أوقف المستقبل وراقب بقاء الحفظ.",
+    "check": "الإشعار يصل بعد تعيين صحيح فقط. فشل HTTP يظهر في السجل، ولا يلغي التعيين المحفوظ.",
+    "files": [
+      "src/TeamBoard.Infrastructure/AssignmentNotifiers.cs",
+      "src/TeamBoard.Api/Program.cs"
+    ],
+    "changedFiles": [
+      "src/TeamBoard.Api/Program.cs"
+    ],
+    "removedFiles": []
+  },
+  {
+    "id": "10-tests",
+    "title": "اختبار نفس القلب من مدخل آخر",
+    "task": "أكمل assertions للاختبار الذي يستدعي WorkItemService دون HTTP أوEF. شغّل ApiTests واقرأ الفرق بين test auth والتحقق الحقيقي منJWT.",
+    "check": "dotnet test يمر؛ إثبات عدم الكتابة وعدم الإشعار عند الرفض، ووجود FK مركب.",
+    "files": [
+      "tests/TeamBoard.Tests/HexagonTests.cs",
+      "tests/TeamBoard.Tests/ApiTests.cs"
+    ],
+    "changedFiles": [
+      "tests/TeamBoard.Tests/BoardFactory.cs",
+      "tests/TeamBoard.Tests/HexagonTests.cs",
+      "tests/TeamBoard.Tests/ApiTests.cs",
+      "tests/TeamBoard.Tests/NotificationTests.cs"
+    ],
+    "removedFiles": [
+      "tests/TeamBoard.Tests/StarterTests.cs"
+    ]
+  },
+  {
+    "id": "11-feature",
+    "title": "ميزة مستقلة: إلغاء التعيين",
+    "task": "أضف DELETE /tasks/{id}/assignee. لا migration لأن AssigneeId اختيارية أصلًا. المطلوب منك port/use case/endpoint/tests؛ المساعدة أقل هنا.",
+    "check": "فاعل عضو →204 والقيمةnull؛ غير عضو →403 بلا تغيير؛ مفقودة404؛ تكرار الإلغاء204.",
+    "files": [
+      "src/TeamBoard.Application/Ports.cs",
+      "src/TeamBoard.Application/WorkItemService.cs",
+      "src/TeamBoard.Api/Controllers/WorkItemsController.cs"
+    ],
+    "changedFiles": [],
+    "removedFiles": []
+  }
+]

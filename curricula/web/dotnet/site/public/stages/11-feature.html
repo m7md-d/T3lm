@@ -1,0 +1,37 @@
+<!doctype html><html lang="ar" dir="rtl"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ميزة مستقلة: إلغاء التعيين · TeamBoard</title><link rel="stylesheet" href="../tokens.css"><style>@font-face{font-family:Readex;src:url('../fonts/ReadexPro-400-arabic.woff2')}*{box-sizing:border-box}body{background:var(--surface-void);color:var(--fg);font:16px/2 Readex,sans-serif;margin:auto;max-width:960px;padding:30px 24px}a{color:var(--adapter)}h1{font-size:28px}.brief{white-space:pre-wrap;font:inherit}details{border:1px solid var(--line);border-radius:10px;margin:18px 0;padding:16px}summary{cursor:pointer;overflow-wrap:anywhere;font:14px/2 monospace}pre{background:var(--surface-code);color:var(--fg);padding:18px;overflow:auto;text-align:left;unicode-bidi:isolate;font:13px/1.9 monospace}nav{display:flex;gap:24px;flex-wrap:wrap}</style><nav><a href="../#home">الرئيسية</a><a href="./11-feature.zip" download>تنزيل ملفات المحطة</a></nav><h1>ميزة مستقلة: إلغاء التعيين</h1><div class="brief"># ميزة مستقلة: إلغاء التعيين
+
+## نفس المشروع
+
+اعمل داخل مجلد TeamBoard الذي بدأت به. لا تنشئ مشروعًا منفصلًا. ملفات checkpoints مرجع وتعافٍ فقط.
+
+## جاهز لك
+
+الشجرة وملفات المشاريع والعقود والأجزاء غير المستهدفة مجهزة. reference/ نسخة المحطة مكتملة للمقارنة. files-to-copy/ هي الملفات الجديدة أو المعدلة، وفي بعضها TODO للتكليف.
+
+## المطلوب منك
+
+أضف DELETE /tasks/{id}/assignee. لا migration لأن AssigneeId اختيارية أصلًا. المطلوب منك port/use case/endpoint/tests؛ المساعدة أقل هنا.
+
+## أين تبدأ
+
+- `src/TeamBoard.Application/Ports.cs`
+- `src/TeamBoard.Application/WorkItemService.cs`
+- `src/TeamBoard.Api/Controllers/WorkItemsController.cs`
+
+## ترتيب التنفيذ
+
+1. خذ نسخة محلية من تعديلاتك المهمة قبل مقارنة الملفات.
+2. افتح `files-to-copy/`، وانقل الملفات بأسمائها ومساراتها فوق **نفس** مشروعك. لا تنقل مجلد files-to-copy نفسه.
+3. اقرأ TODO وأكمل المهمة أعلاه؛ ليس مطلوبًا كتابة جميع الملفات من الصفر.
+4. تحقق من السلوك التالي. لو تعثرت افتح reference/ أو changes.patch للمقارنة.
+
+## دليل النجاح
+
+فاعل عضو →204 والقيمةnull؛ غير عضو →403 بلا تغيير؛ مفقودة404؛ تكرار الإلغاء204.
+
+الأمر المعتاد: `dotnet build TeamBoard.slnx` ثم `dotnet test TeamBoard.slnx`. قبل محطة08 الهوية ثابتة محليًا لغرض التعلم؛ هذه النسخ لا تُنشر. بعد محطة06 اتبع README لـPostgreSQL، وبعد08 اتبع JWT.
+
+## نموذج الحل عند الحاجة
+
+أضف method إلى IWorkItemService باسم UnassignAsync. التنفيذ: FindTaskAsync، ثم NotFound عند الغياب، ثم IsMemberAsync للفاعل على ProjectId المخزن، ثم Forbidden عند الرفض، ثم AssigneeId = null، وCommitAsync، وSuccess. أضف endpoint DELETE يستخرج ActorId من الهوية ويحوّل النتائج كما في Assign. لا ترسل AssignmentNotice القديمة عند الإلغاء لأنها تصف فعلًا مختلفًا. اختبر التكرار كنجاح بلا تغيير. لا migration إضافية.
+</div><h2>الملفات المجهزة للنسخ والتعديل</h2></html>

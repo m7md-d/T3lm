@@ -1,0 +1,155 @@
+<!doctype html><html lang="ar" dir="rtl"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>تشغيل الهيكل الجاهز · TeamBoard</title><link rel="stylesheet" href="../tokens.css"><style>@font-face{font-family:Readex;src:url('../fonts/ReadexPro-400-arabic.woff2')}*{box-sizing:border-box}body{background:var(--surface-void);color:var(--fg);font:16px/2 Readex,sans-serif;margin:auto;max-width:960px;padding:30px 24px}a{color:var(--adapter)}h1{font-size:28px}.brief{white-space:pre-wrap;font:inherit}details{border:1px solid var(--line);border-radius:10px;margin:18px 0;padding:16px}summary{cursor:pointer;overflow-wrap:anywhere;font:14px/2 monospace}pre{background:var(--surface-code);color:var(--fg);padding:18px;overflow:auto;text-align:left;unicode-bidi:isolate;font:13px/1.9 monospace}nav{display:flex;gap:24px;flex-wrap:wrap}</style><nav><a href="../#home">الرئيسية</a><a href="./00-start.zip" download>تنزيل ملفات المحطة</a></nav><h1>تشغيل الهيكل الجاهز</h1><div class="brief"># تشغيل الهيكل الجاهز
+
+## نفس المشروع
+
+اعمل داخل مجلد TeamBoard الذي بدأت به. لا تنشئ مشروعًا منفصلًا. ملفات checkpoints مرجع وتعافٍ فقط.
+
+## جاهز لك
+
+الشجرة وملفات المشاريع والعقود والأجزاء غير المستهدفة مجهزة. reference/ نسخة المحطة مكتملة للمقارنة. files-to-copy/ هي الملفات الجديدة أو المعدلة، وفي بعضها TODO للتكليف.
+
+## المطلوب منك
+
+افتح Program.cs، غيّر الاسم، ثم أعد 404 لأي رقم غير42. الشجرة وملفات المشاريع وUML جاهزة.
+
+## أين تبدأ
+
+- `src/TeamBoard.Api/Program.cs`
+
+## ترتيب التنفيذ
+
+1. خذ نسخة محلية من تعديلاتك المهمة قبل مقارنة الملفات.
+2. افتح `files-to-copy/`، وانقل الملفات بأسمائها ومساراتها فوق **نفس** مشروعك. لا تنقل مجلد files-to-copy نفسه.
+3. اقرأ TODO وأكمل المهمة أعلاه؛ ليس مطلوبًا كتابة جميع الملفات من الصفر.
+4. تحقق من السلوك التالي. لو تعثرت افتح reference/ أو changes.patch للمقارنة.
+
+## دليل النجاح
+
+GET /users/42 →200، وGET /users/7 →404 بعد تعديله.
+
+الأمر المعتاد: `dotnet build TeamBoard.slnx` ثم `dotnet test TeamBoard.slnx`. قبل محطة08 الهوية ثابتة محليًا لغرض التعلم؛ هذه النسخ لا تُنشر. بعد محطة06 اتبع README لـPostgreSQL، وبعد08 اتبع JWT.
+
+حزمة البداية مستقلة عن ملفات copy: فك teamboard-starter.zip مرة واحدة، ثم عدّل Program.cs مباشرة.
+</div><h2>الملفات المجهزة للنسخ والتعديل</h2><details><summary dir="ltr">.config/dotnet-tools.json</summary><pre dir="ltr">{&quot;version&quot;:1,&quot;isRoot&quot;:true,&quot;tools&quot;:{&quot;dotnet-ef&quot;:{&quot;version&quot;:&quot;10.0.12&quot;,&quot;commands&quot;:[&quot;dotnet-ef&quot;]}}}
+</pre></details><details><summary dir="ltr">src/TeamBoard.Application/TeamBoard.Application.csproj</summary><pre dir="ltr">&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;&lt;PropertyGroup&gt;&lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;&lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;&lt;Nullable&gt;enable&lt;/Nullable&gt;&lt;/PropertyGroup&gt;&lt;ItemGroup&gt;&lt;ProjectReference Include=&quot;../TeamBoard.Domain/TeamBoard.Domain.csproj&quot;/&gt;&lt;/ItemGroup&gt;&lt;/Project&gt;
+</pre></details><details><summary dir="ltr">src/TeamBoard.Infrastructure/TeamBoard.Infrastructure.csproj</summary><pre dir="ltr">&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;&lt;PropertyGroup&gt;&lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;&lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;&lt;Nullable&gt;enable&lt;/Nullable&gt;&lt;/PropertyGroup&gt;&lt;ItemGroup&gt;&lt;ProjectReference Include=&quot;../TeamBoard.Application/TeamBoard.Application.csproj&quot;/&gt;&lt;ProjectReference Include=&quot;../TeamBoard.Domain/TeamBoard.Domain.csproj&quot;/&gt;&lt;PackageReference Include=&quot;Npgsql.EntityFrameworkCore.PostgreSQL&quot; Version=&quot;10.0.3&quot;/&gt;&lt;PackageReference Include=&quot;Microsoft.EntityFrameworkCore.Sqlite&quot; Version=&quot;10.0.12&quot;/&gt;&lt;PackageReference Include=&quot;SQLitePCLRaw.bundle_e_sqlite3&quot; Version=&quot;3.0.5&quot;/&gt;&lt;/ItemGroup&gt;&lt;/Project&gt;
+</pre></details><details><summary dir="ltr">src/TeamBoard.Api/appsettings.json</summary><pre dir="ltr">{
+  &quot;Database&quot;: {
+    &quot;Provider&quot;: &quot;Memory&quot;
+  },
+  &quot;Notifications&quot;: {
+    &quot;Mode&quot;: &quot;Log&quot;
+  },
+  &quot;Logging&quot;: {
+    &quot;LogLevel&quot;: {
+      &quot;Default&quot;: &quot;Information&quot;,
+      &quot;Microsoft.AspNetCore&quot;: &quot;Warning&quot;
+    }
+  }
+}</pre></details><details><summary dir="ltr">src/TeamBoard.Api/appsettings.Development.json</summary><pre dir="ltr">{
+  &quot;Logging&quot;: {
+    &quot;LogLevel&quot;: {
+      &quot;Microsoft.EntityFrameworkCore.Database.Command&quot;: &quot;Information&quot;
+    }
+  },
+  &quot;Authentication&quot;: {
+    &quot;Schemes&quot;: {
+      &quot;Bearer&quot;: {
+        &quot;ValidAudiences&quot;: [
+          &quot;http://localhost:5080&quot;
+        ],
+        &quot;ValidIssuer&quot;: &quot;dotnet-user-jwts&quot;
+      }
+    }
+  }
+}</pre></details><details><summary dir="ltr">src/TeamBoard.Api/TeamBoard.Api.csproj</summary><pre dir="ltr">&lt;Project Sdk=&quot;Microsoft.NET.Sdk.Web&quot;&gt;&lt;PropertyGroup&gt;&lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;&lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;&lt;Nullable&gt;enable&lt;/Nullable&gt;&lt;UserSecretsId&gt;t3lm-teamboard-local-lab&lt;/UserSecretsId&gt;&lt;/PropertyGroup&gt;&lt;ItemGroup&gt;&lt;ProjectReference Include=&quot;../TeamBoard.Application/TeamBoard.Application.csproj&quot;/&gt;&lt;ProjectReference Include=&quot;../TeamBoard.Domain/TeamBoard.Domain.csproj&quot;/&gt;&lt;ProjectReference Include=&quot;../TeamBoard.Infrastructure/TeamBoard.Infrastructure.csproj&quot;/&gt;&lt;PackageReference Include=&quot;Microsoft.AspNetCore.Authentication.JwtBearer&quot; Version=&quot;10.0.12&quot;/&gt;&lt;PackageReference Include=&quot;Microsoft.EntityFrameworkCore.Design&quot; Version=&quot;10.0.12&quot;&gt;&lt;PrivateAssets&gt;all&lt;/PrivateAssets&gt;&lt;/PackageReference&gt;&lt;/ItemGroup&gt;&lt;/Project&gt;
+</pre></details><details><summary dir="ltr">src/TeamBoard.Domain/TeamBoard.Domain.csproj</summary><pre dir="ltr">&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;&lt;PropertyGroup&gt;&lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;&lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;&lt;Nullable&gt;enable&lt;/Nullable&gt;&lt;/PropertyGroup&gt;&lt;/Project&gt;
+</pre></details><details><summary dir="ltr">src/TeamBoard.Api/Properties/launchSettings.json</summary><pre dir="ltr">{
+  &quot;profiles&quot;: {
+    &quot;Lab&quot;: {
+      &quot;commandName&quot;: &quot;Project&quot;,
+      &quot;applicationUrl&quot;: &quot;http://localhost:5080&quot;,
+      &quot;environmentVariables&quot;: {
+        &quot;ASPNETCORE_ENVIRONMENT&quot;: &quot;Development&quot;,
+        &quot;Database__Provider&quot;: &quot;Memory&quot;
+      }
+    }
+  }
+}</pre></details><details><summary dir="ltr">tests/TeamBoard.Tests/TeamBoard.Tests.csproj</summary><pre dir="ltr">&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;&lt;PropertyGroup&gt;&lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;&lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;&lt;Nullable&gt;enable&lt;/Nullable&gt;&lt;IsPackable&gt;false&lt;/IsPackable&gt;&lt;IsTestProject&gt;true&lt;/IsTestProject&gt;&lt;/PropertyGroup&gt;&lt;ItemGroup&gt;&lt;PackageReference Include=&quot;Microsoft.NET.Test.Sdk&quot; Version=&quot;17.14.1&quot;/&gt;&lt;PackageReference Include=&quot;xunit&quot; Version=&quot;2.9.3&quot;/&gt;&lt;PackageReference Include=&quot;xunit.runner.visualstudio&quot; Version=&quot;3.1.1&quot;&gt;&lt;PrivateAssets&gt;all&lt;/PrivateAssets&gt;&lt;/PackageReference&gt;&lt;PackageReference Include=&quot;Microsoft.AspNetCore.Mvc.Testing&quot; Version=&quot;10.0.12&quot;/&gt;&lt;ProjectReference Include=&quot;../../src/TeamBoard.Api/TeamBoard.Api.csproj&quot;/&gt;&lt;/ItemGroup&gt;&lt;ItemGroup&gt;&lt;Using Include=&quot;Xunit&quot;/&gt;&lt;/ItemGroup&gt;&lt;/Project&gt;
+</pre></details><details><summary dir="ltr">src/TeamBoard.Domain/Model.cs</summary><pre dir="ltr">namespace TeamBoard.Domain;
+
+public sealed class User
+{
+    public int Id { get; set; }
+    public required string Name { get; set; }
+}
+public sealed class Project
+{
+    public int Id { get; set; }
+    public required string Name { get; set; }
+    public List&lt;WorkItem&gt; WorkItems { get; set; } = [];
+}
+public sealed class ProjectMember
+{
+    public int ProjectId { get; set; }
+    public Project Project { get; set; } = null!;
+    public int UserId { get; set; }
+    public User User { get; set; } = null!;
+}
+public sealed class WorkItem
+{
+    public int Id { get; set; }
+    public required string Title { get; set; }
+    public bool Done { get; set; }
+    public int ProjectId { get; set; }
+    public Project Project { get; set; } = null!;
+    public int? AssigneeId { get; set; }
+    public ProjectMember? AssigneeMembership { get; set; }
+    public List&lt;Comment&gt; Comments { get; set; } = [];
+}
+public sealed class Comment
+{
+    public int Id { get; set; }
+    public int WorkItemId { get; set; }
+    public WorkItem WorkItem { get; set; } = null!;
+    public int AuthorId { get; set; }
+    public User Author { get; set; } = null!;
+    public required string Text { get; set; }
+}
+public record UserDto(int Id, string Name);
+public record TaskDto(int Id, string Title, bool Done, int ProjectId, int? AssigneeId);
+public record CommentDto(int Id, int AuthorId, string Text);
+public record ProjectDto(int Id, string Name, int TaskCount);
+public enum ChangeResult { Success, NotFound, Forbidden, InvalidAssignee, InvalidInput, Conflict }
+public record Operation&lt;T&gt;(ChangeResult Result, T? Value = default);
+public static class TitleRules
+{
+    public static bool IsValid(string? title) =&gt;
+        !string.IsNullOrWhiteSpace(title) &amp;&amp; title.Trim().Length &lt;= 120;
+}
+</pre></details><details><summary dir="ltr">src/TeamBoard.Api/Program.cs</summary><pre dir="ltr">using TeamBoard.Domain;
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+app.MapGet(&quot;/health&quot;, () =&gt; Results.Ok(new { status = &quot;ok&quot; }));
+app.MapGet(&quot;/users/{id:int}&quot;, (int id) =&gt;
+{
+    // TODO: return NotFound when id is not 42.
+    return Results.Ok(new UserDto(id, &quot;Nora&quot;));
+});
+app.Run();
+public partial class Program { }
+</pre></details><details><summary dir="ltr">tests/TeamBoard.Tests/StarterTests.cs</summary><pre dir="ltr">using Microsoft.AspNetCore.Mvc.Testing;
+using System.Net;
+namespace TeamBoard.Tests;
+public class StarterTests
+{
+    [Fact]
+    public async Task Application_starts_and_answers_health()
+    {
+        using var app = new WebApplicationFactory&lt;Program&gt;();
+        using var client = app.CreateClient();
+        using var response = await client.GetAsync(&quot;/health&quot;);
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+}
+</pre></details></html>

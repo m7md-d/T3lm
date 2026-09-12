@@ -1,0 +1,10 @@
+--- a/src/TeamBoard.Api/Program.cs
++++ b/src/TeamBoard.Api/Program.cs
+@@ -3,6 +3,7 @@
+ var builder = WebApplication.CreateBuilder(args);
+ builder.Services.AddControllers();
+ builder.Services.AddProblemDetails();
++builder.Services.AddOptions<NotificationOptions>().BindConfiguration("Notifications").Validate(o => o.Mode is "Log" or "Http", "Unknown mode").ValidateOnStart();
+ builder.Services.AddSingleton<InMemoryBoardState>();
+ builder.Services.AddScoped<IBoardStore, InMemoryBoardStore>();
+ builder.Services.AddScoped<IWorkItemService, WorkItemService>();

@@ -1,0 +1,15 @@
+{
+  "slug":"dotnet",
+  "category":"web",
+  "title":"مسار .NET — رحلة TeamBoard",
+  "tagline":"مشروع واحد من الهيكل السداسي الجاهز إلى تغيير تبنيه وتختبره بنفسك",
+  "profile":"codex-dotnet",
+  "status":"complete",
+  "stack":[".NET 10","C# 14","ASP.NET Core","EF Core 10","PostgreSQL","React"],
+  "content":"content/course.js",
+  "site":"site",
+  "project":"project",
+  "navigation":"open",
+  "theme":"dark",
+  "language":"ar"
+}

@@ -1,0 +1,151 @@
+--- a/src/TeamBoard.Application/BoardService.cs
++++ b/src/TeamBoard.Application/BoardService.cs
+@@ -0,0 +1,57 @@
++using TeamBoard.Domain;
++namespace TeamBoard.Application;
++
++public sealed class BoardService(IBoardStore store, IWorkItemService tasks)
++{
++    public Task<List<ProjectDto>> ProjectsAsync(int actor, CancellationToken ct) => store.ListProjectsAsync(actor, ct);
++    public async Task<Operation<ProjectDto>> ProjectAsync(int id, int actor, CancellationToken ct)
++    {
++        if (!await store.IsMemberAsync(id, actor, ct)) return new(ChangeResult.Forbidden);
++        var project = await store.FindProjectAsync(id, ct);
++        return project is null ? new(ChangeResult.NotFound) : new(ChangeResult.Success, project);
++    }
++    public async Task<Operation<ProjectDto>> CreateProjectAsync(string name, int actor, CancellationToken ct)
++    {
++        if (!TitleRules.IsValid(name)) return new(ChangeResult.InvalidInput);
++        if (!await store.UserExistsAsync(actor, ct)) return new(ChangeResult.Forbidden);
++        var project = new Project { Name = name.Trim() };
++        store.AddProject(project, actor);
++        await store.CommitAsync(ct);
++        return new(ChangeResult.Success, new(project.Id, project.Name, 0));
++    }
++    public async Task<Operation<List<TaskDto>>> TasksAsync(int projectId, int take, int actor, CancellationToken ct)
++    {
++        if (take is < 1 or > 100) return new(ChangeResult.InvalidInput);
++        if (!await store.IsMemberAsync(projectId, actor, ct)) return new(ChangeResult.Forbidden);
++        return new(ChangeResult.Success, await store.ListTasksAsync(projectId, take, ct));
++    }
++    public async Task<Operation<UserDto>> UserAsync(int id, int actor, CancellationToken ct)
++    {
++        if (id != actor && !await store.SharesProjectAsync(actor, id, ct)) return new(ChangeResult.Forbidden);
++        var user = await store.FindUserAsync(id, ct);
++        return user is null ? new(ChangeResult.NotFound) : new(ChangeResult.Success, user);
++    }
++    public async Task<Operation<List<CommentDto>>> CommentsAsync(int taskId, int actor, CancellationToken ct)
++    {
++        var task = await tasks.FindAsync(taskId, actor, ct);
++        if (task.Result != ChangeResult.Success) return new(task.Result);
++        return new(ChangeResult.Success, await store.ListCommentsAsync(taskId, ct));
++    }
++    public async Task<Operation<CommentDto>> CommentAsync(int taskId, int id, int actor, CancellationToken ct)
++    {
++        var task = await tasks.FindAsync(taskId, actor, ct);
++        if (task.Result != ChangeResult.Success) return new(task.Result);
++        var comment = await store.FindCommentAsync(taskId, id, ct);
++        return comment is null ? new(ChangeResult.NotFound) : new(ChangeResult.Success, comment);
++    }
++    public async Task<Operation<CommentDto>> AddCommentAsync(int taskId, string text, int actor, CancellationToken ct)
++    {
++        if (string.IsNullOrWhiteSpace(text) || text.Length > 1000) return new(ChangeResult.InvalidInput);
++        var task = await tasks.FindAsync(taskId, actor, ct);
++        if (task.Result != ChangeResult.Success) return new(task.Result);
++        var comment = new Comment { WorkItemId = taskId, AuthorId = actor, Text = text.Trim() };
++        store.AddComment(comment);
++        await store.CommitAsync(ct);
++        return new(ChangeResult.Success, new(comment.Id, actor, comment.Text));
++    }
++}
+--- a/src/TeamBoard.Application/Ports.cs
++++ b/src/TeamBoard.Application/Ports.cs
+@@ -0,0 +1,36 @@
++using TeamBoard.Domain;
++namespace TeamBoard.Application;
++
++// Outbound port. No EF, IQueryable, SQL, HTTP or provider types cross this boundary.
++public interface IBoardStore
++{
++    Task<WorkItem?> FindTaskAsync(int id, CancellationToken ct);
++    Task<bool> IsMemberAsync(int projectId, int userId, CancellationToken ct);
++    Task<bool> ProjectExistsAsync(int projectId, CancellationToken ct);
++    Task<bool> UserExistsAsync(int userId, CancellationToken ct);
++    Task<bool> SharesProjectAsync(int actorId, int userId, CancellationToken ct);
++    Task<UserDto?> FindUserAsync(int id, CancellationToken ct);
++    Task<List<ProjectDto>> ListProjectsAsync(int actorId, CancellationToken ct);
++    Task<ProjectDto?> FindProjectAsync(int id, CancellationToken ct);
++    Task<List<TaskDto>> ListTasksAsync(int projectId, int take, CancellationToken ct);
++    Task<List<CommentDto>> ListCommentsAsync(int taskId, CancellationToken ct);
++    Task<CommentDto?> FindCommentAsync(int taskId, int id, CancellationToken ct);
++    void AddTask(WorkItem task);
++    void AddProject(Project project, int ownerId);
++    void AddComment(Comment comment);
++    Task CommitAsync(CancellationToken ct);
++}
++public sealed class MembershipConflictException(Exception inner) : Exception("Membership changed", inner);
++public record AssignmentNotice(int TaskId, int ProjectId, int AssigneeId);
++// Best effort in this bounded teaching project. False means saved assignment, missed notification.
++public interface IAssignmentNotifier
++{
++    Task<bool> NotifyAsync(AssignmentNotice notice, CancellationToken ct);
++}
++public interface IWorkItemService
++{
++    Task<Operation<TaskDto>> FindAsync(int id, int actorId, CancellationToken ct);
++    Task<Operation<TaskDto>> CreateAsync(int projectId, string title, int actorId, CancellationToken ct);
++    Task<ChangeResult> AssignAsync(int taskId, int assigneeId, int actorId, CancellationToken ct);
++    Task<ChangeResult> RenameAsync(int taskId, string title, int actorId, CancellationToken ct);
++}
+--- a/src/TeamBoard.Application/WorkItemService.cs
++++ b/src/TeamBoard.Application/WorkItemService.cs
+@@ -0,0 +1,49 @@
++using TeamBoard.Domain;
++namespace TeamBoard.Application;
++
++// Inbound port implementation: independent of ASP.NET Core and EF Core.
++public sealed class WorkItemService(IBoardStore store, IAssignmentNotifier notifier) : IWorkItemService
++{
++    public async Task<Operation<TaskDto>> FindAsync(int id, int actorId, CancellationToken ct)
++    {
++        var item = await store.FindTaskAsync(id, ct);
++        if (item is null) return new(ChangeResult.NotFound);
++        if (!await store.IsMemberAsync(item.ProjectId, actorId, ct)) return new(ChangeResult.Forbidden);
++        return new(ChangeResult.Success, ToDto(item));
++    }
++    public async Task<Operation<TaskDto>> CreateAsync(int projectId, string title, int actorId, CancellationToken ct)
++    {
++        if (!TitleRules.IsValid(title)) return new(ChangeResult.InvalidInput);
++        if (!await store.ProjectExistsAsync(projectId, ct)) return new(ChangeResult.NotFound);
++        if (!await store.IsMemberAsync(projectId, actorId, ct)) return new(ChangeResult.Forbidden);
++        var item = new WorkItem { ProjectId = projectId, Title = title.Trim() };
++        store.AddTask(item);
++        await store.CommitAsync(ct);
++        return new(ChangeResult.Success, ToDto(item));
++    }
++    public async Task<ChangeResult> AssignAsync(int taskId, int assigneeId, int actorId, CancellationToken ct)
++    {
++        var item = await store.FindTaskAsync(taskId, ct);
++        if (item is null) return ChangeResult.NotFound;
++        if (!await store.IsMemberAsync(item.ProjectId, actorId, ct)) return ChangeResult.Forbidden;
++        if (!await store.IsMemberAsync(item.ProjectId, assigneeId, ct)) return ChangeResult.InvalidAssignee;
++        item.AssigneeId = assigneeId;
++        try { await store.CommitAsync(ct); }
++        catch (MembershipConflictException) { return ChangeResult.Conflict; }
++        // Save first. Notification failure cannot roll back a committed assignment.
++        // The adapter logs delivery failure; durable delivery/outbox is outside this course.
++        await notifier.NotifyAsync(new(item.Id, item.ProjectId, assigneeId), ct);
++        return ChangeResult.Success;
++    }
++    public async Task<ChangeResult> RenameAsync(int taskId, string title, int actorId, CancellationToken ct)
++    {
++        if (!TitleRules.IsValid(title)) return ChangeResult.InvalidInput;
++        var item = await store.FindTaskAsync(taskId, ct);
++        if (item is null) return ChangeResult.NotFound;
++        if (!await store.IsMemberAsync(item.ProjectId, actorId, ct)) return ChangeResult.Forbidden;
++        item.Title = title.Trim();
++        await store.CommitAsync(ct);
++        return ChangeResult.Success;
++    }
++    private static TaskDto ToDto(WorkItem t) => new(t.Id, t.Title, t.Done, t.ProjectId, t.AssigneeId);
++}

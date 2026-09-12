@@ -1,0 +1,18 @@
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: teamboard
+      POSTGRES_USER: teamboard
+      POSTGRES_PASSWORD: local-lab-only
+    ports:
+      - "127.0.0.1:5438:5432"
+    volumes:
+      - board-lab-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U teamboard -d teamboard"]
+      interval: 3s
+      timeout: 3s
+      retries: 15
+volumes:
+  board-lab-data:

@@ -1,0 +1,27 @@
+/* TeamBoard: neutral reading surfaces; four semantic colour families.
+   Core = business decisions. Adapter = interaction with the outside.
+   Success and rejection are outcomes, never chapter decorations. */
+:root {
+  color-scheme: dark;
+  --surface-void: #0d1117;
+  --surface-deep: #111820;
+  --surface-panel: #17212b;
+  --surface-raised: #1e2a35;
+  --surface-code: #0a1016;
+  --fg: #e6edf3;
+  --fg-muted: #b3bfcb;
+  --fg-dim: #91a1b1;
+  --line: #314252;
+  --line-strong: #617588;
+  --adapter: #6bd5e1;
+  --adapter-dim: #15353f;
+  --core: #efbc70;
+  --core-dim: #382b1a;
+  --success: #82d6a5;
+  --success-dim: #18382a;
+  --reject: #f0a2b4;
+  --reject-dim: #3b222c;
+  --accent: var(--adapter);
+  --on-accent: #0a2027;
+  --overlay: #05090dbb;
+}

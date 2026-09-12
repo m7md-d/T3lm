@@ -1,0 +1,153 @@
+<!doctype html><html lang="ar" dir="rtl"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>الإشعار عبر HTTP adapter · TeamBoard</title><link rel="stylesheet" href="../tokens.css"><style>@font-face{font-family:Readex;src:url('../fonts/ReadexPro-400-arabic.woff2')}*{box-sizing:border-box}body{background:var(--surface-void);color:var(--fg);font:16px/2 Readex,sans-serif;margin:auto;max-width:960px;padding:30px 24px}a{color:var(--adapter)}h1{font-size:28px}.brief{white-space:pre-wrap;font:inherit}details{border:1px solid var(--line);border-radius:10px;margin:18px 0;padding:16px}summary{cursor:pointer;overflow-wrap:anywhere;font:14px/2 monospace}pre{background:var(--surface-code);color:var(--fg);padding:18px;overflow:auto;text-align:left;unicode-bidi:isolate;font:13px/1.9 monospace}nav{display:flex;gap:24px;flex-wrap:wrap}</style><nav><a href="../#home">الرئيسية</a><a href="./09-notification.zip" download>تنزيل ملفات المحطة</a></nav><h1>الإشعار عبر HTTP adapter</h1><div class="brief"># الإشعار عبر HTTP adapter
+
+## نفس المشروع
+
+اعمل داخل مجلد TeamBoard الذي بدأت به. لا تنشئ مشروعًا منفصلًا. ملفات checkpoints مرجع وتعافٍ فقط.
+
+## جاهز لك
+
+الشجرة وملفات المشاريع والعقود والأجزاء غير المستهدفة مجهزة. reference/ نسخة المحطة مكتملة للمقارنة. files-to-copy/ هي الملفات الجديدة أو المعدلة، وفي بعضها TODO للتكليف.
+
+## المطلوب منك
+
+أكمل EnsureSuccessStatusCode. شغّل notification-receiver.py ثم بدّل Notifications:Mode إلىHttp. أوقف المستقبل وراقب بقاء الحفظ.
+
+## أين تبدأ
+
+- `src/TeamBoard.Infrastructure/AssignmentNotifiers.cs`
+- `src/TeamBoard.Api/Program.cs`
+
+## ترتيب التنفيذ
+
+1. خذ نسخة محلية من تعديلاتك المهمة قبل مقارنة الملفات.
+2. افتح `files-to-copy/`، وانقل الملفات بأسمائها ومساراتها فوق **نفس** مشروعك. لا تنقل مجلد files-to-copy نفسه.
+3. اقرأ TODO وأكمل المهمة أعلاه؛ ليس مطلوبًا كتابة جميع الملفات من الصفر.
+4. تحقق من السلوك التالي. لو تعثرت افتح reference/ أو changes.patch للمقارنة.
+
+## دليل النجاح
+
+الإشعار يصل بعد تعيين صحيح فقط. فشل HTTP يظهر في السجل، ولا يلغي التعيين المحفوظ.
+
+الأمر المعتاد: `dotnet build TeamBoard.slnx` ثم `dotnet test TeamBoard.slnx`. قبل محطة08 الهوية ثابتة محليًا لغرض التعلم؛ هذه النسخ لا تُنشر. بعد محطة06 اتبع README لـPostgreSQL، وبعد08 اتبع JWT.
+</div><h2>الملفات المجهزة للنسخ والتعديل</h2><details><summary dir="ltr">src/TeamBoard.Api/Program.cs</summary><pre dir="ltr">using System.Diagnostics;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using TeamBoard.Domain;
+using TeamBoard.Application;
+using TeamBoard.Infrastructure;
+
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddControllers();
+builder.Services.AddProblemDetails();
+builder.Services.AddOptions&lt;NotificationOptions&gt;().BindConfiguration(&quot;Notifications&quot;)
+    .Validate(o =&gt; o.Mode is &quot;Log&quot; or &quot;Http&quot;, &quot;Unknown notification mode&quot;)
+    .Validate(o =&gt; o.Mode != &quot;Http&quot; ||
+        (Uri.TryCreate(o.BaseUrl, UriKind.Absolute, out var uri) &amp;&amp; uri.Scheme is &quot;http&quot; or &quot;https&quot;),
+        &quot;HTTP notifications need a valid BaseUrl&quot;)
+    .ValidateOnStart();
+builder.Services.AddScoped&lt;IWorkItemService, WorkItemService&gt;();
+builder.Services.AddScoped&lt;BoardService&gt;();
+if (builder.Configuration[&quot;Database:Provider&quot;] == &quot;Memory&quot;)
+{
+    builder.Services.AddSingleton&lt;InMemoryBoardState&gt;();
+    builder.Services.AddScoped&lt;IBoardStore, InMemoryBoardStore&gt;();
+}
+else builder.Services.AddScoped&lt;IBoardStore, EfBoardStore&gt;();
+if (builder.Configuration[&quot;Notifications:Mode&quot;] == &quot;Http&quot;)
+{
+    builder.Services.AddHttpClient&lt;IAssignmentNotifier, HttpAssignmentNotifier&gt;((services, http) =&gt;
+    {
+        var options = services.GetRequiredService&lt;Microsoft.Extensions.Options.IOptions&lt;NotificationOptions&gt;&gt;().Value;
+        http.BaseAddress = new Uri(options.BaseUrl!);
+        http.Timeout = TimeSpan.FromSeconds(3);
+    });
+}
+else builder.Services.AddScoped&lt;IAssignmentNotifier, LogAssignmentNotifier&gt;();
+builder.Services.AddDbContext&lt;BoardDbContext&gt;(options =&gt;
+{
+    var provider = builder.Configuration[&quot;Database:Provider&quot;] ?? &quot;Postgres&quot;;
+    var connection = builder.Configuration.GetConnectionString(&quot;Board&quot;)
+        ?? throw new InvalidOperationException(&quot;Missing ConnectionStrings:Board&quot;);
+    if (provider == &quot;Sqlite&quot;) options.UseSqlite(connection);
+    else if (provider == &quot;Postgres&quot;) options.UseNpgsql(connection);
+    else throw new InvalidOperationException(&quot;Unknown database provider&quot;);
+});
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =&gt;
+    {
+        options.MapInboundClaims = false;
+        if (!builder.Environment.IsDevelopment() &amp;&amp; !builder.Environment.IsEnvironment(&quot;Testing&quot;))
+        {
+            options.Authority = builder.Configuration[&quot;Auth:Authority&quot;]
+                ?? throw new InvalidOperationException(&quot;Missing Auth:Authority&quot;);
+            options.Audience = builder.Configuration[&quot;Auth:Audience&quot;]
+                ?? throw new InvalidOperationException(&quot;Missing Auth:Audience&quot;);
+        }
+    });
+builder.Services.AddAuthorization(options =&gt; options.AddPolicy(&quot;Admin&quot;, p =&gt; p.RequireRole(&quot;Admin&quot;)));
+var app = builder.Build();
+app.Use(async (context, next) =&gt;
+{
+    var clock = Stopwatch.StartNew();
+    await next(context);
+    app.Logger.LogInformation(&quot;{Method} {Path} -&gt; {Status} in {ElapsedMs}ms&quot;, context.Request.Method,
+        context.Request.Path, context.Response.StatusCode, clock.Elapsed.TotalMilliseconds);
+});
+app.UseExceptionHandler();
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapGet(&quot;/health&quot;, () =&gt; Results.Ok(new { status = &quot;ok&quot; }));
+app.MapControllers();
+if (app.Environment.IsDevelopment() &amp;&amp; builder.Configuration.GetValue&lt;bool&gt;(&quot;Lab:Initialize&quot;) &amp;&amp; builder.Configuration[&quot;Database:Provider&quot;] != &quot;Memory&quot;)
+{
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService&lt;BoardDbContext&gt;();
+    // Only the disposable SQLite lab uses EnsureCreated. PostgreSQL uses reviewed migrations.
+    if (db.Database.IsSqlite()) await db.Database.EnsureCreatedAsync();
+    await Seed.ApplyAsync(db);
+}
+app.Run();
+public partial class Program { }
+</pre></details><details><summary dir="ltr">src/TeamBoard.Infrastructure/AssignmentNotifiers.cs</summary><pre dir="ltr">using System.Net.Http.Json;
+using Microsoft.Extensions.Logging;
+using TeamBoard.Application;
+namespace TeamBoard.Infrastructure;
+
+public sealed class LogAssignmentNotifier(ILogger&lt;LogAssignmentNotifier&gt; logger) : IAssignmentNotifier
+{
+    public Task&lt;bool&gt; NotifyAsync(AssignmentNotice notice, CancellationToken ct)
+    {
+        ct.ThrowIfCancellationRequested();
+        logger.LogInformation(&quot;Assignment notice: task {TaskId}, assignee {AssigneeId}&quot;, notice.TaskId, notice.AssigneeId);
+        return Task.FromResult(true);
+    }
+}
+public sealed class HttpAssignmentNotifier(HttpClient http, ILogger&lt;HttpAssignmentNotifier&gt; logger) : IAssignmentNotifier
+{
+    public async Task&lt;bool&gt; NotifyAsync(AssignmentNotice notice, CancellationToken ct)
+    {
+        try
+        {
+            using var response = await http.PostAsJsonAsync(&quot;notifications&quot;, notice, ct);
+            // TODO: a non-success HTTP response must be treated as a failed notification.
+            return true;
+        }
+        catch (HttpRequestException ex)
+        {
+            logger.LogWarning(ex, &quot;Assignment {TaskId} saved, notification failed&quot;, notice.TaskId);
+            return false;
+        }
+        catch (OperationCanceledException) when (!ct.IsCancellationRequested)
+        {
+            logger.LogWarning(&quot;Assignment {TaskId} saved, notification timed out&quot;, notice.TaskId);
+            return false;
+        }
+    }
+}
+public sealed class NotificationOptions
+{
+    public string Mode { get; set; } = &quot;Log&quot;;
+    public string? BaseUrl { get; set; }
+}
+</pre></details></html>

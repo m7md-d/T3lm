@@ -1,0 +1,60 @@
+<!doctype html><html lang="ar" dir="rtl"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>مدخل HTTP وسجل الطلب · TeamBoard</title><link rel="stylesheet" href="../tokens.css"><style>@font-face{font-family:Readex;src:url('../fonts/ReadexPro-400-arabic.woff2')}*{box-sizing:border-box}body{background:var(--surface-void);color:var(--fg);font:16px/2 Readex,sans-serif;margin:auto;max-width:960px;padding:30px 24px}a{color:var(--adapter)}h1{font-size:28px}.brief{white-space:pre-wrap;font:inherit}details{border:1px solid var(--line);border-radius:10px;margin:18px 0;padding:16px}summary{cursor:pointer;overflow-wrap:anywhere;font:14px/2 monospace}pre{background:var(--surface-code);color:var(--fg);padding:18px;overflow:auto;text-align:left;unicode-bidi:isolate;font:13px/1.9 monospace}nav{display:flex;gap:24px;flex-wrap:wrap}</style><nav><a href="../#home">الرئيسية</a><a href="./03-http.zip" download>تنزيل ملفات المحطة</a></nav><h1>مدخل HTTP وسجل الطلب</h1><div class="brief"># مدخل HTTP وسجل الطلب
+
+## نفس المشروع
+
+اعمل داخل مجلد TeamBoard الذي بدأت به. لا تنشئ مشروعًا منفصلًا. ملفات checkpoints مرجع وتعافٍ فقط.
+
+## جاهز لك
+
+الشجرة وملفات المشاريع والعقود والأجزاء غير المستهدفة مجهزة. reference/ نسخة المحطة مكتملة للمقارنة. files-to-copy/ هي الملفات الجديدة أو المعدلة، وفي بعضها TODO للتكليف.
+
+## المطلوب منك
+
+أكمل شرط المستخدم المفقود في LabUsersController. ضع logger حول pipeline وتوقع ترتيب الدخول والخروج.
+
+## أين تبدأ
+
+- `src/TeamBoard.Api/Program.cs`
+- `src/TeamBoard.Api/Controllers/LabUsersController.cs`
+
+## ترتيب التنفيذ
+
+1. خذ نسخة محلية من تعديلاتك المهمة قبل مقارنة الملفات.
+2. افتح `files-to-copy/`، وانقل الملفات بأسمائها ومساراتها فوق **نفس** مشروعك. لا تنقل مجلد files-to-copy نفسه.
+3. اقرأ TODO وأكمل المهمة أعلاه؛ ليس مطلوبًا كتابة جميع الملفات من الصفر.
+4. تحقق من السلوك التالي. لو تعثرت افتح reference/ أو changes.patch للمقارنة.
+
+## دليل النجاح
+
+GET /users/42 →200 و/users/7 →404؛ ترى method/path/status/time.
+
+الأمر المعتاد: `dotnet build TeamBoard.slnx` ثم `dotnet test TeamBoard.slnx`. قبل محطة08 الهوية ثابتة محليًا لغرض التعلم؛ هذه النسخ لا تُنشر. بعد محطة06 اتبع README لـPostgreSQL، وبعد08 اتبع JWT.
+</div><h2>الملفات المجهزة للنسخ والتعديل</h2><details><summary dir="ltr">src/TeamBoard.Api/Program.cs</summary><pre dir="ltr">var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddControllers();
+var app = builder.Build();
+app.Use(async (context, next) =&gt;
+{
+    var timer = System.Diagnostics.Stopwatch.StartNew();
+    await next(context);
+    app.Logger.LogInformation(&quot;{Method} {Path} -&gt; {Status} in {ElapsedMs}ms&quot;,
+        context.Request.Method, context.Request.Path,
+        context.Response.StatusCode, timer.Elapsed.TotalMilliseconds);
+});
+app.MapGet(&quot;/health&quot;, () =&gt; Results.Ok(new { status = &quot;ok&quot; }));
+app.MapControllers();
+app.Run();
+public partial class Program { }
+</pre></details><details><summary dir="ltr">src/TeamBoard.Api/Controllers/LabUsersController.cs</summary><pre dir="ltr">using Microsoft.AspNetCore.Mvc;
+using TeamBoard.Domain;
+namespace TeamBoard.Api.Controllers;
+[ApiController, Route(&quot;users&quot;)]
+public sealed class LabUsersController : ControllerBase
+{
+    [HttpGet(&quot;{id:int}&quot;)]
+    public ActionResult&lt;UserDto&gt; Get(int id)
+    {
+        // TODO: missing user should return 404.
+        return Ok(new UserDto(id, &quot;Nora&quot;));
+    }
+}
+</pre></details></html>

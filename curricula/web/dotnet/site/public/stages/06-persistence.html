@@ -1,0 +1,777 @@
+<!doctype html><html lang="ar" dir="rtl"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>EF adapter وPostgreSQL · TeamBoard</title><link rel="stylesheet" href="../tokens.css"><style>@font-face{font-family:Readex;src:url('../fonts/ReadexPro-400-arabic.woff2')}*{box-sizing:border-box}body{background:var(--surface-void);color:var(--fg);font:16px/2 Readex,sans-serif;margin:auto;max-width:960px;padding:30px 24px}a{color:var(--adapter)}h1{font-size:28px}.brief{white-space:pre-wrap;font:inherit}details{border:1px solid var(--line);border-radius:10px;margin:18px 0;padding:16px}summary{cursor:pointer;overflow-wrap:anywhere;font:14px/2 monospace}pre{background:var(--surface-code);color:var(--fg);padding:18px;overflow:auto;text-align:left;unicode-bidi:isolate;font:13px/1.9 monospace}nav{display:flex;gap:24px;flex-wrap:wrap}</style><nav><a href="../#home">الرئيسية</a><a href="./06-persistence.zip" download>تنزيل ملفات المحطة</a></nav><h1>EF adapter وPostgreSQL</h1><div class="brief"># EF adapter وPostgreSQL
+
+## نفس المشروع
+
+اعمل داخل مجلد TeamBoard الذي بدأت به. لا تنشئ مشروعًا منفصلًا. ملفات checkpoints مرجع وتعافٍ فقط.
+
+## جاهز لك
+
+الشجرة وملفات المشاريع والعقود والأجزاء غير المستهدفة مجهزة. reference/ نسخة المحطة مكتملة للمقارنة. files-to-copy/ هي الملفات الجديدة أو المعدلة، وفي بعضها TODO للتكليف.
+
+## المطلوب منك
+
+أكمل Where في ListTasksAsync بحيث يقيد النتائج بالمشروع المطلوب. راجع migration ثم طبّقها على حاوية المختبر. سجّل SQL.
+
+## أين تبدأ
+
+- `src/TeamBoard.Infrastructure/EfBoardStore.cs`
+- `src/TeamBoard.Infrastructure/BoardDbContext.cs`
+
+## ترتيب التنفيذ
+
+1. خذ نسخة محلية من تعديلاتك المهمة قبل مقارنة الملفات.
+2. افتح `files-to-copy/`، وانقل الملفات بأسمائها ومساراتها فوق **نفس** مشروعك. لا تنقل مجلد files-to-copy نفسه.
+3. اقرأ TODO وأكمل المهمة أعلاه؛ ليس مطلوبًا كتابة جميع الملفات من الصفر.
+4. تحقق من السلوك التالي. لو تعثرت افتح reference/ أو changes.patch للمقارنة.
+
+## دليل النجاح
+
+بعد إعادة تشغيل API تبقى البيانات. /projects/1/tasks لا يعرض مهام مشروع آخر.
+
+الأمر المعتاد: `dotnet build TeamBoard.slnx` ثم `dotnet test TeamBoard.slnx`. قبل محطة08 الهوية ثابتة محليًا لغرض التعلم؛ هذه النسخ لا تُنشر. بعد محطة06 اتبع README لـPostgreSQL، وبعد08 اتبع JWT.
+</div><h2>الملفات المجهزة للنسخ والتعديل</h2><details><summary dir="ltr">src/TeamBoard.Api/appsettings.json</summary><pre dir="ltr">{
+  &quot;Database&quot;: {
+    &quot;Provider&quot;: &quot;Postgres&quot;
+  },
+  &quot;Logging&quot;: {
+    &quot;LogLevel&quot;: {
+      &quot;Default&quot;: &quot;Information&quot;,
+      &quot;Microsoft.AspNetCore&quot;: &quot;Warning&quot;
+    }
+  },
+  &quot;AllowedHosts&quot;: &quot;localhost;127.0.0.1&quot;,
+  &quot;Notifications&quot;: {
+    &quot;Mode&quot;: &quot;Log&quot;
+  }
+}
+</pre></details><details><summary dir="ltr">src/TeamBoard.Api/Properties/launchSettings.json</summary><pre dir="ltr">{
+  &quot;profiles&quot;: {
+    &quot;Postgres&quot;: {
+      &quot;commandName&quot;: &quot;Project&quot;,
+      &quot;launchBrowser&quot;: false,
+      &quot;applicationUrl&quot;: &quot;http://localhost:5080&quot;,
+      &quot;environmentVariables&quot;: {
+        &quot;ASPNETCORE_ENVIRONMENT&quot;: &quot;Development&quot;,
+        &quot;Database__Provider&quot;: &quot;Postgres&quot;,
+        &quot;Lab__Initialize&quot;: &quot;true&quot;
+      }
+    },
+    &quot;Memory&quot;: {
+      &quot;commandName&quot;: &quot;Project&quot;,
+      &quot;launchBrowser&quot;: false,
+      &quot;applicationUrl&quot;: &quot;http://localhost:5080&quot;,
+      &quot;environmentVariables&quot;: {
+        &quot;ASPNETCORE_ENVIRONMENT&quot;: &quot;Development&quot;,
+        &quot;Database__Provider&quot;: &quot;Memory&quot;
+      }
+    }
+  }
+}
+</pre></details><details><summary dir="ltr">src/TeamBoard.Api/Program.cs</summary><pre dir="ltr">using System.Diagnostics;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using TeamBoard.Domain;
+using TeamBoard.Application;
+using TeamBoard.Infrastructure;
+
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddControllers();
+builder.Services.AddProblemDetails();
+builder.Services.AddOptions&lt;NotificationOptions&gt;().BindConfiguration(&quot;Notifications&quot;)
+    .Validate(o =&gt; o.Mode is &quot;Log&quot; or &quot;Http&quot;, &quot;Unknown notification mode&quot;)
+    .Validate(o =&gt; o.Mode != &quot;Http&quot; ||
+        (Uri.TryCreate(o.BaseUrl, UriKind.Absolute, out var uri) &amp;&amp; uri.Scheme is &quot;http&quot; or &quot;https&quot;),
+        &quot;HTTP notifications need a valid BaseUrl&quot;)
+    .ValidateOnStart();
+builder.Services.AddScoped&lt;IWorkItemService, WorkItemService&gt;();
+builder.Services.AddScoped&lt;BoardService&gt;();
+if (builder.Configuration[&quot;Database:Provider&quot;] == &quot;Memory&quot;)
+{
+    builder.Services.AddSingleton&lt;InMemoryBoardState&gt;();
+    builder.Services.AddScoped&lt;IBoardStore, InMemoryBoardStore&gt;();
+}
+else builder.Services.AddScoped&lt;IBoardStore, EfBoardStore&gt;();
+builder.Services.AddScoped&lt;IAssignmentNotifier, LogAssignmentNotifier&gt;();
+builder.Services.AddDbContext&lt;BoardDbContext&gt;(options =&gt;
+{
+    var provider = builder.Configuration[&quot;Database:Provider&quot;] ?? &quot;Postgres&quot;;
+    var connection = builder.Configuration.GetConnectionString(&quot;Board&quot;)
+        ?? throw new InvalidOperationException(&quot;Missing ConnectionStrings:Board&quot;);
+    if (provider == &quot;Sqlite&quot;) options.UseSqlite(connection);
+    else if (provider == &quot;Postgres&quot;) options.UseNpgsql(connection);
+    else throw new InvalidOperationException(&quot;Unknown database provider&quot;);
+});
+var app = builder.Build();
+app.Use(async (context, next) =&gt;
+{
+    var clock = Stopwatch.StartNew();
+    await next(context);
+    app.Logger.LogInformation(&quot;{Method} {Path} -&gt; {Status} in {ElapsedMs}ms&quot;, context.Request.Method,
+        context.Request.Path, context.Response.StatusCode, clock.Elapsed.TotalMilliseconds);
+});
+app.UseExceptionHandler();
+app.UseRouting();
+app.MapGet(&quot;/health&quot;, () =&gt; Results.Ok(new { status = &quot;ok&quot; }));
+app.MapControllers();
+if (app.Environment.IsDevelopment() &amp;&amp; builder.Configuration.GetValue&lt;bool&gt;(&quot;Lab:Initialize&quot;) &amp;&amp; builder.Configuration[&quot;Database:Provider&quot;] != &quot;Memory&quot;)
+{
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService&lt;BoardDbContext&gt;();
+    // Only the disposable SQLite lab uses EnsureCreated. PostgreSQL uses reviewed migrations.
+    if (db.Database.IsSqlite()) await db.Database.EnsureCreatedAsync();
+    await Seed.ApplyAsync(db);
+}
+app.Run();
+public partial class Program { }
+</pre></details><details><summary dir="ltr">src/TeamBoard.Infrastructure/EfBoardStore.cs</summary><pre dir="ltr">using Microsoft.EntityFrameworkCore;
+using TeamBoard.Domain;
+using TeamBoard.Application;
+namespace TeamBoard.Infrastructure;
+
+// Outbound adapter: EF-specific types and query translation stay here.
+public sealed class EfBoardStore(BoardDbContext db) : IBoardStore
+{
+    public Task&lt;WorkItem?&gt; FindTaskAsync(int id, CancellationToken ct) =&gt; db.WorkItems.SingleOrDefaultAsync(t =&gt; t.Id == id, ct);
+    public Task&lt;bool&gt; IsMemberAsync(int projectId, int userId, CancellationToken ct) =&gt; db.ProjectMembers.AnyAsync(m =&gt; m.ProjectId == projectId &amp;&amp; m.UserId == userId, ct);
+    public Task&lt;bool&gt; ProjectExistsAsync(int projectId, CancellationToken ct) =&gt; db.Projects.AnyAsync(p =&gt; p.Id == projectId, ct);
+    public Task&lt;bool&gt; UserExistsAsync(int id, CancellationToken ct) =&gt; db.Users.AnyAsync(u =&gt; u.Id == id, ct);
+    public Task&lt;bool&gt; SharesProjectAsync(int actor, int id, CancellationToken ct) =&gt; db.ProjectMembers.AnyAsync(m =&gt; m.UserId == id &amp;&amp; db.ProjectMembers.Any(a =&gt; a.ProjectId == m.ProjectId &amp;&amp; a.UserId == actor), ct);
+    public Task&lt;UserDto?&gt; FindUserAsync(int id, CancellationToken ct) =&gt; db.Users.Where(u =&gt; u.Id == id).Select(u =&gt; new UserDto(u.Id, u.Name)).SingleOrDefaultAsync(ct);
+    public Task&lt;List&lt;ProjectDto&gt;&gt; ListProjectsAsync(int actor, CancellationToken ct) =&gt; db.Projects.Where(p =&gt; db.ProjectMembers.Any(m =&gt; m.ProjectId == p.Id &amp;&amp; m.UserId == actor)).OrderBy(p =&gt; p.Id).Select(p =&gt; new ProjectDto(p.Id, p.Name, p.WorkItems.Count)).Take(100).ToListAsync(ct);
+    public Task&lt;ProjectDto?&gt; FindProjectAsync(int id, CancellationToken ct) =&gt; db.Projects.Where(p =&gt; p.Id == id).Select(p =&gt; new ProjectDto(p.Id, p.Name, p.WorkItems.Count)).SingleOrDefaultAsync(ct);
+    public Task&lt;List&lt;TaskDto&gt;&gt; ListTasksAsync(int id, int take, CancellationToken ct) =&gt; db.WorkItems /* TODO: filter by project id */.OrderBy(t =&gt; t.Id).Take(take).Select(t =&gt; new TaskDto(t.Id, t.Title, t.Done, t.ProjectId, t.AssigneeId)).ToListAsync(ct);
+    public Task&lt;List&lt;CommentDto&gt;&gt; ListCommentsAsync(int taskId, CancellationToken ct) =&gt; db.Comments.Where(c =&gt; c.WorkItemId == taskId).OrderBy(c =&gt; c.Id).Take(100).Select(c =&gt; new CommentDto(c.Id, c.AuthorId, c.Text)).ToListAsync(ct);
+    public Task&lt;CommentDto?&gt; FindCommentAsync(int taskId, int id, CancellationToken ct) =&gt; db.Comments.Where(c =&gt; c.Id == id &amp;&amp; c.WorkItemId == taskId).Select(c =&gt; new CommentDto(c.Id, c.AuthorId, c.Text)).SingleOrDefaultAsync(ct);
+    public void AddTask(WorkItem task) =&gt; db.WorkItems.Add(task);
+    public void AddProject(Project project, int ownerId)
+    {
+        db.Projects.Add(project);
+        db.ProjectMembers.Add(new ProjectMember { Project = project, UserId = ownerId });
+    }
+    public void AddComment(Comment comment) =&gt; db.Comments.Add(comment);
+    public async Task CommitAsync(CancellationToken ct)
+    {
+        try { await db.SaveChangesAsync(ct); }
+        catch (DbUpdateException ex) when (ex.InnerException is Npgsql.PostgresException { SqlState: &quot;23503&quot; }
+            or Microsoft.Data.Sqlite.SqliteException { SqliteExtendedErrorCode: 787 })
+        { throw new MembershipConflictException(ex); }
+    }
+}
+</pre></details><details><summary dir="ltr">src/TeamBoard.Infrastructure/Seed.cs</summary><pre dir="ltr">using Microsoft.EntityFrameworkCore;
+using TeamBoard.Domain;
+namespace TeamBoard.Infrastructure;
+
+public static class Seed
+{
+    public static async Task ApplyAsync(BoardDbContext db, CancellationToken ct = default)
+    {
+        if (await db.Users.AnyAsync(ct)) return;
+        db.Users.AddRange(new User { Id = 1, Name = &quot;Nora&quot; }, new User { Id = 2, Name = &quot;Omar&quot; }, new User { Id = 3, Name = &quot;Lina&quot; });
+        db.Projects.AddRange(new Project { Id = 1, Name = &quot;TeamBoard&quot; }, new Project { Id = 2, Name = &quot;Other project&quot; });
+        db.ProjectMembers.AddRange(new ProjectMember { ProjectId = 1, UserId = 1 }, new ProjectMember { ProjectId = 1, UserId = 2 }, new ProjectMember { ProjectId = 2, UserId = 3 });
+        db.WorkItems.Add(new WorkItem { Title = &quot;Read Program.cs&quot;, ProjectId = 1 });
+        await db.SaveChangesAsync(ct);
+        if (db.Database.IsNpgsql())
+        {
+            // Explicit fixture IDs do not advance PostgreSQL identity sequences.
+            await db.Database.ExecuteSqlRawAsync(&quot;&quot;&quot;
+                SELECT setval(pg_get_serial_sequence(&#x27;&quot;Projects&quot;&#x27;, &#x27;Id&#x27;), (SELECT MAX(&quot;Id&quot;) FROM &quot;Projects&quot;));
+                SELECT setval(pg_get_serial_sequence(&#x27;&quot;Users&quot;&#x27;, &#x27;Id&#x27;), (SELECT MAX(&quot;Id&quot;) FROM &quot;Users&quot;));
+                &quot;&quot;&quot;, ct);
+        }
+    }
+}
+</pre></details><details><summary dir="ltr">src/TeamBoard.Infrastructure/BoardDbContext.cs</summary><pre dir="ltr">using Microsoft.EntityFrameworkCore;
+using TeamBoard.Domain;
+namespace TeamBoard.Infrastructure;
+
+public sealed class BoardDbContext(DbContextOptions&lt;BoardDbContext&gt; options) : DbContext(options)
+{
+    public DbSet&lt;User&gt; Users =&gt; Set&lt;User&gt;();
+    public DbSet&lt;Project&gt; Projects =&gt; Set&lt;Project&gt;();
+    public DbSet&lt;ProjectMember&gt; ProjectMembers =&gt; Set&lt;ProjectMember&gt;();
+    public DbSet&lt;WorkItem&gt; WorkItems =&gt; Set&lt;WorkItem&gt;();
+    public DbSet&lt;Comment&gt; Comments =&gt; Set&lt;Comment&gt;();
+
+    protected override void OnModelCreating(ModelBuilder model)
+    {
+        model.Entity&lt;User&gt;().Property(x =&gt; x.Name).HasMaxLength(100);
+        model.Entity&lt;Project&gt;().Property(x =&gt; x.Name).HasMaxLength(120);
+        model.Entity&lt;ProjectMember&gt;().HasKey(x =&gt; new { x.ProjectId, x.UserId });
+        model.Entity&lt;ProjectMember&gt;().HasOne(x =&gt; x.Project).WithMany().HasForeignKey(x =&gt; x.ProjectId);
+        model.Entity&lt;ProjectMember&gt;().HasOne(x =&gt; x.User).WithMany().HasForeignKey(x =&gt; x.UserId).OnDelete(DeleteBehavior.Restrict);
+        model.Entity&lt;WorkItem&gt;().Property(x =&gt; x.Title).HasMaxLength(120);
+        model.Entity&lt;WorkItem&gt;().HasOne(x =&gt; x.Project).WithMany(x =&gt; x.WorkItems).HasForeignKey(x =&gt; x.ProjectId);
+        // Enforce that an assignee belongs to THIS project, even under concurrent writes.
+        model.Entity&lt;WorkItem&gt;().HasOne(x =&gt; x.AssigneeMembership).WithMany()
+            .HasForeignKey(x =&gt; new { x.ProjectId, x.AssigneeId })
+            .HasPrincipalKey(x =&gt; new { x.ProjectId, x.UserId })
+            .OnDelete(DeleteBehavior.Restrict);
+        model.Entity&lt;Comment&gt;().Property(x =&gt; x.Text).HasMaxLength(1000);
+        model.Entity&lt;Comment&gt;().HasOne(x =&gt; x.WorkItem).WithMany(x =&gt; x.Comments).HasForeignKey(x =&gt; x.WorkItemId);
+        model.Entity&lt;Comment&gt;().HasOne(x =&gt; x.Author).WithMany().HasForeignKey(x =&gt; x.AuthorId).OnDelete(DeleteBehavior.Restrict);
+    }
+}
+</pre></details><details><summary dir="ltr">src/TeamBoard.Infrastructure/Migrations/20260911164427_InitialBoard.Designer.cs</summary><pre dir="ltr">﻿// &lt;auto-generated /&gt;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using TeamBoard.Infrastructure;
+
+#nullable disable
+
+namespace TeamBoard.Infrastructure.Migrations
+{
+    [DbContext(typeof(BoardDbContext))]
+    [Migration(&quot;20260911164427_InitialBoard&quot;)]
+    partial class InitialBoard
+    {
+        /// &lt;inheritdoc /&gt;
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        {
+#pragma warning disable 612, 618
+            modelBuilder
+                .HasAnnotation(&quot;ProductVersion&quot;, &quot;10.0.12&quot;)
+                .HasAnnotation(&quot;Relational:MaxIdentifierLength&quot;, 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity(&quot;TeamBoard.Domain.Comment&quot;, b =&gt;
+                {
+                    b.Property&lt;int&gt;(&quot;Id&quot;)
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType(&quot;integer&quot;);
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property&lt;int&gt;(&quot;Id&quot;));
+
+                    b.Property&lt;int&gt;(&quot;AuthorId&quot;)
+                        .HasColumnType(&quot;integer&quot;);
+
+                    b.Property&lt;string&gt;(&quot;Text&quot;)
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType(&quot;character varying(1000)&quot;);
+
+                    b.Property&lt;int&gt;(&quot;WorkItemId&quot;)
+                        .HasColumnType(&quot;integer&quot;);
+
+                    b.HasKey(&quot;Id&quot;);
+
+                    b.HasIndex(&quot;AuthorId&quot;);
+
+                    b.HasIndex(&quot;WorkItemId&quot;);
+
+                    b.ToTable(&quot;Comments&quot;);
+                });
+
+            modelBuilder.Entity(&quot;TeamBoard.Domain.Project&quot;, b =&gt;
+                {
+                    b.Property&lt;int&gt;(&quot;Id&quot;)
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType(&quot;integer&quot;);
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property&lt;int&gt;(&quot;Id&quot;));
+
+                    b.Property&lt;string&gt;(&quot;Name&quot;)
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType(&quot;character varying(120)&quot;);
+
+                    b.HasKey(&quot;Id&quot;);
+
+                    b.ToTable(&quot;Projects&quot;);
+                });
+
+            modelBuilder.Entity(&quot;TeamBoard.Domain.ProjectMember&quot;, b =&gt;
+                {
+                    b.Property&lt;int&gt;(&quot;ProjectId&quot;)
+                        .HasColumnType(&quot;integer&quot;);
+
+                    b.Property&lt;int&gt;(&quot;UserId&quot;)
+                        .HasColumnType(&quot;integer&quot;);
+
+                    b.HasKey(&quot;ProjectId&quot;, &quot;UserId&quot;);
+
+                    b.HasIndex(&quot;UserId&quot;);
+
+                    b.ToTable(&quot;ProjectMembers&quot;);
+                });
+
+            modelBuilder.Entity(&quot;TeamBoard.Domain.User&quot;, b =&gt;
+                {
+                    b.Property&lt;int&gt;(&quot;Id&quot;)
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType(&quot;integer&quot;);
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property&lt;int&gt;(&quot;Id&quot;));
+
+                    b.Property&lt;string&gt;(&quot;Name&quot;)
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType(&quot;character varying(100)&quot;);
+
+                    b.HasKey(&quot;Id&quot;);
+
+                    b.ToTable(&quot;Users&quot;);
+                });
+
+            modelBuilder.Entity(&quot;TeamBoard.Domain.WorkItem&quot;, b =&gt;
+                {
+                    b.Property&lt;int&gt;(&quot;Id&quot;)
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType(&quot;integer&quot;);
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property&lt;int&gt;(&quot;Id&quot;));
+
+                    b.Property&lt;int?&gt;(&quot;AssigneeId&quot;)
+                        .HasColumnType(&quot;integer&quot;);
+
+                    b.Property&lt;bool&gt;(&quot;Done&quot;)
+                        .HasColumnType(&quot;boolean&quot;);
+
+                    b.Property&lt;int&gt;(&quot;ProjectId&quot;)
+                        .HasColumnType(&quot;integer&quot;);
+
+                    b.Property&lt;string&gt;(&quot;Title&quot;)
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType(&quot;character varying(120)&quot;);
+
+                    b.HasKey(&quot;Id&quot;);
+
+                    b.HasIndex(&quot;ProjectId&quot;, &quot;AssigneeId&quot;);
+
+                    b.ToTable(&quot;WorkItems&quot;);
+                });
+
+            modelBuilder.Entity(&quot;TeamBoard.Domain.Comment&quot;, b =&gt;
+                {
+                    b.HasOne(&quot;TeamBoard.Domain.User&quot;, &quot;Author&quot;)
+                        .WithMany()
+                        .HasForeignKey(&quot;AuthorId&quot;)
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne(&quot;TeamBoard.Domain.WorkItem&quot;, &quot;WorkItem&quot;)
+                        .WithMany(&quot;Comments&quot;)
+                        .HasForeignKey(&quot;WorkItemId&quot;)
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation(&quot;Author&quot;);
+
+                    b.Navigation(&quot;WorkItem&quot;);
+                });
+
+            modelBuilder.Entity(&quot;TeamBoard.Domain.ProjectMember&quot;, b =&gt;
+                {
+                    b.HasOne(&quot;TeamBoard.Domain.Project&quot;, &quot;Project&quot;)
+                        .WithMany()
+                        .HasForeignKey(&quot;ProjectId&quot;)
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne(&quot;TeamBoard.Domain.User&quot;, &quot;User&quot;)
+                        .WithMany()
+                        .HasForeignKey(&quot;UserId&quot;)
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation(&quot;Project&quot;);
+
+                    b.Navigation(&quot;User&quot;);
+                });
+
+            modelBuilder.Entity(&quot;TeamBoard.Domain.WorkItem&quot;, b =&gt;
+                {
+                    b.HasOne(&quot;TeamBoard.Domain.Project&quot;, &quot;Project&quot;)
+                        .WithMany(&quot;WorkItems&quot;)
+                        .HasForeignKey(&quot;ProjectId&quot;)
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne(&quot;TeamBoard.Domain.ProjectMember&quot;, &quot;AssigneeMembership&quot;)
+                        .WithMany()
+                        .HasForeignKey(&quot;ProjectId&quot;, &quot;AssigneeId&quot;)
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation(&quot;AssigneeMembership&quot;);
+
+                    b.Navigation(&quot;Project&quot;);
+                });
+
+            modelBuilder.Entity(&quot;TeamBoard.Domain.Project&quot;, b =&gt;
+                {
+                    b.Navigation(&quot;WorkItems&quot;);
+                });
+
+            modelBuilder.Entity(&quot;TeamBoard.Domain.WorkItem&quot;, b =&gt;
+                {
+                    b.Navigation(&quot;Comments&quot;);
+                });
+#pragma warning restore 612, 618
+        }
+    }
+}
+</pre></details><details><summary dir="ltr">src/TeamBoard.Infrastructure/Migrations/20260911164427_InitialBoard.cs</summary><pre dir="ltr">﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+
+#nullable disable
+
+namespace TeamBoard.Infrastructure.Migrations
+{
+    /// &lt;inheritdoc /&gt;
+    public partial class InitialBoard : Migration
+    {
+        /// &lt;inheritdoc /&gt;
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.CreateTable(
+                name: &quot;Projects&quot;,
+                columns: table =&gt; new
+                {
+                    Id = table.Column&lt;int&gt;(type: &quot;integer&quot;, nullable: false)
+                        .Annotation(&quot;Npgsql:ValueGenerationStrategy&quot;, NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column&lt;string&gt;(type: &quot;character varying(120)&quot;, maxLength: 120, nullable: false)
+                },
+                constraints: table =&gt;
+                {
+                    table.PrimaryKey(&quot;PK_Projects&quot;, x =&gt; x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: &quot;Users&quot;,
+                columns: table =&gt; new
+                {
+                    Id = table.Column&lt;int&gt;(type: &quot;integer&quot;, nullable: false)
+                        .Annotation(&quot;Npgsql:ValueGenerationStrategy&quot;, NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column&lt;string&gt;(type: &quot;character varying(100)&quot;, maxLength: 100, nullable: false)
+                },
+                constraints: table =&gt;
+                {
+                    table.PrimaryKey(&quot;PK_Users&quot;, x =&gt; x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: &quot;ProjectMembers&quot;,
+                columns: table =&gt; new
+                {
+                    ProjectId = table.Column&lt;int&gt;(type: &quot;integer&quot;, nullable: false),
+                    UserId = table.Column&lt;int&gt;(type: &quot;integer&quot;, nullable: false)
+                },
+                constraints: table =&gt;
+                {
+                    table.PrimaryKey(&quot;PK_ProjectMembers&quot;, x =&gt; new { x.ProjectId, x.UserId });
+                    table.ForeignKey(
+                        name: &quot;FK_ProjectMembers_Projects_ProjectId&quot;,
+                        column: x =&gt; x.ProjectId,
+                        principalTable: &quot;Projects&quot;,
+                        principalColumn: &quot;Id&quot;,
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: &quot;FK_ProjectMembers_Users_UserId&quot;,
+                        column: x =&gt; x.UserId,
+                        principalTable: &quot;Users&quot;,
+                        principalColumn: &quot;Id&quot;,
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: &quot;WorkItems&quot;,
+                columns: table =&gt; new
+                {
+                    Id = table.Column&lt;int&gt;(type: &quot;integer&quot;, nullable: false)
+                        .Annotation(&quot;Npgsql:ValueGenerationStrategy&quot;, NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Title = table.Column&lt;string&gt;(type: &quot;character varying(120)&quot;, maxLength: 120, nullable: false),
+                    Done = table.Column&lt;bool&gt;(type: &quot;boolean&quot;, nullable: false),
+                    ProjectId = table.Column&lt;int&gt;(type: &quot;integer&quot;, nullable: false),
+                    AssigneeId = table.Column&lt;int&gt;(type: &quot;integer&quot;, nullable: true)
+                },
+                constraints: table =&gt;
+                {
+                    table.PrimaryKey(&quot;PK_WorkItems&quot;, x =&gt; x.Id);
+                    table.ForeignKey(
+                        name: &quot;FK_WorkItems_ProjectMembers_ProjectId_AssigneeId&quot;,
+                        columns: x =&gt; new { x.ProjectId, x.AssigneeId },
+                        principalTable: &quot;ProjectMembers&quot;,
+                        principalColumns: new[] { &quot;ProjectId&quot;, &quot;UserId&quot; },
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: &quot;FK_WorkItems_Projects_ProjectId&quot;,
+                        column: x =&gt; x.ProjectId,
+                        principalTable: &quot;Projects&quot;,
+                        principalColumn: &quot;Id&quot;,
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: &quot;Comments&quot;,
+                columns: table =&gt; new
+                {
+                    Id = table.Column&lt;int&gt;(type: &quot;integer&quot;, nullable: false)
+                        .Annotation(&quot;Npgsql:ValueGenerationStrategy&quot;, NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    WorkItemId = table.Column&lt;int&gt;(type: &quot;integer&quot;, nullable: false),
+                    AuthorId = table.Column&lt;int&gt;(type: &quot;integer&quot;, nullable: false),
+                    Text = table.Column&lt;string&gt;(type: &quot;character varying(1000)&quot;, maxLength: 1000, nullable: false)
+                },
+                constraints: table =&gt;
+                {
+                    table.PrimaryKey(&quot;PK_Comments&quot;, x =&gt; x.Id);
+                    table.ForeignKey(
+                        name: &quot;FK_Comments_Users_AuthorId&quot;,
+                        column: x =&gt; x.AuthorId,
+                        principalTable: &quot;Users&quot;,
+                        principalColumn: &quot;Id&quot;,
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: &quot;FK_Comments_WorkItems_WorkItemId&quot;,
+                        column: x =&gt; x.WorkItemId,
+                        principalTable: &quot;WorkItems&quot;,
+                        principalColumn: &quot;Id&quot;,
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: &quot;IX_Comments_AuthorId&quot;,
+                table: &quot;Comments&quot;,
+                column: &quot;AuthorId&quot;);
+
+            migrationBuilder.CreateIndex(
+                name: &quot;IX_Comments_WorkItemId&quot;,
+                table: &quot;Comments&quot;,
+                column: &quot;WorkItemId&quot;);
+
+            migrationBuilder.CreateIndex(
+                name: &quot;IX_ProjectMembers_UserId&quot;,
+                table: &quot;ProjectMembers&quot;,
+                column: &quot;UserId&quot;);
+
+            migrationBuilder.CreateIndex(
+                name: &quot;IX_WorkItems_ProjectId_AssigneeId&quot;,
+                table: &quot;WorkItems&quot;,
+                columns: new[] { &quot;ProjectId&quot;, &quot;AssigneeId&quot; });
+        }
+
+        /// &lt;inheritdoc /&gt;
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: &quot;Comments&quot;);
+
+            migrationBuilder.DropTable(
+                name: &quot;WorkItems&quot;);
+
+            migrationBuilder.DropTable(
+                name: &quot;ProjectMembers&quot;);
+
+            migrationBuilder.DropTable(
+                name: &quot;Projects&quot;);
+
+            migrationBuilder.DropTable(
+                name: &quot;Users&quot;);
+        }
+    }
+}
+</pre></details><details><summary dir="ltr">src/TeamBoard.Infrastructure/Migrations/BoardDbContextModelSnapshot.cs</summary><pre dir="ltr">﻿// &lt;auto-generated /&gt;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using TeamBoard.Infrastructure;
+
+#nullable disable
+
+namespace TeamBoard.Infrastructure.Migrations
+{
+    [DbContext(typeof(BoardDbContext))]
+    partial class BoardDbContextModelSnapshot : ModelSnapshot
+    {
+        protected override void BuildModel(ModelBuilder modelBuilder)
+        {
+#pragma warning disable 612, 618
+            modelBuilder
+                .HasAnnotation(&quot;ProductVersion&quot;, &quot;10.0.12&quot;)
+                .HasAnnotation(&quot;Relational:MaxIdentifierLength&quot;, 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity(&quot;TeamBoard.Domain.Comment&quot;, b =&gt;
+                {
+                    b.Property&lt;int&gt;(&quot;Id&quot;)
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType(&quot;integer&quot;);
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property&lt;int&gt;(&quot;Id&quot;));
+
+                    b.Property&lt;int&gt;(&quot;AuthorId&quot;)
+                        .HasColumnType(&quot;integer&quot;);
+
+                    b.Property&lt;string&gt;(&quot;Text&quot;)
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType(&quot;character varying(1000)&quot;);
+
+                    b.Property&lt;int&gt;(&quot;WorkItemId&quot;)
+                        .HasColumnType(&quot;integer&quot;);
+
+                    b.HasKey(&quot;Id&quot;);
+
+                    b.HasIndex(&quot;AuthorId&quot;);
+
+                    b.HasIndex(&quot;WorkItemId&quot;);
+
+                    b.ToTable(&quot;Comments&quot;);
+                });
+
+            modelBuilder.Entity(&quot;TeamBoard.Domain.Project&quot;, b =&gt;
+                {
+                    b.Property&lt;int&gt;(&quot;Id&quot;)
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType(&quot;integer&quot;);
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property&lt;int&gt;(&quot;Id&quot;));
+
+                    b.Property&lt;string&gt;(&quot;Name&quot;)
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType(&quot;character varying(120)&quot;);
+
+                    b.HasKey(&quot;Id&quot;);
+
+                    b.ToTable(&quot;Projects&quot;);
+                });
+
+            modelBuilder.Entity(&quot;TeamBoard.Domain.ProjectMember&quot;, b =&gt;
+                {
+                    b.Property&lt;int&gt;(&quot;ProjectId&quot;)
+                        .HasColumnType(&quot;integer&quot;);
+
+                    b.Property&lt;int&gt;(&quot;UserId&quot;)
+                        .HasColumnType(&quot;integer&quot;);
+
+                    b.HasKey(&quot;ProjectId&quot;, &quot;UserId&quot;);
+
+                    b.HasIndex(&quot;UserId&quot;);
+
+                    b.ToTable(&quot;ProjectMembers&quot;);
+                });
+
+            modelBuilder.Entity(&quot;TeamBoard.Domain.User&quot;, b =&gt;
+                {
+                    b.Property&lt;int&gt;(&quot;Id&quot;)
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType(&quot;integer&quot;);
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property&lt;int&gt;(&quot;Id&quot;));
+
+                    b.Property&lt;string&gt;(&quot;Name&quot;)
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType(&quot;character varying(100)&quot;);
+
+                    b.HasKey(&quot;Id&quot;);
+
+                    b.ToTable(&quot;Users&quot;);
+                });
+
+            modelBuilder.Entity(&quot;TeamBoard.Domain.WorkItem&quot;, b =&gt;
+                {
+                    b.Property&lt;int&gt;(&quot;Id&quot;)
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType(&quot;integer&quot;);
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property&lt;int&gt;(&quot;Id&quot;));
+
+                    b.Property&lt;int?&gt;(&quot;AssigneeId&quot;)
+                        .HasColumnType(&quot;integer&quot;);
+
+                    b.Property&lt;bool&gt;(&quot;Done&quot;)
+                        .HasColumnType(&quot;boolean&quot;);
+
+                    b.Property&lt;int&gt;(&quot;ProjectId&quot;)
+                        .HasColumnType(&quot;integer&quot;);
+
+                    b.Property&lt;string&gt;(&quot;Title&quot;)
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType(&quot;character varying(120)&quot;);
+
+                    b.HasKey(&quot;Id&quot;);
+
+                    b.HasIndex(&quot;ProjectId&quot;, &quot;AssigneeId&quot;);
+
+                    b.ToTable(&quot;WorkItems&quot;);
+                });
+
+            modelBuilder.Entity(&quot;TeamBoard.Domain.Comment&quot;, b =&gt;
+                {
+                    b.HasOne(&quot;TeamBoard.Domain.User&quot;, &quot;Author&quot;)
+                        .WithMany()
+                        .HasForeignKey(&quot;AuthorId&quot;)
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne(&quot;TeamBoard.Domain.WorkItem&quot;, &quot;WorkItem&quot;)
+                        .WithMany(&quot;Comments&quot;)
+                        .HasForeignKey(&quot;WorkItemId&quot;)
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation(&quot;Author&quot;);
+
+                    b.Navigation(&quot;WorkItem&quot;);
+                });
+
+            modelBuilder.Entity(&quot;TeamBoard.Domain.ProjectMember&quot;, b =&gt;
+                {
+                    b.HasOne(&quot;TeamBoard.Domain.Project&quot;, &quot;Project&quot;)
+                        .WithMany()
+                        .HasForeignKey(&quot;ProjectId&quot;)
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne(&quot;TeamBoard.Domain.User&quot;, &quot;User&quot;)
+                        .WithMany()
+                        .HasForeignKey(&quot;UserId&quot;)
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation(&quot;Project&quot;);
+
+                    b.Navigation(&quot;User&quot;);
+                });
+
+            modelBuilder.Entity(&quot;TeamBoard.Domain.WorkItem&quot;, b =&gt;
+                {
+                    b.HasOne(&quot;TeamBoard.Domain.Project&quot;, &quot;Project&quot;)
+                        .WithMany(&quot;WorkItems&quot;)
+                        .HasForeignKey(&quot;ProjectId&quot;)
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne(&quot;TeamBoard.Domain.ProjectMember&quot;, &quot;AssigneeMembership&quot;)
+                        .WithMany()
+                        .HasForeignKey(&quot;ProjectId&quot;, &quot;AssigneeId&quot;)
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation(&quot;AssigneeMembership&quot;);
+
+                    b.Navigation(&quot;Project&quot;);
+                });
+
+            modelBuilder.Entity(&quot;TeamBoard.Domain.Project&quot;, b =&gt;
+                {
+                    b.Navigation(&quot;WorkItems&quot;);
+                });
+
+            modelBuilder.Entity(&quot;TeamBoard.Domain.WorkItem&quot;, b =&gt;
+                {
+                    b.Navigation(&quot;Comments&quot;);
+                });
+#pragma warning restore 612, 618
+        }
+    }
+}
+</pre></details></html>

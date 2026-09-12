@@ -1,0 +1,327 @@
+<!doctype html><html lang="ar" dir="rtl"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>اختبار نفس القلب من مدخل آخر · TeamBoard</title><link rel="stylesheet" href="../tokens.css"><style>@font-face{font-family:Readex;src:url('../fonts/ReadexPro-400-arabic.woff2')}*{box-sizing:border-box}body{background:var(--surface-void);color:var(--fg);font:16px/2 Readex,sans-serif;margin:auto;max-width:960px;padding:30px 24px}a{color:var(--adapter)}h1{font-size:28px}.brief{white-space:pre-wrap;font:inherit}details{border:1px solid var(--line);border-radius:10px;margin:18px 0;padding:16px}summary{cursor:pointer;overflow-wrap:anywhere;font:14px/2 monospace}pre{background:var(--surface-code);color:var(--fg);padding:18px;overflow:auto;text-align:left;unicode-bidi:isolate;font:13px/1.9 monospace}nav{display:flex;gap:24px;flex-wrap:wrap}</style><nav><a href="../#home">الرئيسية</a><a href="./10-tests.zip" download>تنزيل ملفات المحطة</a></nav><h1>اختبار نفس القلب من مدخل آخر</h1><div class="brief"># اختبار نفس القلب من مدخل آخر
+
+## نفس المشروع
+
+اعمل داخل مجلد TeamBoard الذي بدأت به. لا تنشئ مشروعًا منفصلًا. ملفات checkpoints مرجع وتعافٍ فقط.
+
+## جاهز لك
+
+الشجرة وملفات المشاريع والعقود والأجزاء غير المستهدفة مجهزة. reference/ نسخة المحطة مكتملة للمقارنة. files-to-copy/ هي الملفات الجديدة أو المعدلة، وفي بعضها TODO للتكليف.
+
+## المطلوب منك
+
+أكمل assertions للاختبار الذي يستدعي WorkItemService دون HTTP أوEF. شغّل ApiTests واقرأ الفرق بين test auth والتحقق الحقيقي منJWT.
+
+## أين تبدأ
+
+- `tests/TeamBoard.Tests/HexagonTests.cs`
+- `tests/TeamBoard.Tests/ApiTests.cs`
+
+## ترتيب التنفيذ
+
+1. خذ نسخة محلية من تعديلاتك المهمة قبل مقارنة الملفات.
+2. افتح `files-to-copy/`، وانقل الملفات بأسمائها ومساراتها فوق **نفس** مشروعك. لا تنقل مجلد files-to-copy نفسه.
+3. اقرأ TODO وأكمل المهمة أعلاه؛ ليس مطلوبًا كتابة جميع الملفات من الصفر.
+4. تحقق من السلوك التالي. لو تعثرت افتح reference/ أو changes.patch للمقارنة.
+
+## دليل النجاح
+
+dotnet test يمر؛ إثبات عدم الكتابة وعدم الإشعار عند الرفض، ووجود FK مركب.
+
+الأمر المعتاد: `dotnet build TeamBoard.slnx` ثم `dotnet test TeamBoard.slnx`. قبل محطة08 الهوية ثابتة محليًا لغرض التعلم؛ هذه النسخ لا تُنشر. بعد محطة06 اتبع README لـPostgreSQL، وبعد08 اتبع JWT.
+
+## ملفات انتهى دورها
+
+- احذف من نسخة تعلمك `tests/TeamBoard.Tests/StarterTests.cs` بعد نقل بديله؛ لا تحذف ملفات أخرى.
+</div><h2>الملفات المجهزة للنسخ والتعديل</h2><details><summary dir="ltr">tests/TeamBoard.Tests/BoardFactory.cs</summary><pre dir="ltr">using System.Security.Claims;
+using System.Text.Encodings.Web;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using TeamBoard.Application;
+using TeamBoard.Infrastructure;
+
+namespace TeamBoard.Tests;
+
+public sealed class BoardFactory : WebApplicationFactory&lt;Program&gt;
+{
+    private readonly SqliteConnection connection = new(&quot;Data Source=:memory:&quot;);
+    public RecordingNotifier Notifications { get; } = new();
+    public BoardFactory() =&gt; connection.Open();
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    {
+        builder.UseEnvironment(&quot;Testing&quot;);
+        builder.ConfigureTestServices(services =&gt;
+        {
+            services.RemoveAll&lt;BoardDbContext&gt;();
+            services.RemoveAll&lt;DbContextOptions&lt;BoardDbContext&gt;&gt;();
+            services.RemoveAll&lt;IDbContextOptionsConfiguration&lt;BoardDbContext&gt;&gt;();
+            services.AddDbContext&lt;BoardDbContext&gt;(o =&gt; o.UseSqlite(connection));
+            services.RemoveAll&lt;IAssignmentNotifier&gt;();
+            services.AddSingleton&lt;IAssignmentNotifier&gt;(Notifications);
+            services.AddAuthentication(options =&gt;
+            {
+                options.DefaultAuthenticateScheme = &quot;Test&quot;;
+                options.DefaultChallengeScheme = &quot;Test&quot;;
+                options.DefaultForbidScheme = &quot;Test&quot;;
+            }).AddScheme&lt;AuthenticationSchemeOptions, TestAuthHandler&gt;(&quot;Test&quot;, _ =&gt; { });
+        });
+    }
+    protected override IHost CreateHost(IHostBuilder builder)
+    {
+        var host = base.CreateHost(builder);
+        using var scope = host.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService&lt;BoardDbContext&gt;();
+        db.Database.EnsureCreated();
+        Seed.ApplyAsync(db).GetAwaiter().GetResult();
+        return host;
+    }
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+        if (disposing) connection.Dispose();
+    }
+    public HttpClient ClientAs(string? id)
+    {
+        var client = CreateClient();
+        if (id is not null) client.DefaultRequestHeaders.Add(&quot;Test-User&quot;, id);
+        return client;
+    }
+    public async Task&lt;int?&gt; ReadAssigneeAsync()
+    {
+        using var scope = Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService&lt;BoardDbContext&gt;();
+        return await db.WorkItems.AsNoTracking().Where(x =&gt; x.Id == 1).Select(x =&gt; x.AssigneeId).SingleAsync();
+    }
+}
+public sealed class TestAuthHandler(IOptionsMonitor&lt;AuthenticationSchemeOptions&gt; options,
+    ILoggerFactory logger, UrlEncoder encoder) : AuthenticationHandler&lt;AuthenticationSchemeOptions&gt;(options, logger, encoder)
+{
+    protected override Task&lt;AuthenticateResult&gt; HandleAuthenticateAsync()
+    {
+        if (!Request.Headers.TryGetValue(&quot;Test-User&quot;, out var id))
+            return Task.FromResult(AuthenticateResult.NoResult());
+        var identity = new ClaimsIdentity([new Claim(&quot;sub&quot;, id.ToString())], &quot;Test&quot;);
+        return Task.FromResult(AuthenticateResult.Success(new(new ClaimsPrincipal(identity), &quot;Test&quot;)));
+    }
+}
+public sealed class RecordingNotifier : IAssignmentNotifier
+{
+    public List&lt;AssignmentNotice&gt; Notices { get; } = [];
+    public Task&lt;bool&gt; NotifyAsync(AssignmentNotice notice, CancellationToken ct)
+    {
+        Notices.Add(notice);
+        return Task.FromResult(true);
+    }
+}
+</pre></details><details><summary dir="ltr">tests/TeamBoard.Tests/HexagonTests.cs</summary><pre dir="ltr">using TeamBoard.Application;
+using TeamBoard.Domain;
+using TeamBoard.Infrastructure;
+namespace TeamBoard.Tests;
+public class HexagonTests
+{
+    [Theory]
+    [InlineData(1, 2, ChangeResult.Success, 1)]
+    [InlineData(3, 2, ChangeResult.Forbidden, 0)]
+    [InlineData(1, 3, ChangeResult.InvalidAssignee, 0)]
+    public async Task Same_use_case_runs_without_HTTP_or_EF(int actor, int assignee, ChangeResult expected, int writes)
+    {
+        var state = new InMemoryBoardState();
+        var store = new InMemoryBoardStore(state);
+        var notifier = new RecordingNotifier();
+        var useCase = new WorkItemService(store, notifier);
+        var result = await useCase.AssignAsync(1, assignee, actor, default);
+        Assert.True(false, &quot;TODO: assert the expected use-case result&quot;);
+        Assert.Equal(writes, store.Commits);
+        Assert.Equal(writes, notifier.Notices.Count);
+        Assert.Equal(writes == 0 ? null : assignee, state.Tasks.Single().AssigneeId);
+    }
+    [Fact]
+    public async Task Notification_failure_does_not_undo_committed_assignment()
+    {
+        var state = new InMemoryBoardState();
+        var store = new InMemoryBoardStore(state);
+        var useCase = new WorkItemService(store, new FailedNotifier(store));
+        Assert.Equal(ChangeResult.Success, await useCase.AssignAsync(1, 2, 1, default));
+        Assert.Equal(2, state.Tasks.Single().AssigneeId);
+    }
+    private sealed class FailedNotifier(InMemoryBoardStore store) : IAssignmentNotifier
+    {
+        public Task&lt;bool&gt; NotifyAsync(AssignmentNotice notice, CancellationToken ct)
+        {
+            Assert.Equal(1, store.Commits); // Notification happens after persistence.
+            return Task.FromResult(false);
+        }
+    }
+    [Fact]
+    public void Core_assemblies_do_not_reference_web_or_ef()
+    {
+        foreach (var assembly in new[] { typeof(TitleRules).Assembly, typeof(IWorkItemService).Assembly })
+            Assert.DoesNotContain(assembly.GetReferencedAssemblies(), a =&gt;
+                a.Name!.StartsWith(&quot;Microsoft.EntityFrameworkCore&quot;) || a.Name.StartsWith(&quot;Microsoft.AspNetCore&quot;));
+    }
+}
+</pre></details><details><summary dir="ltr">tests/TeamBoard.Tests/ApiTests.cs</summary><pre dir="ltr">using System.Net;
+using System.Net.Http.Json;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using TeamBoard.Domain;
+using TeamBoard.Application;
+using TeamBoard.Infrastructure;
+
+namespace TeamBoard.Tests;
+public class ApiTests
+{
+    [Fact]
+    public async Task Health_is_public()
+    {
+        using var app = new BoardFactory();
+        using var client = app.ClientAs(null);
+        using var response = await client.GetAsync(&quot;/health&quot;);
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+    [Theory]
+    [InlineData(null, HttpStatusCode.Unauthorized)]
+    [InlineData(&quot;bad-subject&quot;, HttpStatusCode.Unauthorized)]
+    [InlineData(&quot;3&quot;, HttpStatusCode.Forbidden)]
+    public async Task Unauthenticated_or_nonmember_cannot_assign(string? actor, HttpStatusCode expected)
+    {
+        using var app = new BoardFactory();
+        using var client = app.ClientAs(actor);
+        using var response = await client.PatchAsJsonAsync(&quot;/tasks/1/assignee&quot;, new { userId = 2 });
+        Assert.Equal(expected, response.StatusCode);
+        Assert.Null(await app.ReadAssigneeAsync());
+        Assert.Empty(app.Notifications.Notices);
+    }
+    [Fact]
+    public async Task Assignee_must_be_member_of_same_project()
+    {
+        using var app = new BoardFactory();
+        using var client = app.ClientAs(&quot;1&quot;);
+        using var response = await client.PatchAsJsonAsync(&quot;/tasks/1/assignee&quot;, new { userId = 3 });
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Null(await app.ReadAssigneeAsync());
+        Assert.Empty(app.Notifications.Notices);
+    }
+    [Fact]
+    public async Task Valid_assignment_is_persisted_and_notified()
+    {
+        using var app = new BoardFactory();
+        using var client = app.ClientAs(&quot;1&quot;);
+        using var response = await client.PatchAsJsonAsync(&quot;/tasks/1/assignee&quot;, new { userId = 2 });
+        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+        Assert.Equal(&quot;&quot;, await response.Content.ReadAsStringAsync());
+        Assert.Equal(2, await app.ReadAssigneeAsync());
+        Assert.Equal(new AssignmentNotice(1, 1, 2), Assert.Single(app.Notifications.Notices));
+    }
+    [Fact]
+    public async Task Missing_task_returns_not_found()
+    {
+        using var app = new BoardFactory();
+        using var client = app.ClientAs(&quot;1&quot;);
+        using var response = await client.PatchAsJsonAsync(&quot;/tasks/999/assignee&quot;, new { userId = 2 });
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+    [Theory]
+    [InlineData(&quot;&quot;)]
+    [InlineData(&quot;   &quot;)]
+    public async Task Blank_title_is_rejected(string title)
+    {
+        using var app = new BoardFactory();
+        using var client = app.ClientAs(&quot;1&quot;);
+        using var response = await client.PostAsJsonAsync(&quot;/projects/1/tasks&quot;, new { title });
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+    [Fact]
+    public async Task Created_task_has_working_location_and_trimmed_title()
+    {
+        using var app = new BoardFactory();
+        using var client = app.ClientAs(&quot;1&quot;);
+        using var response = await client.PostAsJsonAsync(&quot;/projects/1/tasks&quot;, new { title = &quot;  Review SQL  &quot; });
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+        Assert.NotNull(response.Headers.Location);
+        var task = await client.GetFromJsonAsync&lt;TaskDto&gt;(response.Headers.Location);
+        Assert.Equal(&quot;Review SQL&quot;, task!.Title);
+        Assert.Equal(1, task.ProjectId);
+    }
+    [Fact]
+    public async Task Projects_list_is_scoped_to_membership()
+    {
+        using var app = new BoardFactory();
+        using var client = app.ClientAs(&quot;1&quot;);
+        var projects = await client.GetFromJsonAsync&lt;List&lt;ProjectDto&gt;&gt;(&quot;/projects&quot;);
+        Assert.Equal(1, Assert.Single(projects!).Id);
+    }
+    [Fact]
+    public async Task Comment_author_comes_from_identity_not_body()
+    {
+        using var app = new BoardFactory();
+        using var client = app.ClientAs(&quot;1&quot;);
+        using var response = await client.PostAsJsonAsync(&quot;/tasks/1/comments&quot;, new { text = &quot;Ready&quot;, authorId = 3 });
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+        var comment = await client.GetFromJsonAsync&lt;CommentDto&gt;(response.Headers.Location);
+        Assert.Equal(1, comment!.AuthorId);
+    }
+    [Fact]
+    public async Task Nonmember_cannot_read_comments()
+    {
+        using var app = new BoardFactory();
+        using var client = app.ClientAs(&quot;3&quot;);
+        using var response = await client.GetAsync(&quot;/tasks/1/comments&quot;);
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+    }
+    [Fact]
+    public async Task Composite_foreign_key_prevents_cross_project_assignment()
+    {
+        using var app = new BoardFactory();
+        using var client = app.ClientAs(&quot;1&quot;); // Starts and seeds the test host.
+        using var scope = app.Services.CreateScope();
+        var store = scope.ServiceProvider.GetRequiredService&lt;IBoardStore&gt;();
+        var task = await store.FindTaskAsync(1, default);
+        task!.AssigneeId = 3;
+        await Assert.ThrowsAsync&lt;MembershipConflictException&gt;(() =&gt; store.CommitAsync(default));
+        Assert.Null(await app.ReadAssigneeAsync());
+    }
+}
+</pre></details><details><summary dir="ltr">tests/TeamBoard.Tests/NotificationTests.cs</summary><pre dir="ltr">using System.Net;
+using Microsoft.Extensions.Logging.Abstractions;
+using TeamBoard.Application;
+using TeamBoard.Infrastructure;
+namespace TeamBoard.Tests;
+public class NotificationTests
+{
+    [Theory]
+    [InlineData(HttpStatusCode.NoContent, true)]
+    [InlineData(HttpStatusCode.InternalServerError, false)]
+    public async Task Adapter_reports_delivery_without_real_network(HttpStatusCode status, bool expected)
+    {
+        using var handler = new ReplyHandler(status);
+        using var http = new HttpClient(handler) { BaseAddress = new Uri(&quot;http://notification.test/&quot;) };
+        var adapter = new HttpAssignmentNotifier(http, NullLogger&lt;HttpAssignmentNotifier&gt;.Instance);
+        var delivered = await adapter.NotifyAsync(new(1, 1, 2), default);
+        Assert.Equal(expected, delivered);
+        Assert.Equal(&quot;http://notification.test/notifications&quot;, handler.LastUri);
+        Assert.Contains(&quot;\&quot;assigneeId\&quot;:2&quot;, handler.LastBody);
+    }
+    private sealed class ReplyHandler(HttpStatusCode status) : HttpMessageHandler
+    {
+        public string? LastUri { get; private set; }
+        public string LastBody { get; private set; } = &quot;&quot;;
+        protected override async Task&lt;HttpResponseMessage&gt; SendAsync(HttpRequestMessage request, CancellationToken ct)
+        {
+            LastUri = request.RequestUri?.ToString();
+            LastBody = await request.Content!.ReadAsStringAsync(ct);
+            return new HttpResponseMessage(status);
+        }
+    }
+}
+</pre></details></html>

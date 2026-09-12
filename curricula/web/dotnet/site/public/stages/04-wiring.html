@@ -1,0 +1,259 @@
+<!doctype html><html lang="ar" dir="rtl"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>وصل القلب بمنافذه · TeamBoard</title><link rel="stylesheet" href="../tokens.css"><style>@font-face{font-family:Readex;src:url('../fonts/ReadexPro-400-arabic.woff2')}*{box-sizing:border-box}body{background:var(--surface-void);color:var(--fg);font:16px/2 Readex,sans-serif;margin:auto;max-width:960px;padding:30px 24px}a{color:var(--adapter)}h1{font-size:28px}.brief{white-space:pre-wrap;font:inherit}details{border:1px solid var(--line);border-radius:10px;margin:18px 0;padding:16px}summary{cursor:pointer;overflow-wrap:anywhere;font:14px/2 monospace}pre{background:var(--surface-code);color:var(--fg);padding:18px;overflow:auto;text-align:left;unicode-bidi:isolate;font:13px/1.9 monospace}nav{display:flex;gap:24px;flex-wrap:wrap}</style><nav><a href="../#home">الرئيسية</a><a href="./04-wiring.zip" download>تنزيل ملفات المحطة</a></nav><h1>وصل القلب بمنافذه</h1><div class="brief"># وصل القلب بمنافذه
+
+## نفس المشروع
+
+اعمل داخل مجلد TeamBoard الذي بدأت به. لا تنشئ مشروعًا منفصلًا. ملفات checkpoints مرجع وتعافٍ فقط.
+
+## جاهز لك
+
+الشجرة وملفات المشاريع والعقود والأجزاء غير المستهدفة مجهزة. reference/ نسخة المحطة مكتملة للمقارنة. files-to-copy/ هي الملفات الجديدة أو المعدلة، وفي بعضها TODO للتكليف.
+
+## المطلوب منك
+
+أكمل تسجيل IBoardStore مع InMemoryBoardStore. مرّر نفس use case من controller، ولا تنشئ الخدمة يدويًا داخله.
+
+## أين تبدأ
+
+- `src/TeamBoard.Api/Program.cs`
+- `src/TeamBoard.Infrastructure/InMemoryBoardStore.cs`
+
+## ترتيب التنفيذ
+
+1. خذ نسخة محلية من تعديلاتك المهمة قبل مقارنة الملفات.
+2. افتح `files-to-copy/`، وانقل الملفات بأسمائها ومساراتها فوق **نفس** مشروعك. لا تنقل مجلد files-to-copy نفسه.
+3. اقرأ TODO وأكمل المهمة أعلاه؛ ليس مطلوبًا كتابة جميع الملفات من الصفر.
+4. تحقق من السلوك التالي. لو تعثرت افتح reference/ أو changes.patch للمقارنة.
+
+## دليل النجاح
+
+GET /tasks/1 →200؛ PATCH /tasks/1/assignee مع userId2 →204، وuserId3 →400.
+
+الأمر المعتاد: `dotnet build TeamBoard.slnx` ثم `dotnet test TeamBoard.slnx`. قبل محطة08 الهوية ثابتة محليًا لغرض التعلم؛ هذه النسخ لا تُنشر. بعد محطة06 اتبع README لـPostgreSQL، وبعد08 اتبع JWT.
+
+## ملفات انتهى دورها
+
+- احذف من نسخة تعلمك `src/TeamBoard.Api/Controllers/LabUsersController.cs` بعد نقل بديله؛ لا تحذف ملفات أخرى.
+</div><h2>الملفات المجهزة للنسخ والتعديل</h2><details><summary dir="ltr">src/TeamBoard.Api/Program.cs</summary><pre dir="ltr">using TeamBoard.Application;
+using TeamBoard.Infrastructure;
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddControllers();
+builder.Services.AddProblemDetails();
+builder.Services.AddSingleton&lt;InMemoryBoardState&gt;();
+// TODO: register IBoardStore with its in-memory adapter.
+builder.Services.AddScoped&lt;IWorkItemService, WorkItemService&gt;();
+builder.Services.AddScoped&lt;BoardService&gt;();
+builder.Services.AddScoped&lt;IAssignmentNotifier, LogAssignmentNotifier&gt;();
+var app = builder.Build();
+app.Use(async (context, next) =&gt;
+{
+    var timer = System.Diagnostics.Stopwatch.StartNew();
+    await next(context);
+    app.Logger.LogInformation(&quot;{Method} {Path} -&gt; {Status} in {ElapsedMs}ms&quot;,
+        context.Request.Method, context.Request.Path,
+        context.Response.StatusCode, timer.Elapsed.TotalMilliseconds);
+});
+app.UseExceptionHandler();
+app.MapGet(&quot;/health&quot;, () =&gt; Results.Ok(new { status = &quot;ok&quot; }));
+app.MapControllers();
+app.Run();
+public partial class Program { }
+</pre></details><details><summary dir="ltr">src/TeamBoard.Infrastructure/AssignmentNotifiers.cs</summary><pre dir="ltr">using System.Net.Http.Json;
+using Microsoft.Extensions.Logging;
+using TeamBoard.Application;
+namespace TeamBoard.Infrastructure;
+
+public sealed class LogAssignmentNotifier(ILogger&lt;LogAssignmentNotifier&gt; logger) : IAssignmentNotifier
+{
+    public Task&lt;bool&gt; NotifyAsync(AssignmentNotice notice, CancellationToken ct)
+    {
+        ct.ThrowIfCancellationRequested();
+        logger.LogInformation(&quot;Assignment notice: task {TaskId}, assignee {AssigneeId}&quot;, notice.TaskId, notice.AssigneeId);
+        return Task.FromResult(true);
+    }
+}
+public sealed class HttpAssignmentNotifier(HttpClient http, ILogger&lt;HttpAssignmentNotifier&gt; logger) : IAssignmentNotifier
+{
+    public async Task&lt;bool&gt; NotifyAsync(AssignmentNotice notice, CancellationToken ct)
+    {
+        try
+        {
+            using var response = await http.PostAsJsonAsync(&quot;notifications&quot;, notice, ct);
+            response.EnsureSuccessStatusCode();
+            return true;
+        }
+        catch (HttpRequestException ex)
+        {
+            logger.LogWarning(ex, &quot;Assignment {TaskId} saved, notification failed&quot;, notice.TaskId);
+            return false;
+        }
+        catch (OperationCanceledException) when (!ct.IsCancellationRequested)
+        {
+            logger.LogWarning(&quot;Assignment {TaskId} saved, notification timed out&quot;, notice.TaskId);
+            return false;
+        }
+    }
+}
+public sealed class NotificationOptions
+{
+    public string Mode { get; set; } = &quot;Log&quot;;
+    public string? BaseUrl { get; set; }
+}
+</pre></details><details><summary dir="ltr">src/TeamBoard.Infrastructure/InMemoryBoardStore.cs</summary><pre dir="ltr">using TeamBoard.Application;
+using TeamBoard.Domain;
+namespace TeamBoard.Infrastructure;
+
+// Lab adapter, with an isolated state object per unit test. It is not a database emulator.
+public sealed class InMemoryBoardState
+{
+    public object Gate { get; } = new();
+    public List&lt;User&gt; Users { get; } = [new() { Id = 1, Name = &quot;Nora&quot; }, new() { Id = 2, Name = &quot;Omar&quot; }, new() { Id = 3, Name = &quot;Lina&quot; }];
+    public List&lt;Project&gt; Projects { get; } = [new() { Id = 1, Name = &quot;TeamBoard&quot; }, new() { Id = 2, Name = &quot;Other&quot; }];
+    public List&lt;ProjectMember&gt; Members { get; } = [new() { ProjectId = 1, UserId = 1 }, new() { ProjectId = 1, UserId = 2 }, new() { ProjectId = 2, UserId = 3 }];
+    public List&lt;WorkItem&gt; Tasks { get; } = [new() { Id = 1, ProjectId = 1, Title = &quot;Read Program.cs&quot; }];
+    public List&lt;Comment&gt; Comments { get; } = [];
+}
+public sealed class InMemoryBoardStore(InMemoryBoardState state) : IBoardStore
+{
+    private readonly Dictionary&lt;int, WorkItem&gt; tracked = [];
+    private readonly List&lt;WorkItem&gt; addedTasks = [];
+    private readonly List&lt;(Project Project, int Owner)&gt; addedProjects = [];
+    private readonly List&lt;Comment&gt; addedComments = [];
+    public int Commits { get; private set; }
+    private Task&lt;T&gt; Read&lt;T&gt;(Func&lt;T&gt; read, CancellationToken ct)
+    {
+        ct.ThrowIfCancellationRequested();
+        lock (state.Gate) return Task.FromResult(read());
+    }
+    public Task&lt;WorkItem?&gt; FindTaskAsync(int id, CancellationToken ct) =&gt; Read(() =&gt;
+    {
+        if (tracked.TryGetValue(id, out var existing)) return existing;
+        var source = state.Tasks.Find(t =&gt; t.Id == id);
+        if (source is null) return null;
+        var copy = new WorkItem { Id = source.Id, ProjectId = source.ProjectId, Title = source.Title, Done = source.Done, AssigneeId = source.AssigneeId };
+        tracked[id] = copy;
+        return copy;
+    }, ct);
+    public Task&lt;bool&gt; IsMemberAsync(int projectId, int userId, CancellationToken ct) =&gt; Read(() =&gt; state.Members.Any(m =&gt; m.ProjectId == projectId &amp;&amp; m.UserId == userId), ct);
+    public Task&lt;bool&gt; ProjectExistsAsync(int projectId, CancellationToken ct) =&gt; Read(() =&gt; state.Projects.Any(p =&gt; p.Id == projectId), ct);
+    public Task&lt;bool&gt; UserExistsAsync(int userId, CancellationToken ct) =&gt; Read(() =&gt; state.Users.Any(u =&gt; u.Id == userId), ct);
+    public Task&lt;bool&gt; SharesProjectAsync(int actorId, int userId, CancellationToken ct) =&gt; Read(() =&gt; state.Members.Any(m =&gt; m.UserId == userId &amp;&amp; state.Members.Any(a =&gt; a.ProjectId == m.ProjectId &amp;&amp; a.UserId == actorId)), ct);
+    public Task&lt;UserDto?&gt; FindUserAsync(int id, CancellationToken ct) =&gt; Read(() =&gt; state.Users.Where(u =&gt; u.Id == id).Select(u =&gt; new UserDto(u.Id, u.Name)).SingleOrDefault(), ct);
+    public Task&lt;List&lt;ProjectDto&gt;&gt; ListProjectsAsync(int actorId, CancellationToken ct) =&gt; Read(() =&gt; state.Projects.Where(p =&gt; state.Members.Any(m =&gt; m.ProjectId == p.Id &amp;&amp; m.UserId == actorId)).Select(p =&gt; new ProjectDto(p.Id, p.Name, state.Tasks.Count(t =&gt; t.ProjectId == p.Id))).ToList(), ct);
+    public Task&lt;ProjectDto?&gt; FindProjectAsync(int id, CancellationToken ct) =&gt; Read(() =&gt; state.Projects.Where(p =&gt; p.Id == id).Select(p =&gt; new ProjectDto(p.Id, p.Name, state.Tasks.Count(t =&gt; t.ProjectId == p.Id))).SingleOrDefault(), ct);
+    public Task&lt;List&lt;TaskDto&gt;&gt; ListTasksAsync(int projectId, int take, CancellationToken ct) =&gt; Read(() =&gt; state.Tasks.Where(t =&gt; t.ProjectId == projectId).OrderBy(t =&gt; t.Id).Take(take).Select(t =&gt; new TaskDto(t.Id, t.Title, t.Done, t.ProjectId, t.AssigneeId)).ToList(), ct);
+    public Task&lt;List&lt;CommentDto&gt;&gt; ListCommentsAsync(int taskId, CancellationToken ct) =&gt; Read(() =&gt; state.Comments.Where(c =&gt; c.WorkItemId == taskId).Select(c =&gt; new CommentDto(c.Id, c.AuthorId, c.Text)).Take(100).ToList(), ct);
+    public Task&lt;CommentDto?&gt; FindCommentAsync(int taskId, int id, CancellationToken ct) =&gt; Read(() =&gt; state.Comments.Where(c =&gt; c.WorkItemId == taskId &amp;&amp; c.Id == id).Select(c =&gt; new CommentDto(c.Id, c.AuthorId, c.Text)).SingleOrDefault(), ct);
+    public void AddTask(WorkItem task) =&gt; addedTasks.Add(task);
+    public void AddProject(Project project, int ownerId) =&gt; addedProjects.Add((project, ownerId));
+    public void AddComment(Comment comment) =&gt; addedComments.Add(comment);
+    public Task CommitAsync(CancellationToken ct)
+    {
+        ct.ThrowIfCancellationRequested();
+        lock (state.Gate)
+        {
+            foreach (var task in tracked.Values)
+            {
+                var target = state.Tasks.Single(t =&gt; t.Id == task.Id);
+                target.Title = task.Title; target.Done = task.Done; target.AssigneeId = task.AssigneeId;
+            }
+            foreach (var (project, owner) in addedProjects)
+            {
+                project.Id = state.Projects.Count == 0 ? 1 : state.Projects.Max(p =&gt; p.Id) + 1;
+                state.Projects.Add(project);
+                state.Members.Add(new ProjectMember { ProjectId = project.Id, UserId = owner });
+            }
+            foreach (var task in addedTasks)
+            {
+                task.Id = state.Tasks.Count == 0 ? 1 : state.Tasks.Max(t =&gt; t.Id) + 1;
+                state.Tasks.Add(task);
+            }
+            foreach (var comment in addedComments)
+            {
+                comment.Id = state.Comments.Count == 0 ? 1 : state.Comments.Max(c =&gt; c.Id) + 1;
+                state.Comments.Add(comment);
+            }
+            addedProjects.Clear(); addedTasks.Clear(); addedComments.Clear(); Commits++;
+        }
+        return Task.CompletedTask;
+    }
+}
+</pre></details><details><summary dir="ltr">src/TeamBoard.Api/Controllers/ApiController.cs</summary><pre dir="ltr">using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using TeamBoard.Domain;
+namespace TeamBoard.Api.Controllers;
+
+[ApiController]
+public abstract class ApiController : ControllerBase
+{
+    // Learning checkpoint only: fixed actor, loopback only. Replaced by JWT in stage 08.
+    protected int? ActorId =&gt; 1;
+    protected ActionResult Failure(ChangeResult result) =&gt; result switch
+    {
+        ChangeResult.NotFound =&gt; Problem(statusCode: 404, title: &quot;Resource not found&quot;),
+        ChangeResult.Forbidden =&gt; Forbid(),
+        ChangeResult.InvalidAssignee =&gt; Problem(statusCode: 400, title: &quot;Assignee must be a project member&quot;),
+        ChangeResult.InvalidInput =&gt; Problem(statusCode: 400, title: &quot;Invalid input&quot;),
+        ChangeResult.Conflict =&gt; Problem(statusCode: 409, title: &quot;Membership changed; reload and retry&quot;),
+        _ =&gt; Problem(statusCode: 500, title: &quot;Unexpected operation result&quot;)
+    };
+}
+</pre></details><details><summary dir="ltr">src/TeamBoard.Api/Controllers/UsersController.cs</summary><pre dir="ltr">using Microsoft.AspNetCore.Mvc;
+using TeamBoard.Domain;
+using TeamBoard.Application;
+namespace TeamBoard.Api.Controllers;
+
+[Route(&quot;users&quot;)]
+public sealed class UsersController(BoardService board) : ApiController
+{
+    [HttpGet(&quot;{id:int}&quot;)]
+    public async Task&lt;ActionResult&lt;UserDto&gt;&gt; GetById(int id, CancellationToken ct)
+    {
+        if (ActorId is not int actor) return Unauthorized();
+        var result = await board.UserAsync(id, actor, ct);
+        return result.Result == ChangeResult.Success ? Ok(result.Value) : Failure(result.Result);
+    }
+}
+</pre></details><details><summary dir="ltr">src/TeamBoard.Api/Controllers/WorkItemsController.cs</summary><pre dir="ltr">using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
+using TeamBoard.Domain;
+using TeamBoard.Application;
+namespace TeamBoard.Api.Controllers;
+
+[Route(&quot;tasks&quot;)]
+public sealed class WorkItemsController(IWorkItemService service) : ApiController
+{
+    [HttpGet(&quot;{id:int}&quot;)]
+    public async Task&lt;ActionResult&lt;TaskDto&gt;&gt; GetById(int id, CancellationToken ct)
+    {
+        if (ActorId is not int actor) return Unauthorized();
+        var result = await service.FindAsync(id, actor, ct);
+        return result.Result == ChangeResult.Success ? Ok(result.Value) : Failure(result.Result);
+    }
+    [HttpPost(&quot;/projects/{projectId:int}/tasks&quot;)]
+    public async Task&lt;ActionResult&lt;TaskDto&gt;&gt; Create(int projectId, CreateTaskRequest request, CancellationToken ct)
+    {
+        if (ActorId is not int actor) return Unauthorized();
+        var result = await service.CreateAsync(projectId, request.Title, actor, ct);
+        return result.Result == ChangeResult.Success
+            ? CreatedAtAction(nameof(GetById), new { id = result.Value!.Id }, result.Value)
+            : Failure(result.Result);
+    }
+    [HttpPatch(&quot;{id:int}/assignee&quot;)]
+    public async Task&lt;ActionResult&gt; Assign(int id, AssignRequest request, CancellationToken ct)
+    {
+        if (ActorId is not int actor) return Unauthorized();
+        var result = await service.AssignAsync(id, request.UserId, actor, ct);
+        return result == ChangeResult.Success ? NoContent() : Failure(result);
+    }
+    [HttpPatch(&quot;{id:int}/title&quot;)]
+    public async Task&lt;ActionResult&gt; Rename(int id, CreateTaskRequest request, CancellationToken ct)
+    {
+        if (ActorId is not int actor) return Unauthorized();
+        var result = await service.RenameAsync(id, request.Title, actor, ct);
+        return result == ChangeResult.Success ? NoContent() : Failure(result);
+    }
+}
+public record CreateTaskRequest([Required, StringLength(120, MinimumLength = 1)] string Title);
+public record AssignRequest([Range(1, int.MaxValue)] int UserId);
+</pre></details></html>

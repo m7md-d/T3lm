@@ -1,0 +1,23 @@
+{
+  "profiles": {
+    "Postgres": {
+      "commandName": "Project",
+      "launchBrowser": false,
+      "applicationUrl": "http://localhost:5080",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "Database__Provider": "Postgres",
+        "Lab__Initialize": "true"
+      }
+    },
+    "Memory": {
+      "commandName": "Project",
+      "launchBrowser": false,
+      "applicationUrl": "http://localhost:5080",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "Database__Provider": "Memory"
+      }
+    }
+  }
+}

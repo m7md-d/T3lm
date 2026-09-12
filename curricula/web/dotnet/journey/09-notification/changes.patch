@@ -1,0 +1,20 @@
+--- a/src/TeamBoard.Api/Program.cs
++++ b/src/TeamBoard.Api/Program.cs
+@@ -22,7 +22,16 @@
+     builder.Services.AddScoped<IBoardStore, InMemoryBoardStore>();
+ }
+ else builder.Services.AddScoped<IBoardStore, EfBoardStore>();
+-builder.Services.AddScoped<IAssignmentNotifier, LogAssignmentNotifier>();
++if (builder.Configuration["Notifications:Mode"] == "Http")
++{
++    builder.Services.AddHttpClient<IAssignmentNotifier, HttpAssignmentNotifier>((services, http) =>
++    {
++        var options = services.GetRequiredService<Microsoft.Extensions.Options.IOptions<NotificationOptions>>().Value;
++        http.BaseAddress = new Uri(options.BaseUrl!);
++        http.Timeout = TimeSpan.FromSeconds(3);
++    });
++}
++else builder.Services.AddScoped<IAssignmentNotifier, LogAssignmentNotifier>();
+ builder.Services.AddDbContext<BoardDbContext>(options =>
+ {
+     var provider = builder.Configuration["Database:Provider"] ?? "Postgres";

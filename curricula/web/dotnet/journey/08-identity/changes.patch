@@ -1,0 +1,47 @@
+--- a/src/TeamBoard.Api/Controllers/ApiController.cs
++++ b/src/TeamBoard.Api/Controllers/ApiController.cs
+@@ -4,11 +4,10 @@
+ using TeamBoard.Domain;
+ namespace TeamBoard.Api.Controllers;
+ 
+-[ApiController]
++[ApiController, Authorize]
+ public abstract class ApiController : ControllerBase
+ {
+-    // Learning checkpoint only: fixed actor, loopback only. Replaced by JWT in stage 08.
+-    protected int? ActorId => 1;
++    protected int? ActorId => int.TryParse(User.FindFirstValue("sub"), out var id) && id > 0 ? id : null;
+     protected ActionResult Failure(ChangeResult result) => result switch
+     {
+         ChangeResult.NotFound => Problem(statusCode: 404, title: "Resource not found"),
+--- a/src/TeamBoard.Api/Program.cs
++++ b/src/TeamBoard.Api/Program.cs
+@@ -32,6 +32,19 @@
+     else if (provider == "Postgres") options.UseNpgsql(connection);
+     else throw new InvalidOperationException("Unknown database provider");
+ });
++builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
++    .AddJwtBearer(options =>
++    {
++        options.MapInboundClaims = false;
++        if (!builder.Environment.IsDevelopment() && !builder.Environment.IsEnvironment("Testing"))
++        {
++            options.Authority = builder.Configuration["Auth:Authority"]
++                ?? throw new InvalidOperationException("Missing Auth:Authority");
++            options.Audience = builder.Configuration["Auth:Audience"]
++                ?? throw new InvalidOperationException("Missing Auth:Audience");
++        }
++    });
++builder.Services.AddAuthorization(options => options.AddPolicy("Admin", p => p.RequireRole("Admin")));
+ var app = builder.Build();
+ app.Use(async (context, next) =>
+ {
+@@ -42,6 +55,8 @@
+ });
+ app.UseExceptionHandler();
+ app.UseRouting();
++app.UseAuthentication();
++app.UseAuthorization();
+ app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
+ app.MapControllers();
+ if (app.Environment.IsDevelopment() && builder.Configuration.GetValue<bool>("Lab:Initialize") && builder.Configuration["Database:Provider"] != "Memory")

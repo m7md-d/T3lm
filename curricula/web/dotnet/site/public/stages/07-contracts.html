@@ -1,0 +1,145 @@
+<!doctype html><html lang="ar" dir="rtl"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>عقود API والتعليقات · TeamBoard</title><link rel="stylesheet" href="../tokens.css"><style>@font-face{font-family:Readex;src:url('../fonts/ReadexPro-400-arabic.woff2')}*{box-sizing:border-box}body{background:var(--surface-void);color:var(--fg);font:16px/2 Readex,sans-serif;margin:auto;max-width:960px;padding:30px 24px}a{color:var(--adapter)}h1{font-size:28px}.brief{white-space:pre-wrap;font:inherit}details{border:1px solid var(--line);border-radius:10px;margin:18px 0;padding:16px}summary{cursor:pointer;overflow-wrap:anywhere;font:14px/2 monospace}pre{background:var(--surface-code);color:var(--fg);padding:18px;overflow:auto;text-align:left;unicode-bidi:isolate;font:13px/1.9 monospace}nav{display:flex;gap:24px;flex-wrap:wrap}</style><nav><a href="../#home">الرئيسية</a><a href="./07-contracts.zip" download>تنزيل ملفات المحطة</a></nav><h1>عقود API والتعليقات</h1><div class="brief"># عقود API والتعليقات
+
+## نفس المشروع
+
+اعمل داخل مجلد TeamBoard الذي بدأت به. لا تنشئ مشروعًا منفصلًا. ملفات checkpoints مرجع وتعافٍ فقط.
+
+## جاهز لك
+
+الشجرة وملفات المشاريع والعقود والأجزاء غير المستهدفة مجهزة. reference/ نسخة المحطة مكتملة للمقارنة. files-to-copy/ هي الملفات الجديدة أو المعدلة، وفي بعضها TODO للتكليف.
+
+## المطلوب منك
+
+اجعل POST مهمة يرجع CreatedAtAction بدل200. أكمل الفرق بين request DTO وentity؛ جرّب blank title وتعليق من مستخدم غير عضو.
+
+## أين تبدأ
+
+- `src/TeamBoard.Api/Controllers/WorkItemsController.cs`
+
+## ترتيب التنفيذ
+
+1. خذ نسخة محلية من تعديلاتك المهمة قبل مقارنة الملفات.
+2. افتح `files-to-copy/`، وانقل الملفات بأسمائها ومساراتها فوق **نفس** مشروعك. لا تنقل مجلد files-to-copy نفسه.
+3. اقرأ TODO وأكمل المهمة أعلاه؛ ليس مطلوبًا كتابة جميع الملفات من الصفر.
+4. تحقق من السلوك التالي. لو تعثرت افتح reference/ أو changes.patch للمقارنة.
+
+## دليل النجاح
+
+POST →201 مع Location صالح؛ التحديث204 بلا body؛ التحقق400.
+
+الأمر المعتاد: `dotnet build TeamBoard.slnx` ثم `dotnet test TeamBoard.slnx`. قبل محطة08 الهوية ثابتة محليًا لغرض التعلم؛ هذه النسخ لا تُنشر. بعد محطة06 اتبع README لـPostgreSQL، وبعد08 اتبع JWT.
+</div><h2>الملفات المجهزة للنسخ والتعديل</h2><details><summary dir="ltr">src/TeamBoard.Api/Controllers/CommentsController.cs</summary><pre dir="ltr">using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
+using TeamBoard.Domain;
+using TeamBoard.Application;
+namespace TeamBoard.Api.Controllers;
+
+[Route(&quot;tasks/{taskId:int}/comments&quot;)]
+public sealed class CommentsController(BoardService board) : ApiController
+{
+    [HttpGet]
+    public async Task&lt;ActionResult&lt;List&lt;CommentDto&gt;&gt;&gt; List(int taskId, CancellationToken ct)
+    {
+        if (ActorId is not int actor) return Unauthorized();
+        var result = await board.CommentsAsync(taskId, actor, ct);
+        return result.Result == ChangeResult.Success ? Ok(result.Value) : Failure(result.Result);
+    }
+    [HttpPost]
+    public async Task&lt;ActionResult&lt;CommentDto&gt;&gt; Create(int taskId, CreateCommentRequest request, CancellationToken ct)
+    {
+        if (ActorId is not int actor) return Unauthorized();
+        var result = await board.AddCommentAsync(taskId, request.Text, actor, ct);
+        return result.Result == ChangeResult.Success
+            ? Created($&quot;/tasks/{taskId}/comments/{result.Value!.Id}&quot;, result.Value) : Failure(result.Result);
+    }
+    [HttpGet(&quot;{id:int}&quot;)]
+    public async Task&lt;ActionResult&lt;CommentDto&gt;&gt; GetById(int taskId, int id, CancellationToken ct)
+    {
+        if (ActorId is not int actor) return Unauthorized();
+        var result = await board.CommentAsync(taskId, id, actor, ct);
+        return result.Result == ChangeResult.Success ? Ok(result.Value) : Failure(result.Result);
+    }
+}
+public record CreateCommentRequest([Required, StringLength(1000, MinimumLength = 1)] string Text);
+</pre></details><details><summary dir="ltr">src/TeamBoard.Api/Controllers/ProjectsController.cs</summary><pre dir="ltr">using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
+using TeamBoard.Domain;
+using TeamBoard.Application;
+namespace TeamBoard.Api.Controllers;
+
+[Route(&quot;projects&quot;)]
+public sealed class ProjectsController(BoardService board) : ApiController
+{
+    [HttpGet]
+    public async Task&lt;ActionResult&lt;List&lt;ProjectDto&gt;&gt;&gt; List(CancellationToken ct)
+    {
+        if (ActorId is not int actor) return Unauthorized();
+        return await board.ProjectsAsync(actor, ct);
+    }
+    [HttpGet(&quot;{id:int}&quot;)]
+    public async Task&lt;ActionResult&lt;ProjectDto&gt;&gt; GetById(int id, CancellationToken ct)
+    {
+        if (ActorId is not int actor) return Unauthorized();
+        var result = await board.ProjectAsync(id, actor, ct);
+        return result.Result == ChangeResult.Success ? Ok(result.Value) : Failure(result.Result);
+    }
+    [HttpPost]
+    public async Task&lt;ActionResult&lt;ProjectDto&gt;&gt; Create(CreateProjectRequest request, CancellationToken ct)
+    {
+        if (ActorId is not int actor) return Unauthorized();
+        var result = await board.CreateProjectAsync(request.Name, actor, ct);
+        return result.Result == ChangeResult.Success
+            ? CreatedAtAction(nameof(GetById), new { id = result.Value!.Id }, result.Value) : Failure(result.Result);
+    }
+    [HttpGet(&quot;{id:int}/tasks&quot;)]
+    public async Task&lt;ActionResult&lt;List&lt;TaskDto&gt;&gt;&gt; Tasks(int id, CancellationToken ct, [FromQuery, Range(1,100)] int take = 20)
+    {
+        if (ActorId is not int actor) return Unauthorized();
+        var result = await board.TasksAsync(id, take, actor, ct);
+        return result.Result == ChangeResult.Success ? Ok(result.Value) : Failure(result.Result);
+    }
+}
+public record CreateProjectRequest([Required, StringLength(120, MinimumLength = 1)] string Name);
+</pre></details><details><summary dir="ltr">src/TeamBoard.Api/Controllers/WorkItemsController.cs</summary><pre dir="ltr">using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
+using TeamBoard.Domain;
+using TeamBoard.Application;
+namespace TeamBoard.Api.Controllers;
+
+[Route(&quot;tasks&quot;)]
+public sealed class WorkItemsController(IWorkItemService service) : ApiController
+{
+    [HttpGet(&quot;{id:int}&quot;)]
+    public async Task&lt;ActionResult&lt;TaskDto&gt;&gt; GetById(int id, CancellationToken ct)
+    {
+        if (ActorId is not int actor) return Unauthorized();
+        var result = await service.FindAsync(id, actor, ct);
+        return result.Result == ChangeResult.Success ? Ok(result.Value) : Failure(result.Result);
+    }
+    [HttpPost(&quot;/projects/{projectId:int}/tasks&quot;)]
+    public async Task&lt;ActionResult&lt;TaskDto&gt;&gt; Create(int projectId, CreateTaskRequest request, CancellationToken ct)
+    {
+        if (ActorId is not int actor) return Unauthorized();
+        var result = await service.CreateAsync(projectId, request.Title, actor, ct);
+        return result.Result == ChangeResult.Success
+            ? Ok(result.Value) // TODO: return 201 and a working Location
+            : Failure(result.Result);
+    }
+    [HttpPatch(&quot;{id:int}/assignee&quot;)]
+    public async Task&lt;ActionResult&gt; Assign(int id, AssignRequest request, CancellationToken ct)
+    {
+        if (ActorId is not int actor) return Unauthorized();
+        var result = await service.AssignAsync(id, request.UserId, actor, ct);
+        return result == ChangeResult.Success ? NoContent() : Failure(result);
+    }
+    [HttpPatch(&quot;{id:int}/title&quot;)]
+    public async Task&lt;ActionResult&gt; Rename(int id, CreateTaskRequest request, CancellationToken ct)
+    {
+        if (ActorId is not int actor) return Unauthorized();
+        var result = await service.RenameAsync(id, request.Title, actor, ct);
+        return result == ChangeResult.Success ? NoContent() : Failure(result);
+    }
+}
+public record CreateTaskRequest([Required, StringLength(120, MinimumLength = 1)] string Title);
+public record AssignRequest([Range(1, int.MaxValue)] int UserId);
+</pre></details></html>

@@ -1,0 +1,40 @@
+--- a/src/TeamBoard.Api/Controllers/LabUsersController.cs
++++ b/src/TeamBoard.Api/Controllers/LabUsersController.cs
+@@ -0,0 +1,13 @@
++using Microsoft.AspNetCore.Mvc;
++using TeamBoard.Domain;
++namespace TeamBoard.Api.Controllers;
++[ApiController, Route("users")]
++public sealed class LabUsersController : ControllerBase
++{
++    [HttpGet("{id:int}")]
++    public ActionResult<UserDto> Get(int id)
++    {
++        if (id != 42) return NotFound();
++        return Ok(new UserDto(id, "Nora"));
++    }
++}
+--- a/src/TeamBoard.Api/Program.cs
++++ b/src/TeamBoard.Api/Program.cs
+@@ -1,11 +1,15 @@
+-using TeamBoard.Domain;
+ var builder = WebApplication.CreateBuilder(args);
++builder.Services.AddControllers();
+ var app = builder.Build();
++app.Use(async (context, next) =>
++{
++    var timer = System.Diagnostics.Stopwatch.StartNew();
++    await next(context);
++    app.Logger.LogInformation("{Method} {Path} -> {Status} in {ElapsedMs}ms",
++        context.Request.Method, context.Request.Path,
++        context.Response.StatusCode, timer.Elapsed.TotalMilliseconds);
++});
+ app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
+-app.MapGet("/users/{id:int}", (int id) =>
+-{
+-    if (id != 42) return Results.NotFound();
+-    return Results.Ok(new UserDto(id, "Nora"));
+-});
++app.MapControllers();
+ app.Run();
+ public partial class Program { }
