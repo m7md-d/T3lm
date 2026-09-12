@@ -10,7 +10,7 @@
   "site": {
     "stack": "kit",
     "deploy": "t3lm-python",
-    "live": false
+    "live": true
   },
   "hook": "الاسم في Python لا يملك قيمة. فماذا يملك، وأين تعيش القيمة؟"
 }

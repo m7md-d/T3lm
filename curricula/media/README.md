@@ -46,7 +46,7 @@
 <!-- doctor:list:start -->
 | المنهج | الموضوع | الموقع | الأسلوب | الحالة |
 |---|---|---|---|---|
-| [`path-to-pixel`](path-to-pixel) | بناءُ مصيّرٍ ثنائيّ الأبعاد بـC من الأوّل، وكلُّ صورةٍ تُقاس ضدّ مصيّرٍ ناضج — لمن أنهى C | `path-to-pixel.nodeksa.com` | `default` | 🔨 |
+| [`path-to-pixel`](path-to-pixel) | بناءُ مصيّرٍ ثنائيّ الأبعاد بـC من الأوّل، وكلُّ صورةٍ تُقاس ضدّ مصيّرٍ ناضج — لمن أنهى C | [زُر ↗](https://path-to-pixel.nodeksa.com) | `default` | 🔨 |
 <!-- doctor:list:end -->
 
 البنية والاتفاقات: [`.claude/conventions/repo-layout.md`](../../.claude/conventions/repo-layout.md)

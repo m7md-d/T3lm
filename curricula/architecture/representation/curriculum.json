@@ -11,7 +11,7 @@
   "site": {
     "stack": "kit",
     "deploy": "t3lm-representation",
-    "live": false
+    "live": true
   },
   "hook": "ملفُّك صحيحُ الصيغة ومعناه مستحيل. من كان يفترض أن يمنع ذلك — القواعد، أم المتحقِّق، أم العُرف؟"
 }

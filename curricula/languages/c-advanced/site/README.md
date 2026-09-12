@@ -135,10 +135,5 @@ npm run build  -w curricula/languages/c-advanced/site   # الإنتاج
 اللوحة بعده · تنقيةُ خريطة المصادر بالضغط · «فرق الإتقان» في صفحة الأثر بعد
 توقّعٍ محفوظ. شغّل `npm run dev` وجرّبها بيدك.
 
-### الرفع
-
-```bash
-node tools/release.mjs curricula/languages/c-advanced/site   # من جذر المستودع
-```
-
-والمشروع `t3lm-c-advanced`، والعنوان `c-advanced.nodeksa.com`.
+والمشروع `t3lm-c-advanced`، والعنوان `c-advanced.nodeksa.com`. وأمرُ الإصدار
+نفسُه مشترَكٌ في `conventions/repo-layout.md`، فلا يُكرَّر هنا.

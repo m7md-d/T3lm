@@ -37,10 +37,10 @@
 | المنهج | الموضوع | الموقع | الحالة |
 |---|---|---|---|
 | [`c`](curricula/languages/c) | C — اللغة الأولى | [زُر ↗](https://c.nodeksa.com) | ✅ |
-| [`c-advanced`](curricula/languages/c-advanced) | C المتقدّم — الذاكرة والملفّ التنفيذيّ والخيط | `c-advanced.nodeksa.com` | 🔨 |
+| [`c-advanced`](curricula/languages/c-advanced) | C المتقدّم — الذاكرة والملفّ التنفيذيّ والخيط | [زُر ↗](https://c-advanced.nodeksa.com) | ✅ |
 | [`dart`](curricula/languages/dart) | Dart — لغةٌ مُدارة بعد لغةٍ عارية | [زُر ↗](https://dart.nodeksa.com) | ✅ |
 | [`go`](curricula/languages/go) | Go — من الجذور | [زُر ↗](https://go.nodeksa.com) | ✅ |
-| [`python`](curricula/languages/python) | Python — الكائن والمفسّر والحدّ مع C | `python.nodeksa.com` | 🔨 |
+| [`python`](curricula/languages/python) | Python — الكائن والمفسّر والحدّ مع C | [زُر ↗](https://python.nodeksa.com) | 🔨 |
 | [`rust`](curricula/languages/rust) | Rust — ما يثبته المترجم | [زُر ↗](https://rust.nodeksa.com) | ✅ |
 
 ### الأنظمة — `systems/`
@@ -52,13 +52,21 @@
 | [`docker`](curricula/systems/docker) | دوكر من البدائيات | `docker.nodeksa.com` | 🔨 |
 | [`who-waits`](curricula/systems/who-waits) | مَن يَنتظر؟ | [زُر ↗](https://who-waits.nodeksa.com) | ✅ |
 
+### الويب — `web/`
+
+الخادم والمتصفّح وما بينهما
+
+| المنهج | الموضوع | الموقع | الحالة |
+|---|---|---|---|
+| [`dotnet`](curricula/web/dotnet) | مسار .NET — رحلة TeamBoard | [زُر ↗](https://dotnet.nodeksa.com) | ✅ |
+
 ### الوسائط — `media/`
 
 الصورة والصوت والفيديو: ترميزاً وصيغاً
 
 | المنهج | الموضوع | الموقع | الحالة |
 |---|---|---|---|
-| [`path-to-pixel`](curricula/media/path-to-pixel) | من المسار إلى البكسل — الملء والخطّ والتركيب واللون | `path-to-pixel.nodeksa.com` | 🔨 |
+| [`path-to-pixel`](curricula/media/path-to-pixel) | من المسار إلى البكسل — الملء والخطّ والتركيب واللون | [زُر ↗](https://path-to-pixel.nodeksa.com) | 🔨 |
 
 ### المعمار — `architecture/`
 
@@ -67,7 +75,7 @@
 | المنهج | الموضوع | الموقع | الحالة |
 |---|---|---|---|
 | [`project-layout`](curricula/architecture/project-layout) | هيكلة المشروع — أين يسكن كل شيء، ولماذا | [زُر ↗](https://project-layout.nodeksa.com) | 🔨 |
-| [`representation`](curricula/architecture/representation) | التمثيل — بنيةٌ يكتبها إنسانٌ وينفّذها برنامج | `representation.nodeksa.com` | 🔨 |
+| [`representation`](curricula/architecture/representation) | التمثيل — بنيةٌ يكتبها إنسانٌ وينفّذها برنامج | [زُر ↗](https://representation.nodeksa.com) | 🔨 |
 
 <!-- doctor:curricula:end -->
 

@@ -6,7 +6,7 @@
 | المنهج | الموضوع | الموقع | الأسلوب | الحالة |
 |---|---|---|---|---|
 | [`project-layout`](project-layout) | فلسفة تنظيم المشروع وفصل المسؤوليات: من المسطّح إلى Hexagonal وClean وDDD — بقياسٍ لا بذوق | [زُر ↗](https://project-layout.nodeksa.com) | `default` | 🔨 |
-| [`representation`](representation) | تصميم التمثيل قبل الصيغة: الحالة الصالحة، والقواعد، والمنفذ نوعاً، والقيد، والعقد الذي يُنشَر — بالمكتبة القياسية وحدها | `representation.nodeksa.com` | `default` | 🔨 |
+| [`representation`](representation) | تصميم التمثيل قبل الصيغة: الحالة الصالحة، والقواعد، والمنفذ نوعاً، والقيد، والعقد الذي يُنشَر — بالمكتبة القياسية وحدها | [زُر ↗](https://representation.nodeksa.com) | `default` | 🔨 |
 <!-- doctor:list:end -->
 
 البنية والاتفاقات: [`.claude/conventions/repo-layout.md`](../../.claude/conventions/repo-layout.md)

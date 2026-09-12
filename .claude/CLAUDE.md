@@ -178,8 +178,9 @@ archive/  ما ليس منهجاً
 
 التصنيفات: `languages` · `systems` · `networks` · `web` · `media` · `architecture`.
 
-**والمناهج تسعة:** `c` · `c-advanced` · `go` · `rust` · `dart` · `project-layout` ·
-`representation` · `who-waits` · `docker`. و`c-advanced` مكتمل — سبعةٌ وعشرون فصلاً وموقعٌ مبنيّ لم يُرفَع بعد.
+**والمناهج اثنا عشر:** `c` · `c-advanced` · `go` · `rust` · `dart` · `python` ·
+`who-waits` · `docker` · `path-to-pixel` · `project-layout` · `representation` ·
+`dotnet`. و`c-advanced` مكتمل: سبعةٌ وعشرون فصلاً وموقعٌ على العدّة.
 
 وما سواها **مقترَحات**: موضوعٌ يسكن مكانه بريدمي يقول متطلّباته، ومادّتُه
 القديمة في `archive/`. لا يُبنى عليه ولا يُقاس بالخطة، وتُقرأ المقترحات معاً
@@ -189,6 +190,12 @@ archive/  ما ليس منهجاً
 كل منهج: `curriculum.json` + `README.md` + محتواه + `site/` (وفيه جدول الاشتقاق
 إلزاماً). المخرَج ساكن بالكامل، مُصيَّر مسبقاً، بلا أصول خارجية، قابل للتثبيت
 كتطبيق.
+
+**و`dotnet` يخالف هذا الشكل ويبقى معتمَداً:** بنيةٌ `flat` بلا `regions/`، وموقعٌ
+مستقلٌّ لا يقوم على `kit/` — فيُعلَن `site.stack: legacy` ولا يلزمه جدول اشتقاق،
+لأننا لم نبنه. وقواعدُ تأليفه في `AUTHORING.md` عنده، وما يخالف فيه الأسلوب
+الافتراضيَّ مسجَّلٌ في `profiles/codex-dotnet.md`. **والمخالفة تُعلَن في
+`curriculum.json` ولا تُستنتَج.**
 
 ---
 

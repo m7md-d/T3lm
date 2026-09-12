@@ -5,12 +5,12 @@
   "tagline": "الجزء الثاني: virtual memory وallocator وABI وlinker وloader وthreads",
   "url": "https://c-advanced.nodeksa.com",
   "profile": "default",
-  "status": "building",
+  "status": "published",
   "adopted": true,
   "layout": "canonical",
   "site": {
     "stack": "kit",
-    "live": false,
+    "live": true,
     "deploy": "t3lm-c-advanced"
   }
 }
