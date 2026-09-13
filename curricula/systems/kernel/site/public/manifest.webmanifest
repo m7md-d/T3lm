@@ -1,0 +1,19 @@
+{
+  "id": "/",
+  "name": "الكيرنل من الجذور",
+  "short_name": "الكيرنل",
+  "description": "بناء نواة x86-64 تعمل طبقةً طبقة: من تسليم الـbootloader إلى عمليات userspace.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b0c0d",
+  "theme_color": "#0b0c0d",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    { "src": "./icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "./icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "./icons/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "./icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

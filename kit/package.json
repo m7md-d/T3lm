@@ -9,6 +9,7 @@
     "./editor/editor.css": "./src/editor/editor.css",
     "./editor/vscode-dark.css": "./src/editor/presets/vscode-dark.css",
     "./highlight": "./src/highlight/index.ts",
+    "./highlight/asm": "./src/highlight/asm.ts",
     "./highlight/c": "./src/highlight/c.ts",
     "./highlight/dart": "./src/highlight/dart.ts",
     "./highlight/go": "./src/highlight/go.ts",

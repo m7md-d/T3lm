@@ -50,6 +50,7 @@
 | المنهج | الموضوع | الموقع | الحالة |
 |---|---|---|---|
 | [`docker`](curricula/systems/docker) | دوكر من البدائيات | `docker.nodeksa.com` | 🔨 |
+| [`kernel`](curricula/systems/kernel) | الكيرنل من الجذور | `kernel.nodeksa.com` | ✅ |
 | [`who-waits`](curricula/systems/who-waits) | مَن يَنتظر؟ | [زُر ↗](https://who-waits.nodeksa.com) | ✅ |
 
 ### الويب — `web/`

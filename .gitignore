@@ -33,3 +33,13 @@ my_idea/
 
 # مراجع خارجية وضعها المؤلّف — مستودعات git مستقلّة
 curricula/languages/python/ref/
+
+# Kernel — كلُّ ما يولّده `programs/build.sh` و`programs/user/build.sh`:
+# صورُ الإقلاع والكائنات وترويسات صور المستخدم. تُبنى بأمرٍ واحد ولا تُلتزَم.
+curricula/systems/kernel/programs/out/
+curricula/systems/kernel/programs/user/*.o
+curricula/systems/kernel/programs/user/*.elf
+curricula/systems/kernel/programs/user/*.elfbin
+curricula/systems/kernel/programs/user/*.bin
+curricula/systems/kernel/programs/user/*_blob.h
+curricula/systems/kernel/programs/user/*_elf.h

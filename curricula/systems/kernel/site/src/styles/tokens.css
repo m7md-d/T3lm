@@ -1,0 +1,91 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   توكنز «الكيرنل من الجذور» — **مصدر الحقيقة البصري الوحيد**.
+   كل ورقةٍ ومكوّنٍ بعدها يحيل ولا يعرّف، ويفحصه `node tools/doctor.mjs`.
+
+   والاشتقاق كاملاً في `../../README.md` (جدول الاشتقاق). وخلاصته:
+
+   ١) اللون يقول **من يضمن**. وسومُ السلطة ثمانيةٌ في `../../../README.md`
+      §البيئة، والأدلّة §٨ تحدّ الفئات بأربع — فتُطوى بمعناها:
+        spec  المواصفة   `@arch` `@abi` `@boot`
+        env   هذه البيئة `@qemu` `@fw` `@host`
+        ours  قرارُنا     `@ours`            ← المهيمن: ما يكتبه القارئ بيده
+        —     بلا مالك    `@unspec`          ← بلا لون، والغياب هو الدلالة
+      وعليها يقوم تلوين المخرَج أيضاً: لون الرمز لون مالكه.
+
+   ٢) الأسطح رماديةٌ معدنية باردة — مادّةُ المنهج معالجٌ وfirmware، لا واجهة.
+   ٣) النسيج خطوطٌ أفقية خافتة: مخرَج المنهج كلُّه سطورٌ من منفذٍ تسلسليّ،
+      وبنيته الغالبة ٦٣٩ صفَّ جدول.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  color-scheme: dark;
+
+  /* ── العائلات الأربع ───────────────────────────────────────────────── */
+  --k-spec: #6aa7e0;
+  --k-spec-dim: #2e455c;
+  --k-env: #e0a44e;
+  --k-env-dim: #5c4526;
+  --k-ours: #63c98a;
+  --k-ours-dim: #2b5440;
+  --k-break: #e0685c;
+  --k-break-dim: #5c2e2b;
+
+  /* ── الأسطح: من الأعمق إلى الأعلى ──────────────────────────────────── */
+  --k-void: #0b0c0d;
+  --k-deep: #101214;
+  --k-panel: #16181b;
+  --k-elev: #1d2023;
+  --k-code: #0d0f11;
+
+  /* ── الخطوط والحدود ───────────────────────────────────────────────── */
+  --k-hair: #1e2225;
+  --k-line: #282d31;
+  --k-line-2: #3a4046;
+
+  /* ── النصّ ────────────────────────────────────────────────────────── */
+  --k-strong: #f4f6f8;
+  --k-text: #e3e6e9;
+  --k-dim: #a3aab0;
+  --k-faint: #6d757c;
+
+  /* ── الطباعة ──────────────────────────────────────────────────────── */
+  --k-body: 'IBM Plex Sans Arabic', 'Noto Sans Arabic', system-ui, sans-serif;
+  --k-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* ── الإيقاع ──────────────────────────────────────────────────────── */
+  --k-r: 2px;
+  --k-bar: 52px;
+  --k-rail: 44px;
+  --k-max: 76ch;
+  --k-pad: clamp(16px, 4vw, 40px);
+
+  /* ── عقد العدّة: يُشتقّ منه المحرّر وكل مكوّنٍ مستورَد ──────────────── */
+  --ck-primary: var(--k-ours);
+  --ck-primary-soft: #8fe0ac;
+  --ck-secondary: var(--k-spec);
+  --ck-ok: var(--k-ours);
+  --ck-warn: var(--k-env);
+  --ck-danger: var(--k-break);
+  --ck-bg: var(--k-void);
+  --ck-surface: var(--k-panel);
+  --ck-surface-2: var(--k-elev);
+  --ck-line: var(--k-line);
+  --ck-line-2: var(--k-line-2);
+  --ck-text: var(--k-text);
+  --ck-text-dim: var(--k-dim);
+  --ck-text-faint: var(--k-faint);
+  --ck-font-body: var(--k-body);
+  --ck-font-mono: var(--k-mono);
+  --ck-r: var(--k-r);
+  --ck-border-w: 1px;
+
+  /* ── توكنة الكود: من العائلات نفسها وسلّم النصّ، بلا خامسة ────────── */
+  --k-tok-keyword: var(--k-spec);
+  --k-tok-type: var(--ck-primary-soft);
+  --k-tok-string: var(--k-env);
+  --k-tok-number: var(--k-env);
+  --k-tok-comment: var(--k-faint);
+  --k-tok-fn: var(--k-ours);
+  --k-tok-macro: var(--k-spec);
+  --k-tok-punct: var(--k-dim);
+}

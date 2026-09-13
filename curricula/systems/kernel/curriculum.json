@@ -1,0 +1,16 @@
+{
+  "slug": "kernel",
+  "category": "systems",
+  "title": "الكيرنل من الجذور",
+  "tagline": "بناء نواة x86-64 تعمل طبقةً طبقة: من تسليم الـbootloader إلى عمليات userspace",
+  "url": "https://kernel.nodeksa.com",
+  "profile": "kernel-dfs",
+  "status": "published",
+  "adopted": true,
+  "layout": "canonical",
+  "site": {
+    "stack": "kit",
+    "deploy": "t3lm-kernel"
+  },
+  "hook": "الكيرنل لا يعمل في الخلفية. هو يُدخَل — ولحظةُ الدخول هي كل ما في هذا المنهج."
+}

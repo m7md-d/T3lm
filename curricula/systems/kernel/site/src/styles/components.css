@@ -1,0 +1,227 @@
+/* المكوّنات. وكلُّ لونٍ هنا من `tokens.css` — يحيل ولا يعرّف. */
+
+/* ── بلوك الكود ────────────────────────────────────────────────────── */
+.code { margin: 0 0 1.3em; border: 1px solid var(--k-hair); border-radius: var(--k-r); background: var(--k-code); }
+.code-top {
+  display: flex; align-items: center; gap: 0.6em;
+  padding: 0.4em 0.7em;
+  border-bottom: 1px solid var(--k-hair);
+  background: var(--k-deep);
+  font-size: 0.78rem;
+  color: var(--k-faint);
+}
+.code-file { font-family: var(--k-mono); direction: ltr; unicode-bidi: isolate; color: var(--k-dim); }
+.code-sp { flex: 1; }
+.code pre { margin: 0; padding: 0.85em 1em; overflow-x: auto; font-size: 0.85rem; line-height: 1.75; }
+.code-open {
+  appearance: none; font: inherit; font-size: 0.78rem;
+  background: none; border: 1px solid var(--k-line); border-radius: var(--k-r);
+  color: var(--k-dim); padding: 0.12em 0.6em; cursor: pointer;
+}
+.code-open:hover { color: var(--k-text); border-color: var(--k-line-2); }
+
+/* توكنة CodeMirror — أصنافٌ قياسية من `@lezer/highlight` */
+.tok-keyword, .tok-controlKeyword, .tok-moduleKeyword, .tok-operatorKeyword { color: var(--k-tok-keyword); }
+.tok-typeName, .tok-standard.tok-typeName { color: var(--k-tok-type); }
+.tok-string, .tok-character { color: var(--k-tok-string); }
+.tok-number, .tok-integer, .tok-float { color: var(--k-tok-number); }
+/*
+ * التعليق يحمل اتجاهه هو: مئةٌ وستّةٌ وثمانون سطراً من مقتطعات المنهج فيها
+ * تعليقٌ عربيّ داخل كودٍ LTR. وبلا `plaintext` يُعاد ترتيبُ الجملة حول ما
+ * فيها من لاتينيّ فتُقرأ معكوسة — وقعت في `switch_nosti.S` فعلاً.
+ */
+/*
+ * التعليق نثرٌ لا بيانات، فيأخذ خطّ القراءة ويحمل اتجاهه هو.
+ *
+ * وسببه مقيس: مئةٌ وستّةٌ وثمانون سطراً من مقتطعات المنهج فيها تعليقٌ عربيّ
+ * داخل كودٍ LTR. فالخليّة الأحادية الثابتة تفكّ وصل حروفه، وبلا `plaintext`
+ * يُعاد ترتيبُ جملته حول ما فيها من لاتينيّ فتُقرأ معكوسة — وقع في
+ * `switch_nosti.S` فعلاً. والمسافةُ التي تسبق `/*` كودٌ لا تعليق، فتبقى
+ * أحاديةً ويبقى عمودُ التعليقات مصطفّاً.
+ */
+.tok-comment, .tok-lineComment, .tok-blockComment {
+  color: var(--k-tok-comment);
+  font-family: var(--k-body);
+  font-size: 0.95em;
+  font-style: normal;
+  unicode-bidi: plaintext;
+}
+.tok-function, .tok-definition.tok-variableName, .tok-labelName { color: var(--k-tok-fn); }
+.tok-macroName, .tok-meta, .tok-processingInstruction, .tok-builtin { color: var(--k-tok-macro); }
+.tok-punctuation, .tok-bracket, .tok-separator, .tok-operator { color: var(--k-tok-punct); }
+.tok-variableName, .tok-propertyName { color: var(--k-text); }
+
+/* ── لوحة المخرَج: من يضمنها هو لونُها، ونصُّ الوسم قناتُها الثانية ──── */
+.panel { margin: 0 0 1.4em; border: 1px solid var(--k-line); border-radius: var(--k-r); background: var(--k-panel); }
+.panel[data-fam='spec'] { border-inline-start: 3px solid var(--k-spec); }
+.panel[data-fam='env'] { border-inline-start: 3px solid var(--k-env); }
+.panel[data-fam='ours'] { border-inline-start: 3px solid var(--k-ours); }
+.panel[data-fam='none'] { border-inline-start: 3px solid var(--k-line-2); }
+.panel[data-broken='1'] { border-inline-start-color: var(--k-break); }
+
+.panel-top { display: flex; align-items: center; gap: 0.6em; flex-wrap: wrap; padding: 0.5em 0.8em; border-bottom: 1px solid var(--k-hair); }
+.panel-t { font-size: 0.9rem; color: var(--k-text); }
+.panel-sp { flex: 1; }
+.tag {
+  font-family: var(--k-mono); font-size: 0.74rem; direction: ltr; unicode-bidi: isolate;
+  border: 1px solid var(--k-line); border-radius: var(--k-r); padding: 0.05em 0.45em; white-space: nowrap;
+}
+.tag[data-fam='spec'] { color: var(--k-spec); border-color: var(--k-spec-dim); }
+.tag[data-fam='env'] { color: var(--k-env); border-color: var(--k-env-dim); }
+.tag[data-fam='ours'] { color: var(--k-ours); border-color: var(--k-ours-dim); }
+.tag[data-fam='none'] { color: var(--k-faint); }
+.stage-chip {
+  font-family: var(--k-mono); font-size: 0.74rem; direction: ltr; unicode-bidi: isolate;
+  color: var(--k-dim); border: 1px solid var(--k-line); border-radius: var(--k-r); padding: 0.05em 0.45em;
+}
+.stage-chip[data-broken='1'] { color: var(--k-break); border-color: var(--k-break-dim); }
+.panel-note { padding: 0.45em 0.8em 0; font-size: 0.84rem; color: var(--k-dim); }
+.panel pre { margin: 0; padding: 0.85em 1em; overflow-x: auto; font-size: 0.83rem; line-height: 1.7; background: var(--k-code); }
+.panel-foot { padding: 0.4em 0.8em; border-top: 1px solid var(--k-hair); font-size: 0.78rem; color: var(--k-faint); }
+.panel-foot code { font-size: 0.95em; color: var(--k-dim); }
+
+/* معجم المخرَج: لون الرمز لون مالكه */
+.o-spec { color: var(--k-spec); }
+.o-env { color: var(--k-env); }
+.o-ours { color: var(--k-ours); }
+
+/* ── مسار التنفيذ: سُلَّمُ خطوات، لا `pre` يقلب العربية ──────────────── */
+.trace { margin: 0 0 1.3em; border: 1px solid var(--k-hair); border-radius: var(--k-r); background: var(--k-deep); padding: 0.7em 0; counter-reset: tr; }
+.trace-s { display: grid; grid-template-columns: 2.2em 1fr; align-items: baseline; padding: 0.18em 0.8em; font-size: 0.92rem; }
+.trace-s > .trace-n { font-family: var(--k-mono); font-size: 0.72rem; color: var(--k-faint); direction: ltr; unicode-bidi: isolate; }
+.trace-s + .trace-s { border-top: 1px dashed var(--k-hair); }
+.trace-s code { font-size: 0.88em; color: var(--ck-primary-soft); }
+
+/* ── لوح البناء: ما في نواتك الآن ──────────────────────────────────── */
+.build { border: 1px solid var(--k-line); border-radius: var(--k-r); background: var(--k-panel); margin-bottom: 26px; }
+.build-top { display: flex; align-items: center; gap: 0.6em; flex-wrap: wrap; padding: 0.55em 0.85em; border-bottom: 1px solid var(--k-hair); }
+.build-h { font-size: 0.9rem; color: var(--k-dim); }
+.build-cmd { font-family: var(--k-mono); font-size: 0.8rem; color: var(--k-dim); direction: ltr; unicode-bidi: isolate; }
+/* قائمةُ ملفّاتٍ إنجليزية كما تُمرَّر إلى المترجم — فتُقرأ LTR */
+.build-files { display: flex; flex-wrap: wrap; gap: 4px; padding: 0.7em 0.85em; direction: ltr; }
+.file {
+  font-family: var(--k-mono); font-size: 0.75rem; direction: ltr; unicode-bidi: isolate;
+  border: 1px solid var(--k-hair); border-radius: var(--k-r); padding: 0.1em 0.45em; color: var(--k-faint);
+  background: var(--k-code);
+}
+.file[data-new='1'] { color: var(--k-ours); border-color: var(--k-ours-dim); }
+.file[data-gone='1'] { color: var(--k-faint); border-style: dashed; text-decoration: line-through; }
+.build-foot { padding: 0.45em 0.85em; border-top: 1px solid var(--k-hair); font-size: 0.8rem; color: var(--k-faint); }
+.build-foot b { color: var(--k-ours); font-weight: 500; }
+
+/* ── الفخاخ ────────────────────────────────────────────────────────── */
+.traps { display: grid; gap: 8px; }
+.trap { border: 1px solid var(--k-hair); border-radius: var(--k-r); background: var(--k-deep); padding: 0.65em 0.85em; }
+.trap-q { color: var(--k-dim); margin-bottom: 0.35em; font-size: 0.95rem; }
+.trap-a { color: var(--k-text); font-size: 0.97rem; }
+.trap-a::before { content: '← '; color: var(--ck-primary); }
+
+/* ── Artifact: تعريفُ «مكتمل» في الأسلوب، لا شارةَ إنجاز ─────────────── */
+.art { border: 1px solid var(--k-line); border-radius: var(--k-r); background: var(--k-panel); overflow: hidden; }
+.art-row { display: grid; grid-template-columns: 8.5em 1fr; gap: 0.8em; padding: 0.55em 0.85em; font-size: 0.95rem; }
+.art-row + .art-row { border-top: 1px solid var(--k-hair); }
+.art-k { color: var(--k-faint); font-size: 0.86rem; }
+
+/* ── Checkpoint: بوّابةٌ تُكتَب، بلا جوابٍ مخزَّن ────────────────────── */
+.cp { display: grid; gap: 12px; }
+.cp-q { border: 1px solid var(--k-hair); border-radius: var(--k-r); background: var(--k-deep); padding: 0.7em 0.85em; }
+.cp-n { font-family: var(--k-mono); font-size: 0.74rem; color: var(--k-faint); direction: ltr; unicode-bidi: isolate; }
+/* وسمٌ عربيّ في نفس الموضع — بخطّ القراءة، فالأحاديّ يفكّ وصل حروفه */
+.cp-k { font-size: 0.78rem; color: var(--k-faint); }
+.cp-t { margin: 0.25em 0 0.5em; }
+/* في الأثر: السؤال يخفت، وما كتبه القارئ هو الظاهر */
+.cp-ask { color: var(--k-faint); font-size: 0.9rem; margin-bottom: 0.4em; }
+.cp-said { color: var(--k-text); }
+textarea.write, input.write {
+  width: 100%; font: inherit; font-size: 0.94rem; line-height: 1.7;
+  background: var(--k-code); color: var(--k-text);
+  border: 1px solid var(--k-line); border-radius: var(--k-r);
+  padding: 0.5em 0.7em; resize: vertical;
+}
+textarea.write:focus, input.write:focus { border-color: var(--ck-primary); }
+.cp-saved { font-size: 0.78rem; color: var(--k-faint); margin-top: 0.3em; }
+
+/* ── بوّابة المصدر: الأسلوب §٧ — يُكتَب التوقّع قبل فتح المصدر ───────── */
+.gate { border: 1px dashed var(--k-line-2); border-radius: var(--k-r); background: var(--k-deep); padding: 0.8em 0.9em; margin: 0 0 1.3em; }
+.gate-h { font-size: 0.95rem; margin-bottom: 0.5em; }
+.gate-s { font-size: 0.85rem; color: var(--k-dim); margin-bottom: 0.6em; }
+.btn {
+  appearance: none; font: inherit; cursor: pointer;
+  background: var(--k-elev); color: var(--k-text);
+  border: 1px solid var(--k-line); border-radius: var(--k-r);
+  padding: 0.42em 0.9em; font-size: 0.9rem;
+}
+.btn:hover:not(:disabled) { border-color: var(--k-line-2); }
+.btn:disabled { color: var(--k-faint); cursor: not-allowed; }
+.btn-go { border-color: var(--k-ours-dim); }
+.btn-go:hover:not(:disabled) { border-color: var(--ck-primary); }
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 0.6em; }
+
+/* ── زوج «تعمل / كُسِرت عمداً» ───────────────────────────────────────── */
+.pair { display: flex; gap: 6px; margin-bottom: 10px; }
+.pair-b {
+  appearance: none; font: inherit; font-size: 0.86rem; cursor: pointer;
+  background: var(--k-deep); color: var(--k-dim);
+  border: 1px solid var(--k-line); border-radius: var(--k-r);
+  padding: 0.32em 0.8em;
+}
+.pair-b[aria-pressed='true'] { color: var(--k-text); background: var(--k-elev); border-color: var(--ck-primary); }
+.pair-b[data-broken='1'][aria-pressed='true'] { border-color: var(--k-break); }
+
+/* ── الواجهة: البديهيات والحِزَم والقياس ────────────────────────────── */
+.ax { display: grid; gap: 8px; counter-reset: ax; }
+.ax-i { display: grid; grid-template-columns: 1.9em 1fr; align-items: baseline; gap: 0.6em; border: 1px solid var(--k-hair); border-radius: var(--k-r); background: var(--k-deep); padding: 0.6em 0.8em; }
+.ax-n { font-family: var(--k-mono); font-size: 0.78rem; color: var(--ck-primary); direction: ltr; unicode-bidi: isolate; }
+
+.pack { border: 1px solid var(--k-hair); border-radius: var(--k-r); background: var(--k-deep); padding: 0.8em 0.9em; }
+.pack-h { display: flex; align-items: baseline; gap: 0.6em; margin-bottom: 0.6em; }
+.pack-r { font-family: var(--k-mono); font-size: 0.76rem; color: var(--k-faint); direction: ltr; unicode-bidi: isolate; }
+.pack-t { font-size: 1rem; }
+.ch-list { display: grid; gap: 2px; }
+.ch-li {
+  display: grid; grid-template-columns: 2.4em 1fr; gap: 0.5em; align-items: baseline;
+  padding: 0.35em 0.4em; border-radius: var(--k-r); text-decoration: none; color: var(--k-text); font-size: 0.92rem;
+}
+.ch-li:hover { background: var(--k-panel); }
+.ch-li[data-seen='1'] .ch-li-n { color: var(--ck-primary); }
+.ch-li-n { font-family: var(--k-mono); font-size: 0.78rem; color: var(--k-faint); direction: ltr; unicode-bidi: isolate; }
+.ch-li-g { color: var(--k-dim); font-size: 0.88em; }
+
+/* القياس: ثلاثة تشغيلاتٍ يبدّل بينها القارئ */
+.meas { border: 1px solid var(--k-line); border-radius: var(--k-r); background: var(--k-panel); }
+.meas-tabs { display: flex; gap: 4px; padding: 6px; border-bottom: 1px solid var(--k-hair); flex-wrap: wrap; }
+.meas-b {
+  appearance: none; font: inherit; font-size: 0.88rem; cursor: pointer;
+  background: none; color: var(--k-dim); border: 1px solid transparent; border-radius: var(--k-r);
+  padding: 0.3em 0.7em;
+}
+.meas-b:hover { color: var(--k-text); }
+.meas-b[aria-pressed='true'] { color: var(--k-text); background: var(--k-deep); border-color: var(--k-line); }
+.meas-body { padding: 0.9em 1em; }
+.meas-say { color: var(--k-dim); font-size: 0.94rem; margin-top: 0.7em; }
+.bars { display: grid; gap: 6px; font-variant-numeric: tabular-nums; }
+.bar-row { display: grid; grid-template-columns: 4.2em 1fr 4.4em; align-items: center; gap: 0.6em; font-size: 0.86rem; }
+.bar-k { font-family: var(--k-mono); color: var(--k-dim); direction: ltr; unicode-bidi: isolate; }
+.bar-t { height: 8px; background: var(--k-code); border-radius: var(--k-r); overflow: hidden; }
+.bar-t > i { display: block; height: 100%; }
+/* العمود الذي يدور عليه الفصل هو `sys`، فيأخذ المهيمن، وما حوله سلّمُ خطوط */
+.bar-t > i[data-w='sys'] { background: var(--ck-primary); }
+.bar-t > i[data-w='user'] { background: var(--k-line-2); }
+.bar-t > i[data-w='real'] { background: var(--k-line); }
+.bar-v { font-family: var(--k-mono); color: var(--k-text); direction: ltr; unicode-bidi: isolate; text-align: start; }
+
+/* ── الأثر ─────────────────────────────────────────────────────────── */
+.trail-ch { border: 1px solid var(--k-hair); border-radius: var(--k-r); background: var(--k-deep); padding: 0.8em 0.9em; margin-bottom: 10px; }
+.trail-h { display: flex; align-items: baseline; gap: 0.6em; margin-bottom: 0.5em; }
+.empty { color: var(--k-faint); border: 1px dashed var(--k-line); border-radius: var(--k-r); padding: 1.2em; text-align: center; }
+
+/* ── مفتاح العائلات ────────────────────────────────────────────────── */
+.fam { border: 1px solid var(--k-hair); border-radius: var(--k-r); background: var(--k-deep); padding: 0.75em 0.9em; }
+.fam-h { display: flex; align-items: center; gap: 0.5em; margin-bottom: 0.4em; }
+.swatch { width: 10px; height: 10px; border-radius: var(--k-r); display: inline-block; }
+.swatch[data-fam='spec'] { background: var(--k-spec); }
+.swatch[data-fam='env'] { background: var(--k-env); }
+.swatch[data-fam='ours'] { background: var(--k-ours); }
+.swatch[data-fam='none'] { background: var(--k-line-2); }
+.fam-m { color: var(--k-dim); font-size: 0.9rem; }
+.tag-row { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 0.5em; }

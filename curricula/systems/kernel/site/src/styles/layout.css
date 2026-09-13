@@ -1,0 +1,146 @@
+/* التخطيط: الشريط، وقشرة الصفحة، وشريط المراحل، والانتقال بين اللقطات. */
+
+/* ── الشريط العلويّ: ارتفاعُه توكن، والمراسي تحسبه ────────────────── */
+.bar {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  height: var(--k-bar);
+  display: flex;
+  align-items: center;
+  gap: 0.9em;
+  padding-inline: var(--k-pad);
+  background: color-mix(in oklab, var(--k-void) 86%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--k-hair);
+  z-index: 20;
+}
+.bar-home { display: flex; align-items: center; gap: 0.5em; color: var(--k-text); text-decoration: none; font-weight: 600; }
+.bar-mark { width: 18px; height: 18px; display: block; }
+.bar-sp { flex: 1; }
+.bar-link { color: var(--k-dim); text-decoration: none; font-size: 0.9em; }
+.bar-link:hover, .bar-link[aria-current='page'] { color: var(--k-text); }
+
+.shell { padding-block: calc(var(--k-bar) + 28px) 96px; padding-inline: var(--k-pad); }
+.wrap { max-width: 1080px; margin-inline: auto; }
+.narrow { max-width: 78ch; margin-inline: auto; }
+
+/* ── ترويسة الفصل ──────────────────────────────────────────────────── */
+.ch-head { display: flex; align-items: baseline; gap: 0.7em; flex-wrap: wrap; margin-bottom: 0.35em; }
+/* «الفصل» عربيٌّ بخطّ القراءة، ورقمُه وحده أحاديّ — الأحاديّ يفكّ وصل الحروف */
+.ch-num { font-size: 0.95rem; color: var(--k-faint); }
+.ch-title { font-size: clamp(1.5rem, 3.4vw, 2.1rem); }
+.ch-sub { color: var(--k-dim); max-width: var(--k-max); margin: 0 0 1.4em; }
+
+/* ── شريط المراحل: القالب نفسه في كل فصل، فيتعلّم القارئ مكاناً واحداً ─ */
+.rail {
+  position: sticky;
+  inset-block-start: var(--k-bar);
+  z-index: 10;
+  display: flex;
+  gap: 2px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  background: var(--k-deep);
+  border: 1px solid var(--k-hair);
+  border-radius: var(--k-r);
+  padding: 3px;
+  margin-bottom: 26px;
+}
+.rail-item {
+  flex: 0 0 auto;
+  appearance: none;
+  background: none;
+  border: 0;
+  border-radius: var(--k-r);
+  padding: 0.42em 0.75em;
+  font: inherit;
+  font-size: 0.84rem;
+  color: var(--k-faint);
+  cursor: pointer;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+}
+.rail-item:hover { color: var(--k-dim); background: var(--k-panel); }
+.rail-item[data-seen='1'] { color: var(--k-dim); }
+.rail-item[aria-current='true'] {
+  color: var(--k-text);
+  background: var(--k-panel);
+  border-bottom-color: var(--ck-primary);
+}
+
+/* ── جسم اللقطة ────────────────────────────────────────────────────── */
+.shot { max-width: var(--k-max); }
+.shot-h { font-size: 1.28rem; margin-bottom: 0.9em; }
+.shot-h .stage-of {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--k-faint);
+  margin-bottom: 0.2em;
+}
+.sub-h { font-size: 1.02rem; color: var(--ck-primary-soft); margin: 1.8em 0 0.7em; }
+.sub-h::before { content: '— '; color: var(--k-faint); }
+
+/* ── الانتقال: زرٌّ واحدٌ في نفس الموضع، ويسمّي ما بعده ──────────────── */
+.step {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--k-hair);
+}
+.step-btn {
+  appearance: none;
+  font: inherit;
+  cursor: pointer;
+  background: var(--k-panel);
+  color: var(--k-text);
+  border: 1px solid var(--k-line);
+  border-radius: var(--k-r);
+  padding: 0.6em 1em;
+  text-align: start;
+  text-decoration: none;
+  display: block;
+}
+.step-btn:hover { border-color: var(--k-line-2); background: var(--k-elev); }
+.step-next { flex: 1; border-color: var(--k-ours-dim); }
+.step-next:hover { border-color: var(--ck-primary); }
+.step-k { display: block; font-size: 0.78rem; color: var(--k-faint); }
+.step-v { display: block; }
+.step-prev { color: var(--k-dim); }
+
+/* شريطٌ للّقطة نفسها لا للمنهج — بلا عددٍ ولا نسبة */
+.shot-bar { height: 2px; background: var(--k-hair); margin-bottom: 22px; border-radius: var(--k-r); }
+.shot-bar > i { display: block; height: 100%; background: var(--k-ours-dim); border-radius: var(--k-r); }
+
+/* ── الواجهة ───────────────────────────────────────────────────────── */
+.hero { padding-block: clamp(24px, 6vw, 64px) 8px; }
+.hero-mark { width: clamp(38px, 6vw, 58px); height: auto; color: var(--k-line-2); display: block; margin-bottom: 1em; }
+.hero .lede p { margin-bottom: 0.6em; }
+.hero h1 { font-size: clamp(2.1rem, 6.4vw, 3.9rem); line-height: 1.25; }
+.hero .lede { font-size: clamp(1.02rem, 2vw, 1.2rem); color: var(--k-dim); max-width: 58ch; margin-top: 0.7em; }
+
+.sec { margin-block: clamp(40px, 7vw, 78px); }
+.sec > h2 {
+  font-size: 1.12rem;
+  color: var(--k-dim);
+  font-weight: 500;
+  padding-bottom: 0.5em;
+  margin-bottom: 1.2em;
+  border-bottom: 1px solid var(--k-hair);
+}
+
+.cols { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.cols-road { grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); }
+
+@media (max-width: 640px) {
+  body { font-size: 15px; }
+  .shell { padding-block: calc(var(--k-bar) + 18px) 72px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

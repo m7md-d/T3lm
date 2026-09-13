@@ -1,0 +1,121 @@
+/* الأساس: الطباعة، والنثر، والجداول، وانضباط ثنائية اللغة. */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+/* المتن لا يمرّ أفقياً أبداً — ما اتّسع يمرّ داخل حاويته هو */
+body { overflow-x: hidden; }
+
+body {
+  margin: 0;
+  background: var(--k-void);
+  color: var(--k-text);
+  font-family: var(--k-body);
+  font-size: 16px;
+  line-height: 1.85;
+  direction: rtl;
+  /* النسيج: سطورٌ أفقية خافتة — مخرَجُ المنهج كلُّه سطور، وبنيتُه جداول */
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--k-hair) 0, var(--k-hair) 1px,
+    transparent 1px, transparent 7px
+  );
+  background-attachment: fixed;
+  background-blend-mode: normal;
+}
+
+/* النسيج يخفّ تحت المحتوى فلا يزاحم النصّ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: var(--k-void);
+  opacity: 0.86;
+  pointer-events: none;
+  z-index: 0;
+}
+#root { position: relative; z-index: 1; }
+
+h1, h2, h3, h4 { text-wrap: balance; line-height: 1.45; margin: 0; font-weight: 600; }
+p { text-wrap: pretty; margin: 0 0 1em; }
+
+a { color: var(--ck-primary); text-decoration-color: var(--k-ours-dim); text-underline-offset: 3px; }
+a:hover { text-decoration-color: var(--ck-primary); }
+
+:focus-visible { outline: 2px solid var(--ck-primary); outline-offset: 2px; }
+::selection { background: var(--k-ours-dim); }
+
+/* ── ثنائية اللغة ───────────────────────────────────────────────────── */
+code, pre, .en, kbd, samp {
+  direction: ltr;
+  unicode-bidi: isolate;
+  font-family: var(--k-mono);
+  font-variant-ligatures: none;
+}
+pre { text-align: left; }
+
+/* الأحاديّ للكود والأرقام فقط — ولا يمسّ العربية ولا يصحبها تباعد حروف */
+.num { font-family: var(--k-mono); font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: isolate; }
+
+/* ── النثر ──────────────────────────────────────────────────────────── */
+.prose { max-width: var(--k-max); }
+.prose > :last-child { margin-bottom: 0; }
+.prose code {
+  background: var(--k-code);
+  border: 1px solid var(--k-hair);
+  border-radius: var(--k-r);
+  padding: 0.08em 0.36em;
+  font-size: 0.88em;
+  color: var(--k-text);
+}
+.prose strong { color: var(--k-strong); font-weight: 600; }
+.prose em { font-style: normal; color: var(--k-dim); }
+.prose ul, .prose ol { padding-inline-start: 1.4em; margin: 0 0 1em; }
+.prose li { margin-bottom: 0.3em; }
+.prose blockquote {
+  margin: 0 0 1em;
+  padding-inline-start: 1em;
+  border-inline-start: 2px solid var(--k-line-2);
+  color: var(--k-dim);
+}
+
+/* ── الجداول: ٦٣٩ صفّاً في المنهج، فهي بنيةٌ لا استثناء ───────────── */
+.prose table, table.grid {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 1.2em;
+  font-size: 0.94em;
+  font-variant-numeric: tabular-nums;
+}
+.prose th, .prose td, table.grid th, table.grid td {
+  text-align: start;
+  vertical-align: top;
+  padding: 0.5em 0.7em;
+  border-bottom: 1px solid var(--k-hair);
+}
+.prose thead th, table.grid thead th {
+  color: var(--k-dim);
+  font-weight: 500;
+  font-size: 0.9em;
+  border-bottom: 1px solid var(--k-line);
+}
+.prose tbody tr:hover, table.grid tbody tr:hover { background: var(--k-deep); }
+.prose table code { background: none; border: 0; padding: 0; }
+
+.table-wrap { overflow-x: auto; }
+
+/* ── حدُّ الادّعاء: فقرة `⚠` ــ ليست تحذيراً من خطر فلا تأخذ لونه ───── */
+.limit {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0 0.6em;
+  margin: 0 0 1em;
+  padding: 0.7em 0.9em;
+  background: var(--k-deep);
+  border-inline-start: 2px solid var(--k-line-2);
+  border-radius: var(--k-r);
+  color: var(--k-dim);
+  font-size: 0.95em;
+}
+.limit > .limit-mark { color: var(--k-faint); line-height: 1.85; }
+.limit > div > :last-child { margin-bottom: 0; }
